@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Grape, MapPin, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { NdaBadge } from "@/components/marketplace/NdaBadge";
 import { formatCurrency, formatTons } from "@/lib/utils";
-import type { Listing } from "@/types";
+import type { PublicListing } from "@/lib/serializers/listing";
 
 const PRACTICE_LABEL: Record<string, string> = {
   conventional: "Conventional",
@@ -11,7 +12,7 @@ const PRACTICE_LABEL: Record<string, string> = {
   biodynamic: "Biodynamic",
 };
 
-export function ListingCard({ listing }: { listing: Listing }) {
+export function ListingCard({ listing }: { listing: PublicListing }) {
   return (
     <Link
       href={`/listings/${listing.id}`}
@@ -22,7 +23,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
         <Badge variant="brand" className="absolute left-3 top-3">
           {listing.harvest_year} Harvest
         </Badge>
-        {listing.profiles?.is_verified && (
+        {listing.seller?.is_verified && (
           <Badge variant="success" className="absolute right-3 top-3">
             <ShieldCheck className="size-3" /> Verified
           </Badge>
@@ -31,9 +32,12 @@ export function ListingCard({ listing }: { listing: Listing }) {
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
-            {listing.profiles?.company_name ?? "HarvestLink Grower"}
-          </p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
+              {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "HarvestLink Grower"}
+            </p>
+            {listing.is_confidential && <NdaBadge size="sm" interactive={false} />}
+          </div>
           <h3 className="mt-1 line-clamp-2 font-semibold text-stone-900">{listing.title}</h3>
         </div>
 

@@ -20,6 +20,11 @@ export const CreateListingSchema = z.object({
   // Only ever shown/editable on the edit form — new listings always start
   // "available" (set server-side in the create action).
   status: z.enum(["available", "pending", "sold", "archived"]).optional(),
+  // NDA-1/NDA-2 (Requirement 1). Default off; nda_location_precision only
+  // matters when is_nda is true, so it's kept simple here rather than
+  // conditionally required.
+  is_nda: z.boolean().default(false),
+  nda_location_precision: z.enum(["county", "state"]).default("county"),
 });
 
 // react-hook-form needs the pre-coercion shape (z.input) since fields like

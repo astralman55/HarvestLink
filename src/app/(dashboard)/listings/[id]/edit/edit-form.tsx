@@ -27,6 +27,8 @@ export function EditListingForm({ listing }: { listing: Listing }) {
     slope_percent: listing.slope_percent ?? undefined,
     harvest_year: listing.harvest_year,
     status: listing.status,
+    is_nda: listing.is_nda,
+    nda_location_precision: listing.nda_location_precision,
   };
 
   async function handleSubmit(data: CreateListingInput) {
@@ -42,6 +44,7 @@ export function EditListingForm({ listing }: { listing: Listing }) {
       submitLabel="Save Changes"
       submittingLabel="Saving…"
       showStatusField
+      originalIsNda={listing.is_nda}
     />
   );
 }

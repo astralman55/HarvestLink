@@ -3,6 +3,8 @@
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { flags } from "@/lib/flags";
 import {
   FARMING_PRACTICES,
   TRELLIS_SYSTEMS,
@@ -187,6 +189,16 @@ export function AdvancedFilterFields({ values, onChange }: FieldsProps) {
           onChange={(e) => onChange({ min_brix: e.target.value })}
         />
       </FieldShell>
+
+      {flags.ndaListings && (
+        <label className="flex cursor-pointer items-center gap-2 pt-1 text-sm text-stone-700">
+          <Checkbox
+            checked={values.hide_nda === "true"}
+            onCheckedChange={(checked) => onChange({ hide_nda: checked ? "true" : undefined })}
+          />
+          Exclude NDA listings
+        </label>
+      )}
     </>
   );
 }

@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import { createClient } from "./client";
 
+interface NewListingBroadcast {
+  variety: string;
+  estimated_tons: number;
+  region_ava: string;
+}
+
 export function useRealtimeListings() {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
@@ -19,22 +25,19 @@ export function useRealtimeListings() {
       return;
     }
 
+    // A DB trigger (migration 0005) broadcasts a hand-picked, always-safe
+    // payload on insert -- not postgres_changes, which sends the entire
+    // raw row (including user_id, and eventually vineyard_name) to every
+    // subscribed browser tab regardless of what this hook reads from it
+    // (Phase 0 audit, Flag #8).
     const channel = supabase
-      .channel("schema-db-changes")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "listings" },
-        (payload) => {
-          const newRow = payload.new as {
-            estimated_tons: number;
-            variety: string;
-            region_ava: string;
-          };
-          setAlertMessage(
-            `New Yield Alert: ${newRow.estimated_tons} tons of ${newRow.variety} just listed in ${newRow.region_ava}!`
-          );
-        }
-      )
+      .channel("public-listings")
+      .on("broadcast", { event: "new_listing" }, ({ payload }) => {
+        const newRow = payload as NewListingBroadcast;
+        setAlertMessage(
+          `New Yield Alert: ${newRow.estimated_tons} tons of ${newRow.variety} just listed in ${newRow.region_ava}!`
+        );
+      })
       .subscribe();
 
     return () => {

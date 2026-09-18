@@ -102,4 +102,6 @@ export interface ListingSearchFilters {
   min_tons?: string;
   max_price?: string;
   min_brix?: string;
+  /** NDA-12: browse filter to exclude NDA listings. Default (unset) is include. */
+  hide_nda?: string;
 }

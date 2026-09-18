@@ -15,7 +15,7 @@ Per Section 0.6 of `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md`: places w
 - Add a `profiles_public` view (default `security_invoker = false`, so it runs with the view owner's rights and isn't blocked by the tightened base-table RLS) exposing only the safe columns: `id, company_name, region_ava, is_verified, username`.
 - Change the listing data layer to fetch `profiles_public` rows for card/detail display (a second batched query, not a PostgREST embed — view-embedding through PostgREST's FK inference is fragile enough that an explicit fetch is safer and is also what NDA-4's "one central serializer with viewer context" needs anyway, since NDA listings must suppress the seller row entirely rather than just narrowing its columns).
 
-Until Phase 3 lands, this is a known, documented pre-existing exposure — not newly introduced by this addendum, but worth prioritizing.
+**Status: resolved in Phase 3.** Implemented exactly as planned above (migration `0005`): `profiles` select RLS is now self/admin-only via an `is_admin()` helper (avoids RLS self-reference recursion), `profiles_public` exposes the safe columns to everyone, and `src/lib/data/listings.ts` batch-fetches it separately rather than via PostgREST embedding, feeding both the raw row and the safe profile into `serializeListing()`.
 
 ---
 
@@ -86,3 +86,47 @@ One accepted minor UX regression while the flag is off: the login field's Zod va
 ### Decision 11 (bug caught during live testing, fixed before commit) — the availability check was silently reporting DB query errors as "available"
 
 `checkUsernameAvailability` destructured only `data` from its two Supabase queries (`reserved_usernames`, `profiles.username_normalized`) and never checked `error`. Live-tested against the real Supabase project *before* migration `0003`/`0004` were applied there (so the queries genuinely errored, missing table/column) — the function fell through both `if (reserved)`/`if (taken)` checks (both `null` on error) and returned `{ available: true }`. That's the dangerous direction: a broken check silently approving a username instead of blocking it. Fixed by checking each query's `error` and throwing into the existing catch block, which returns `{ available: false, reason: "Couldn't check availability right now..." }` instead. Caught by testing against the live (not-yet-migrated) database rather than by code review -- worth remembering that Supabase JS query errors don't throw, they return an `error` field that's easy to silently ignore if only `data` is destructured.
+
+---
+
+## Phase 3 (NDA listings + central serializer)
+
+### Decision 12 — Grapes' location precision ("county"/"state") maps onto region_ava/sub_ava, since there are no county/state columns to reduce
+
+The spec's WINE-5/NDA-3 assume a location that can be reduced to "county" or "state." Grapes listings only ever had `region_ava` (an AVA name, e.g. "Napa Valley") and `sub_ava` (e.g. "Atlas Peak") -- no county or state column exists on `listings` (only on the new `bulk_wine_details.wine_location_state/county`, which is a different field entirely -- see WINE-5, "where the wine is stored" vs. grape origin).
+
+**Decision:** For grapes, `nda_location_precision = 'county'` shows `region_ava` and hides `sub_ava` (the AVA is the "broad" tier, the sub-AVA is the "narrow" tier); `'state'` additionally generalizes `region_ava` itself down to the state the AVA sits in, via a new `getStateForRegion()` helper in `src/lib/constants/viticulture.ts` (a lookup over the existing `AVA_REGIONS` data, which already tags every AVA with its state). Implemented in `serializeListing()`. This will need revisiting once bulk wine (Phase 5) lands its own real `wine_location_state`/`wine_location_county` columns, which map onto the spec's literal "county"/"state" concept directly.
+
+### Decision 13 — Reference numbers (NDA-9) are computed from the listing's own UUID, not a database sequence
+
+NDA-9 wants a per-listing reference (e.g. `G-10482`) instead of a per-seller anonymous ID, specifically so buyers can't correlate one seller's multiple NDA listings. Rather than adding a sequence/counter column, `computeReferenceNumber()` in `src/lib/serializers/listing.ts` derives it deterministically from the listing's existing UUID (`G-` or `W-` + the first 5 hex characters, uppercased). This needs no new schema, is already unique (it's derived from a UUID), and is pure/stateless so it works identically in the client-side NDA preview dialog (Decision 15) without a round trip.
+
+### Decision 14 — Realtime now broadcasts a hand-picked payload instead of raw postgres_changes rows
+
+Resolves Phase 0 audit Flag #8. `useRealtimeListings.ts` only ever rendered `variety`/`estimated_tons`/`region_ava`, but the underlying `postgres_changes` subscription sent the *entire* raw row (including `user_id`, and eventually `vineyard_name`) into every subscribed browser tab regardless. Fixed via a `realtime.send()` broadcast trigger (migration `0005`) that hand-picks exactly those safe fields, and the table was dropped from the `supabase_realtime` publication so no other client can get the raw row either. This is, structurally, a second small "serializer" -- but it lives in SQL because the broadcast trigger fires inside the same transaction as the insert and Realtime's broadcast-from-database feature only takes a payload built in SQL. It doesn't need `is_nda` branching: all three broadcast fields are already in NDA-3's "everyone can see" row.
+
+### Decision 15 — The NDA preview (NDA-10) runs the real serializer client-side, not a server round trip
+
+`serializeListing()` is a pure function with no I/O (no `createClient()`, no `fetch`), so `NdaPreviewDialog` imports and calls it directly in the browser against a synthetic `Listing` row built from the current form values, as an anonymous viewer. This satisfies NDA-10's requirement literally ("rendered through the *real* public serializer, not a hand-built mock") without needing a server action + loading state just to preview form values the browser already has.
+
+### Decision 16 — NDA-8's "old URL 404s, never redirects" isn't achievable yet -- flagged, not silently skipped
+
+Listing URLs are still the raw UUID (`/listings/{id}`, Phase 0 audit -- no slugs exist anywhere in the app yet; that's WINE-2, Phase 5/6 work). Because the ID never changes, toggling NDA on an existing listing cannot mint a new anonymized URL and 404 the old one the way the spec describes for a slug-based system. What *does* happen now: the confirmation modals (Appendix A copy) run, the audit log records the change (trigger, migration `0003`), all `revalidatePath` calls fire so cached copies are dropped, and the page at that same URL immediately starts rendering through the redacted path. The gap: anyone who saw the un-redacted page before and revisits the identical URL can trivially notice it's now confidential and infer why -- there's no way to close this without a URL change, which needs slugs. Revisit when Phase 5/6 add them.
+
+### Decision 17 — Free-text guard doesn't scan the title, only the description
+
+Resolves Phase 0 audit Flag #3. `listings.title` is always server-generated from controlled fields (`generateListingTitle(variety, clone, region)` -- variety/clone/region all come from fixed lookup lists, never seller-typed text), so it's structurally incapable of containing an identity string. NDA-6's free-text guard (`src/lib/validation/nda-guard.ts`) therefore only runs against `description`, the one genuinely seller-authored field today.
+
+### Decision 18 — The contact relay stores buyer/seller messages in-app; no email notifications yet
+
+NDA-7's own instruction is to build the minimum relay and flag anything beyond it. Built: `listing_inquiries`/`listing_inquiry_messages` (migration `0005`), one thread per buyer per listing, RLS-scoped to participants (+ admin), with `seller_id` derived server-side by trigger (never trusted from the client). A new `profiles_inquiry_counterpart` view lets each side see the other's name-only fields (company_name/full_name -- no phone/address/email) without broadening the general-public `profiles_public` view, gated to only rows where the caller actually shares an inquiry with that person. On an NDA listing, the buyer's view of the thread always labels the seller "Confidential Seller," even though the underlying relay correctly routes to the real seller.
+
+**Flagged as a scope expansion needing a decision:** there is still no email provider configured (Phase 0 audit), so sellers/buyers are only notified of a new message by visiting `/inquiries` -- no "you have a new message" email goes out. Per the system's own integration guidance, picking a provider (Resend, Postmark, etc.) means loading the `marketplace` skill and provisioning a real account before writing code, which is a real scope/cost decision for the project owner, not something to default into silently.
+
+### Decision 19 — The canary test (Section 8.1) runs as a Vitest unit suite against the serializer, not a full browser E2E test
+
+No test framework, browser test runner, or CI existed before this phase (Phase 0 audit). Rather than standing up the full E2E harness Section 8.1 describes (fetching every surface -- sitemap, feeds, JSON-LD, image metadata, emails -- as anonymous/other-user/owner/admin) when most of those surfaces don't exist yet in this app, the canary test targets the one place ALL of that redaction logic actually lives: `serializeListing()` (NDA-4 explicitly calls this "the most important requirement" for exactly this reason). `src/lib/serializers/listing.test.ts` constructs an NDA listing with unmistakable canary strings and asserts they never appear in the output for an anonymous or other-logged-in viewer, do appear for the owner/admin, and that the seller's internal `user_id` never appears at all. Wired into CI (`.github/workflows/test.yml`, runs on every push/PR) so it can't be silently skipped. As real surfaces get built (search, sitemap, images, email), extend this test to cover them rather than starting a second canary suite.
+
+### Decision 20 — The admin identity view (NDA-11) is one page, not an admin console
+
+No admin infrastructure exists at all yet (Phase 0 audit -- the `admin` role exists in the enum but nothing gates on it anywhere). Built the minimum NDA-11 asks for: `/admin/listings/[id]`, gated by `profiles.role = 'admin'` (redirects non-admins to `/dashboard`), shows the real seller identity for an NDA listing, and writes one row to `admin_identity_view_log` per view. No listing/moderation console, no way to browse to it except by URL (an admin would need the listing ID) -- broader admin tooling is out of scope until the project owner asks for it.

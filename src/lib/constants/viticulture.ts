@@ -278,6 +278,16 @@ export function getSubAvasForRegion(regionName: string | undefined): readonly st
   return AVA_REGIONS.find((r) => r.name === regionName)?.subAvas ?? [];
 }
 
+/**
+ * NDA-3/WINE-5: grapes listings have no county/state columns, only
+ * region_ava/sub_ava. When an NDA listing's location precision is "state",
+ * the public serializer generalizes down to the state this AVA sits in.
+ */
+export function getStateForRegion(regionName: string | undefined): string | null {
+  if (!regionName) return null;
+  return AVA_REGIONS.find((r) => r.name === regionName)?.state ?? null;
+}
+
 /** Groups regions by state, in the order states first appear, for <optgroup> rendering. */
 export function groupRegionsByState(): { state: string; regions: AvaRegion[] }[] {
   const groups: { state: string; regions: AvaRegion[] }[] = [];

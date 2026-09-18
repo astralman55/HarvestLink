@@ -5,6 +5,7 @@ import { CreateListingSchema, type CreateListingInput } from "@/lib/validation/l
 import { generateListingTitle } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { flags } from "@/lib/flags";
+import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
 
 export async function createNewListing(data: CreateListingInput) {
   const validation = CreateListingSchema.safeParse(data);
@@ -22,11 +23,26 @@ export async function createNewListing(data: CreateListingInput) {
 
     // USR-7: existing accounts must choose a username before creating a
     // listing (they can still browse in the meantime).
-    if (flags.usernames) {
-      const { data: profile } = await supabase.from("profiles").select("username").eq("id", user.id).single();
-      if (!profile?.username) {
-        return { error: "Please choose a username before publishing a listing.", needsUsername: true };
-      }
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username, company_name, full_name")
+      .eq("id", user.id)
+      .single();
+    if (flags.usernames && !profile?.username) {
+      return { error: "Please choose a username before publishing a listing.", needsUsername: true };
+    }
+
+    // NDA-6: block identifying free text before it's ever published.
+    if (validation.data.is_nda) {
+      const { data: otherListings } = await supabase.from("listings").select("vineyard_name").eq("user_id", user.id);
+      const guard = checkFreeTextForNdaLeak({
+        text: validation.data.description,
+        companyName: profile?.company_name,
+        fullName: profile?.full_name,
+        username: profile?.username,
+        vineyardNames: (otherListings ?? []).map((l) => l.vineyard_name),
+      });
+      if (guard.blocked) return { error: guard.reason };
     }
 
     const { error } = await supabase.from("listings").insert({

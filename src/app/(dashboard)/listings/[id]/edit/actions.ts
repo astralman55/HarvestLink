@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CreateListingSchema, type CreateListingInput } from "@/lib/validation/listing";
 import { generateListingTitle } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
 
 export async function updateListing(listingId: string, data: CreateListingInput) {
   const validation = CreateListingSchema.safeParse(data);
@@ -19,9 +20,27 @@ export async function updateListing(listingId: string, data: CreateListingInput)
 
     if (!user) return { error: "Unauthorized access token context." };
 
+    // NDA-6: block identifying free text before it's ever published.
+    if (validation.data.is_nda) {
+      const [{ data: profile }, { data: otherListings }] = await Promise.all([
+        supabase.from("profiles").select("username, company_name, full_name").eq("id", user.id).single(),
+        supabase.from("listings").select("vineyard_name").eq("user_id", user.id),
+      ]);
+      const guard = checkFreeTextForNdaLeak({
+        text: validation.data.description,
+        companyName: profile?.company_name,
+        fullName: profile?.full_name,
+        username: profile?.username,
+        vineyardNames: (otherListings ?? []).map((l) => l.vineyard_name),
+      });
+      if (guard.blocked) return { error: guard.reason };
+    }
+
     // Scoping the update to `user_id` here is defense in depth on top of
     // the "Growers can update their own listings" RLS policy — without it,
-    // a mismatched owner would just silently update zero rows.
+    // a mismatched owner would just silently update zero rows. Toggling
+    // is_nda writes to nda_audit_log automatically via a DB trigger
+    // (migration 0003) -- no app code needed for that part.
     const { data: updated, error } = await supabase
       .from("listings")
       .update({

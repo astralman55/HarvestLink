@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npm run lint
+      # The NDA canary test (src/lib/serializers/listing.test.ts) lives in
+      # this suite and must never be skipped -- see Section 8.1 of
+      # SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md.
+      - name: Test
+        run: npm run test

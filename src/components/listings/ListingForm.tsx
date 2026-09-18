@@ -19,6 +19,11 @@ import {
   getSubAvasForRegion,
 } from "@/lib/constants/viticulture";
 import { RegionOptionGroups, GrapeVarietyOptionGroups } from "@/components/shared/SelectOptionGroups";
+import { NdaFields } from "@/components/listings/NdaFields";
+import { NdaPreviewDialog } from "@/components/listings/NdaPreviewDialog";
+import { NdaToggleConfirmDialog } from "@/components/listings/NdaToggleConfirmDialog";
+import { flags } from "@/lib/flags";
+import type { Listing } from "@/types";
 
 const LISTING_STATUSES = ["available", "pending", "sold", "archived"] as const;
 
@@ -28,6 +33,8 @@ interface ListingFormProps {
   submitLabel: string;
   submittingLabel: string;
   showStatusField?: boolean;
+  /** Present only on the edit form -- lets NDA-8's toggle confirmation detect an actual change. */
+  originalIsNda?: boolean;
 }
 
 export function ListingForm({
@@ -36,21 +43,28 @@ export function ListingForm({
   submitLabel,
   submittingLabel,
   showStatusField = false,
+  originalIsNda,
 }: ListingFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [pendingData, setPendingData] = useState<CreateListingInput | null>(null);
+  const [toggleConfirm, setToggleConfirm] = useState<"on" | "off" | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [submittingFinal, setSubmittingFinal] = useState(false);
   const {
     register,
+    control,
     handleSubmit,
     watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<CreateListingInput>({
     resolver: zodResolver(CreateListingSchema),
-    defaultValues: { minimum_tons: 1, farming_practice: "conventional", ...defaultValues },
+    defaultValues: { minimum_tons: 1, farming_practice: "conventional", is_nda: false, nda_location_precision: "county", ...defaultValues },
   });
 
   const selectedRegion = watch("region_ava");
   const subAvaOptions = getSubAvasForRegion(selectedRegion);
+  const isNda = watch("is_nda");
 
   useEffect(() => {
     if (selectedRegion !== defaultValues?.region_ava) {
@@ -67,11 +81,68 @@ export function ListingForm({
     watch("sub_ava") || selectedRegion
   );
 
-  async function handleFormSubmit(data: CreateListingInput) {
+  async function finalSubmit(data: CreateListingInput) {
     setServerError(null);
+    setSubmittingFinal(true);
     const result = await onSubmit(data);
+    setSubmittingFinal(false);
     if (result?.error) setServerError(result.error);
   }
+
+  // NDA-10: whenever the listing is going out under NDA, publish routes
+  // through "Preview as a buyer sees it" first.
+  async function proceedPastToggleCheck(data: CreateListingInput) {
+    if (data.is_nda) {
+      setPendingData(data);
+      setShowPreview(true);
+      return;
+    }
+    await finalSubmit(data);
+  }
+
+  // NDA-8: an existing listing's NDA flag actually changing requires its
+  // own confirmation, distinct from the preview above.
+  async function handleFormSubmit(data: CreateListingInput) {
+    setServerError(null);
+    if (originalIsNda !== undefined && originalIsNda !== data.is_nda) {
+      setPendingData(data);
+      setToggleConfirm(data.is_nda ? "on" : "off");
+      return;
+    }
+    await proceedPastToggleCheck(data);
+  }
+
+  const previewRow: Listing | null = pendingData
+    ? ({
+        id: "preview",
+        user_id: "preview",
+        title: generatedTitle || "Untitled Listing",
+        created_at: new Date().toISOString(),
+        status: "available",
+        listing_type: "grapes",
+        clone: pendingData.clone || null,
+        rootstock: pendingData.rootstock || null,
+        sub_ava: pendingData.sub_ava || null,
+        brix_target: pendingData.brix_target ?? null,
+        description: pendingData.description ?? null,
+        trellis_system: pendingData.trellis_system || null,
+        soil_type: pendingData.soil_type || null,
+        sun_exposure: pendingData.sun_exposure || null,
+        slope_percent: pendingData.slope_percent ?? null,
+        single_vineyard: false,
+        vineyard_name: null,
+        vineyard_name_normalized: null,
+        variety: pendingData.variety,
+        region_ava: pendingData.region_ava,
+        estimated_tons: Number(pendingData.estimated_tons),
+        minimum_tons: Number(pendingData.minimum_tons ?? 1),
+        price_per_ton: Number(pendingData.price_per_ton),
+        farming_practice: pendingData.farming_practice,
+        harvest_year: Number(pendingData.harvest_year),
+        is_nda: pendingData.is_nda ?? false,
+        nda_location_precision: pendingData.nda_location_precision ?? "county",
+      } as Listing)
+    : null;
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="mt-8 space-y-8">
@@ -99,6 +170,8 @@ export function ListingForm({
           </div>
         </section>
       )}
+
+      {flags.ndaListings && <NdaFields control={control} register={register} isNda={!!isNda} />}
 
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-stone-900">Listing Basics</h2>
@@ -224,9 +297,37 @@ export function ListingForm({
 
       {serverError && <p className="text-sm text-red-600">{serverError}</p>}
 
-      <Button type="submit" size="lg" disabled={isSubmitting}>
-        {isSubmitting ? submittingLabel : submitLabel}
+      <Button type="submit" size="lg" disabled={isSubmitting || submittingFinal}>
+        {isSubmitting || submittingFinal ? submittingLabel : submitLabel}
       </Button>
+
+      <NdaToggleConfirmDialog
+        direction={toggleConfirm}
+        onCancel={() => {
+          setToggleConfirm(null);
+          setPendingData(null);
+        }}
+        onConfirm={() => {
+          setToggleConfirm(null);
+          if (pendingData) proceedPastToggleCheck(pendingData);
+        }}
+      />
+
+      {previewRow && (
+        <NdaPreviewDialog
+          open={showPreview}
+          onOpenChange={(open) => {
+            setShowPreview(open);
+            if (!open) setPendingData(null);
+          }}
+          previewRow={previewRow}
+          submitting={submittingFinal}
+          onConfirm={() => {
+            setShowPreview(false);
+            if (pendingData) finalSubmit(pendingData);
+          }}
+        />
+      )}
     </form>
   );
 }

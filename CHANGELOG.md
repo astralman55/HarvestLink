@@ -24,3 +24,17 @@ Per `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md`. All new behavior ships 
 - Added `src/lib/rate-limit.ts` (in-memory, IP-keyed) on signup, login, and the availability check.
 - All of the above is inert with the flag off — verified by restarting the dev server in both states.
 - Bug caught during live testing (fixed before commit): the availability check ignored Supabase query errors and reported a broken check as "available" instead of blocking it. See `docs/scope-addendum-decisions.md`, Decision 11.
+
+### Phase 3 — NDA listings + central public serializer
+- Added `src/lib/serializers/listing.ts` (`serializeListing`, NDA-4): the one function every listing-reading surface goes through, deciding what a given viewer (anonymous/member/owner/admin) is allowed to see. Resolves Phase 0 audit Flags #1 and #2 (profiles RLS lockdown + `profiles_public` view, migration `0005`; the seller's `user_id` is never included in the public shape at all).
+- Rewrote `src/lib/data/listings.ts` to fetch raw rows + a batched `profiles_public` lookup and pass both through the serializer, instead of the old unfiltered `select("*, profiles(...))`. `ListingCard` and the listing detail page now consume `PublicListing`, not the raw `Listing` row.
+- NDA-1: "Selling under NDA?" checkbox + live "what buyers will see" panel + location-precision choice on the listing form (behind `NEXT_PUBLIC_FEATURE_NDA_LISTINGS`), `NdaFields`.
+- NDA-6: free-text leak guard (`src/lib/validation/nda-guard.ts`) blocks the seller's own name/vineyard/email/phone/URL in an NDA listing's description before it can be saved.
+- NDA-8: confirmation modals when an existing listing's NDA flag actually changes (`NdaToggleConfirmDialog`); known limitation logged as Decision 16 (URLs are still raw UUIDs, so the old URL can't be rotated/404'd the way the spec describes until slugs exist).
+- NDA-9/NDA-10: per-listing reference numbers (`G-xxxxx`) instead of a per-seller id, and a "Preview as a buyer sees it" dialog that runs the real serializer client-side (`NdaPreviewDialog`).
+- NDA-11: minimal admin identity view (`/admin/listings/[id]`), gated by role and logged to `admin_identity_view_log`.
+- NDA-12: `NdaBadge` (Popover-based, works on touch/keyboard) on cards and the detail page; "Exclude NDA listings" browse filter.
+- NDA-7 minimum viable contact relay: `listing_inquiries`/`listing_inquiry_messages` (migration `0005`), `/inquiries` inbox + thread view, replacing the dead "Sign In to Contact Grower" link. No email notifications yet -- flagged as a scope expansion needing a provider decision (Decision 18).
+- Fixed a real pre-existing leak: Realtime broadcast full raw listing rows (including `user_id`) to every browser tab via `postgres_changes`; replaced with a `realtime.send()` trigger that only ever sends the three fields the UI actually shows (Decision 14).
+- Added the mandatory NDA canary test (Section 8.1) as a Vitest suite against the serializer (`src/lib/serializers/listing.test.ts`, 18 tests) plus a minimal CI workflow (`.github/workflows/test.yml`) so it can never be silently skipped -- first test framework and CI this project has had (Decision 19).
+- All of the above is inert with `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` off — verified by restarting the dev server in both states.

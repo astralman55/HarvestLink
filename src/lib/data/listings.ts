@@ -1,23 +1,23 @@
 import { createClient } from "@/lib/supabase/server";
 import { DEMO_LISTINGS, filterDemoListings } from "@/lib/demo-data";
+import { resolveViewerContext } from "@/lib/supabase/viewer";
+import { serializeListing, type PublicListing, type RawSellerProfile } from "@/lib/serializers/listing";
 import type { Listing, ListingSearchFilters } from "@/types";
 
 /**
- * Reads listings from the live Supabase project. If no project has been
+ * Reads listings from the live Supabase project and returns them through
+ * the central NDA-aware serializer (NDA-4) -- this is the only place the
+ * public marketplace should read listings from. If no project has been
  * connected yet (placeholder credentials in .env.local), the query throws
  * and we transparently fall back to the bundled demo catalog so the
  * marketplace UI is always browsable. Real errors from a connected project
  * still surface as an empty result rather than silently swapping in demo
  * data.
  */
-export async function getListings(filters: ListingSearchFilters = {}): Promise<Listing[]> {
+export async function getListings(filters: ListingSearchFilters = {}): Promise<PublicListing[]> {
   try {
     const supabase = await createClient();
-    let query = supabase
-      .from("listings")
-      .select("*, profiles(company_name, region_ava, is_verified)")
-      .eq("status", "available")
-      .order("created_at", { ascending: false });
+    let query = supabase.from("listings").select("*").eq("status", "available").order("created_at", { ascending: false });
 
     if (filters.region_ava) query = query.eq("region_ava", filters.region_ava);
     if (filters.variety) query = query.eq("variety", filters.variety);
@@ -31,26 +31,61 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<L
     if (filters.min_tons) query = query.gte("estimated_tons", Number(filters.min_tons));
     if (filters.max_price) query = query.lte("price_per_ton", Number(filters.max_price));
     if (filters.min_brix) query = query.gte("brix_target", Number(filters.min_brix));
+    // NDA-12: browse filter, default include.
+    if (filters.hide_nda) query = query.eq("is_nda", false);
 
     const { data, error } = await query;
     if (error) throw error;
-    return data as Listing[];
+    const rows = data as Listing[];
+
+    const [sellersByUserId, viewer] = await Promise.all([fetchPublicSellers(supabase, rows), resolveViewerContext()]);
+    return rows.map((row) => serializeListing(row, sellersByUserId.get(row.user_id) ?? null, viewer));
   } catch {
-    return filterDemoListings(filters);
+    return filterDemoListings(filters).map((row) => serializeListing(row, demoSeller(row), { userId: null, isAdmin: false }));
   }
 }
 
-export async function getListingById(id: string): Promise<Listing | null> {
+export async function getListingById(id: string): Promise<PublicListing | null> {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("listings")
-      .select("*, profiles(company_name, region_ava, is_verified)")
-      .eq("id", id)
-      .single();
+    const { data, error } = await supabase.from("listings").select("*").eq("id", id).single();
     if (error) throw error;
-    return data as Listing;
+    const row = data as Listing;
+
+    const [sellersByUserId, viewer] = await Promise.all([fetchPublicSellers(supabase, [row]), resolveViewerContext()]);
+    return serializeListing(row, sellersByUserId.get(row.user_id) ?? null, viewer);
   } catch {
-    return DEMO_LISTINGS.find((listing) => listing.id === id) ?? null;
+    const row = DEMO_LISTINGS.find((listing) => listing.id === id);
+    if (!row) return null;
+    return serializeListing(row, demoSeller(row), { userId: null, isAdmin: false });
   }
+}
+
+/**
+ * Batch-fetches the safe, publicly-displayable slice of each seller's
+ * profile through the profiles_public view (docs/scope-addendum-decisions.md,
+ * Decision 1) -- never the profiles table directly, which is now
+ * self/admin-only. The NDA serializer decides whether to actually pass
+ * this through to a given viewer.
+ */
+async function fetchPublicSellers(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  rows: Listing[]
+): Promise<Map<string, RawSellerProfile>> {
+  const userIds = [...new Set(rows.map((row) => row.user_id))];
+  if (userIds.length === 0) return new Map();
+
+  const { data, error } = await supabase.from("profiles_public").select("id, company_name, region_ava, is_verified, username").in("id", userIds);
+  if (error) throw error;
+
+  return new Map((data ?? []).map((seller) => [seller.id, seller]));
+}
+
+function demoSeller(row: Listing): RawSellerProfile {
+  return {
+    company_name: row.profiles?.company_name ?? null,
+    region_ava: row.profiles?.region_ava ?? null,
+    is_verified: row.profiles?.is_verified ?? false,
+    username: null,
+  };
 }

@@ -33,6 +33,7 @@ function readValues(searchParams: URLSearchParams): FilterValues {
     "min_tons",
     "max_price",
     "min_brix",
+    "hide_nda",
   ] as const) {
     const value = searchParams.get(key);
     if (value) values[key] = value;

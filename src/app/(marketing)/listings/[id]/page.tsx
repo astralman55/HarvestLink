@@ -4,8 +4,12 @@ import { Grape, MapPin, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { NdaBadge } from "@/components/marketplace/NdaBadge";
+import { InquiryPanel } from "@/components/marketplace/InquiryPanel";
 import { getListingById } from "@/lib/data/listings";
 import { formatCurrency, formatTons } from "@/lib/utils";
+import { resolveViewerContext } from "@/lib/supabase/viewer";
+import { flags } from "@/lib/flags";
 
 const PRACTICE_LABEL: Record<string, string> = {
   conventional: "Conventional",
@@ -23,6 +27,10 @@ const SPEC_ROWS = (listing: NonNullable<Awaited<ReturnType<typeof getListingById
   ["Slope", listing.slope_percent != null ? `${listing.slope_percent}%` : null],
   ["Brix Target", listing.brix_target != null ? `${listing.brix_target}°` : null],
   ["Minimum Order", formatTons(listing.minimum_tons)],
+  [
+    "Vineyard",
+    listing.single_vineyard ? (listing.vineyard_withheld ? "Single vineyard (name withheld)" : listing.vineyard_name) : null,
+  ],
 ];
 
 export default async function ListingDetailPage({
@@ -31,7 +39,7 @@ export default async function ListingDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const listing = await getListingById(id);
+  const [listing, viewer] = await Promise.all([getListingById(id), resolveViewerContext()]);
   if (!listing) notFound();
 
   return (
@@ -47,11 +55,17 @@ export default async function ListingDetailPage({
             <Badge variant="brand" className="absolute left-4 top-4">
               {listing.harvest_year} Harvest
             </Badge>
+            {listing.is_confidential && (
+              <div className="absolute right-4 top-4">
+                <NdaBadge />
+              </div>
+            )}
           </div>
 
           <div className="mt-6">
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
               {listing.variety}
+              {listing.is_confidential && <span className="ml-2 normal-case text-stone-400">Ref. {listing.reference_number}</span>}
             </p>
             <h1 className="mt-1 text-3xl font-semibold text-stone-900">{listing.title}</h1>
             <div className="mt-2 flex items-center gap-1.5 text-sm text-stone-500">
@@ -61,7 +75,7 @@ export default async function ListingDetailPage({
 
             <div className="mt-4 flex flex-wrap gap-2">
               <Badge variant="outline">{PRACTICE_LABEL[listing.farming_practice]}</Badge>
-              {listing.profiles?.is_verified && (
+              {listing.seller?.is_verified && (
                 <Badge variant="success">
                   <ShieldCheck className="size-3" /> Verified Grower
                 </Badge>
@@ -97,14 +111,26 @@ export default async function ListingDetailPage({
             <Separator className="my-5" />
 
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Listed By</p>
-            <p className="mt-1 font-medium text-stone-900">
-              {listing.profiles?.company_name ?? "HarvestLink Grower"}
+            <p className="mt-1 flex items-center gap-1.5 font-medium text-stone-900">
+              {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "HarvestLink Grower"}
+              {listing.is_confidential && <NdaBadge size="sm" />}
             </p>
-            <p className="text-sm text-stone-500">{listing.profiles?.region_ava ?? listing.region_ava}</p>
+            <p className="text-sm text-stone-500">
+              {listing.is_confidential ? listing.region_ava : listing.seller?.region_ava ?? listing.region_ava}
+            </p>
 
-            <Button asChild className="mt-6 w-full" size="lg">
-              <Link href="/login">Sign In to Contact Grower</Link>
-            </Button>
+            {flags.ndaListings ? (
+              <InquiryPanel
+                listingId={listing.id}
+                isConfidential={listing.is_confidential}
+                isLoggedIn={viewer.userId != null}
+                viewerIsOwner={listing.viewer_is_owner}
+              />
+            ) : (
+              <Button asChild className="mt-6 w-full" size="lg">
+                <Link href="/login">Sign In to Contact Grower</Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>
