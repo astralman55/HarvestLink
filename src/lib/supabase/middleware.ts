@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/listings/create", "/planning"];
+const PROTECTED_PREFIXES = ["/dashboard", "/listings/create", "/listings/mine", "/planning"];
+const EDIT_LISTING_PATTERN = /^\/listings\/[^/]+\/edit$/;
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -25,9 +26,9 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const isProtected = PROTECTED_PREFIXES.some((prefix) =>
-    request.nextUrl.pathname.startsWith(prefix)
-  );
+  const isProtected =
+    PROTECTED_PREFIXES.some((prefix) => request.nextUrl.pathname.startsWith(prefix)) ||
+    EDIT_LISTING_PATTERN.test(request.nextUrl.pathname);
 
   // In demo mode (no real Supabase project configured yet) this call fails
   // fast against the placeholder URL — treat that the same as "no session"

@@ -40,15 +40,19 @@ export default async function DashboardPage() {
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
-          <CardHeader className="flex flex-row items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-[var(--color-brand-50)] text-[var(--color-brand)]">
-              <Package className="size-5" />
-            </span>
-            <CardTitle>Active Listings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-semibold text-stone-900">{listings}</p>
-            <Button asChild variant="link" className="mt-2 h-auto p-0">
+          <Link href="/listings/mine" className="block">
+            <CardHeader className="flex flex-row items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-xl bg-[var(--color-brand-50)] text-[var(--color-brand)]">
+                <Package className="size-5" />
+              </span>
+              <CardTitle>My Listings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-semibold text-stone-900">{listings}</p>
+            </CardContent>
+          </Link>
+          <CardContent className="pt-0">
+            <Button asChild variant="link" className="h-auto p-0">
               <Link href="/listings/create">
                 <PlusCircle className="size-3.5" /> Create a new listing
               </Link>
@@ -57,15 +61,19 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-[var(--color-brand-50)] text-[var(--color-brand)]">
-              <CalendarRange className="size-5" />
-            </span>
-            <CardTitle>Crop Plans</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-semibold text-stone-900">{cropPlans}</p>
-            <Button asChild variant="link" className="mt-2 h-auto p-0">
+          <Link href="/planning" className="block">
+            <CardHeader className="flex flex-row items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-xl bg-[var(--color-brand-50)] text-[var(--color-brand)]">
+                <CalendarRange className="size-5" />
+              </span>
+              <CardTitle>Crop Plans</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-semibold text-stone-900">{cropPlans}</p>
+            </CardContent>
+          </Link>
+          <CardContent className="pt-0">
+            <Button asChild variant="link" className="h-auto p-0">
               <Link href="/planning">
                 <PlusCircle className="size-3.5" /> Forecast a future block
               </Link>

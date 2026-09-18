@@ -1,5 +1,5 @@
 import { CalendarRange } from "lucide-react";
-import { AddCropPlanDialog } from "@/components/planning/AddCropPlanDialog";
+import { CropPlanDialog } from "@/components/planning/CropPlanDialog";
 import { Badge } from "@/components/ui/badge";
 import { ConnectSupabaseNotice } from "@/components/shared/ConnectSupabaseNotice";
 import { createClient } from "@/lib/supabase/server";
@@ -51,7 +51,7 @@ export default async function PlanningPage() {
             Forecast future blocks and align them with buyers ahead of harvest.
           </p>
         </div>
-        <AddCropPlanDialog />
+        <CropPlanDialog />
       </div>
 
       {!connected && (
@@ -84,9 +84,12 @@ export default async function PlanningPage() {
                     </p>
                     <p className="text-sm text-stone-500">{formatTons(plan.projected_tons)} projected</p>
                   </div>
-                  <Badge variant={STATUS_VARIANT[plan.current_status]} className="capitalize">
-                    {plan.current_status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={STATUS_VARIANT[plan.current_status]} className="capitalize">
+                      {plan.current_status}
+                    </Badge>
+                    <CropPlanDialog cropPlan={plan} />
+                  </div>
                 </div>
               ))}
             </div>

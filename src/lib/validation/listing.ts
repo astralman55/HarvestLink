@@ -17,6 +17,9 @@ export const CreateListingSchema = z.object({
   sun_exposure: z.string().optional(),
   slope_percent: z.coerce.number().min(0).max(100).optional(),
   harvest_year: z.coerce.number().int().min(2020).max(2100),
+  // Only ever shown/editable on the edit form — new listings always start
+  // "available" (set server-side in the create action).
+  status: z.enum(["available", "pending", "sold", "archived"]).optional(),
 });
 
 // react-hook-form needs the pre-coercion shape (z.input) since fields like

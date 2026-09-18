@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Grape, LayoutDashboard, PlusCircle, CalendarRange, ShieldCheck } from "lucide-react";
+import { Grape, LayoutDashboard, Package, PlusCircle, CalendarRange, ShieldCheck } from "lucide-react";
 import { SignOutButton } from "@/components/shared/SignOutButton";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/types";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/listings/mine", label: "My Listings", icon: Package },
   { href: "/listings/create", label: "Create Listing", icon: PlusCircle },
   { href: "/planning", label: "Crop Planning", icon: CalendarRange },
 ];
