@@ -3,6 +3,17 @@ export type ListingStatus = "available" | "pending" | "sold" | "archived";
 export type CropStatus = "dormant" | "flowering" | "veraison" | "harvested";
 export type FarmingPractice = "conventional" | "sustainable" | "organic" | "biodynamic";
 
+// Scope addendum: NDA listings, usernames, vineyard field, bulk wine.
+export type ListingType = "grapes" | "bulk_wine";
+export type NdaLocationPrecision = "county" | "state";
+export type BulkWineFarmingPractice =
+  | "organic"
+  | "biodynamic"
+  | "natural"
+  | "sustainable"
+  | "regenerative_organic"
+  | "demeter_certified_biodynamic";
+
 export interface Profile {
   id: string;
   updated_at: string;
@@ -13,6 +24,24 @@ export interface Profile {
   region_ava: string | null;
   address: string | null;
   is_verified: boolean;
+  username: string | null;
+  username_normalized: string | null;
+}
+
+/** Safe, publicly-displayable slice of a profile. See docs/scope-addendum-decisions.md, Decision 1. */
+export type PublicProfile = Pick<Profile, "id" | "company_name" | "region_ava" | "is_verified" | "username">;
+
+export interface BulkWineDetails {
+  listing_id: string;
+  quantity_gallons: number;
+  price_per_gallon: number;
+  abv: number;
+  total_so2_ppm: number | null;
+  vintage_year: number | null;
+  is_multi_vintage: boolean;
+  wine_location_state: string | null;
+  wine_location_county: string | null;
+  created_at: string;
 }
 
 export interface Listing {
@@ -37,7 +66,14 @@ export interface Listing {
   slope_percent: number | null;
   harvest_year: number;
   created_at: string;
+  listing_type: ListingType;
+  is_nda: boolean;
+  nda_location_precision: NdaLocationPrecision;
+  single_vineyard: boolean;
+  vineyard_name: string | null;
+  vineyard_name_normalized: string | null;
   profiles?: Pick<Profile, "company_name" | "region_ava" | "is_verified">;
+  bulk_wine_details?: BulkWineDetails;
 }
 
 export interface CropPlan {

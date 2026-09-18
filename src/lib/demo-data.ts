@@ -6,8 +6,21 @@ import type { Listing } from "@/types";
  * and filterable out of the box; swapped out automatically once real
  * NEXT_PUBLIC_SUPABASE_URL / ANON_KEY values are set.
  */
+// Scope addendum fields all demo listings share: plain grapes, no NDA, no
+// single-vineyard designation. Spread first in each entry below so a
+// per-listing override (none needed yet) could still shadow it.
+const DEMO_LISTING_DEFAULTS = {
+  listing_type: "grapes" as const,
+  is_nda: false,
+  nda_location_precision: "county" as const,
+  single_vineyard: false,
+  vineyard_name: null,
+  vineyard_name_normalized: null,
+};
+
 export const DEMO_LISTINGS: Listing[] = [
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-1",
     user_id: "demo-grower-1",
     title: "Estate Cabernet Sauvignon — Hillside Block",
@@ -33,6 +46,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Stagecoach Ridge Vineyards", region_ava: "Napa Valley", is_verified: true },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-2",
     user_id: "demo-grower-2",
     title: "Certified Organic Chardonnay — Coastal Bench",
@@ -58,6 +72,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Bodega Bay Growers Co.", region_ava: "Sonoma Coast", is_verified: true },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-3",
     user_id: "demo-grower-3",
     title: "Biodynamic Pinot Noir — Estate Block 4",
@@ -83,6 +98,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Chehalem Ridge Farms", region_ava: "Willamette Valley", is_verified: true },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-4",
     user_id: "demo-grower-4",
     title: "Paso Robles Zinfandel — Dry-Farmed Old Vine",
@@ -108,6 +124,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Adelaida Bench Vineyards", region_ava: "Paso Robles", is_verified: false },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-5",
     user_id: "demo-grower-5",
     title: "Columbia Valley Syrah — Sustainable Block",
@@ -133,6 +150,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Horse Heaven Growers", region_ava: "Columbia Valley", is_verified: true },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-6",
     user_id: "demo-grower-6",
     title: "Sauvignon Blanc — Estate Coastal Fruit",
@@ -158,6 +176,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Sta. Rita Hills Farming Co.", region_ava: "Santa Ynez Valley", is_verified: true },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-7",
     user_id: "demo-grower-7",
     title: "Estate Riesling — Steep Shale Slope",
@@ -183,6 +202,7 @@ export const DEMO_LISTINGS: Listing[] = [
     profiles: { company_name: "Seneca Bluff Vineyards", region_ava: "Finger Lakes", is_verified: false },
   },
   {
+    ...DEMO_LISTING_DEFAULTS,
     id: "demo-8",
     user_id: "demo-grower-8",
     title: "Red Mountain Malbec — Forward Contract Ready",

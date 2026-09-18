@@ -40,9 +40,31 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
 2. Copy **Project Settings → API** values into `.env.local`:
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
-3. Run `supabase/migrations/0001_init.sql` in the Supabase SQL Editor.
+3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`,
+   `0002_buyer_profile_fields.sql`, `0003_scope_addendum_phase1.sql`, ...)
+   in the Supabase SQL Editor.
 4. Restart `npm run dev`. Register an account — the `profiles` row is
    created automatically via trigger.
+
+## Scope addendum in progress (NDA listings, usernames, vineyard field, bulk wine)
+
+A larger feature set is being built per
+[`SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md`](./SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md).
+Status:
+
+- **Phase 0 (Audit)** — done. See
+  [`docs/scope-addendum-audit.md`](./docs/scope-addendum-audit.md).
+- **Phase 1 (Data model & migrations)** — done. See
+  `supabase/migrations/0003_scope_addendum_phase1.sql` and
+  [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md)
+  for judgment calls made along the way.
+- Everything new ships behind `NEXT_PUBLIC_FEATURE_USERNAMES` /
+  `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` / `NEXT_PUBLIC_FEATURE_BULK_WINE` in
+  `.env.local` (see `src/lib/flags.ts`), all `false` by default — existing
+  behavior is unchanged until each phase lands and a flag is flipped.
+- Phases 2–7 (usernames, the NDA-safe serializer, the vineyard field UI,
+  the bulk-wine marketplace, cross-cutting search/nav/type-awareness, and
+  hardening) are not built yet.
 
 ## Not included (needs your accounts/decisions)
 
