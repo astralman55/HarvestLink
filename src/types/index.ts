@@ -6,10 +6,12 @@ export type FarmingPractice = "conventional" | "sustainable" | "organic" | "biod
 export interface Profile {
   id: string;
   updated_at: string;
-  company_name: string;
+  full_name: string | null;
+  company_name: string | null;
   contact_phone: string | null;
   role: UserRole;
   region_ava: string | null;
+  address: string | null;
   is_verified: boolean;
 }
 

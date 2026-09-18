@@ -15,10 +15,12 @@ create type farming_practice as enum ('conventional', 'sustainable', 'organic', 
 create table public.profiles (
     id uuid references auth.users on delete cascade primary key,
     updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
-    company_name text not null,
+    full_name text,
+    company_name text, -- growers require this at signup; buyers may have none
     contact_phone text,
     role user_role not null default 'buyer',
-    region_ava text,
+    region_ava text,   -- growers: operational AVA region
+    address text,      -- buyers: shipping/billing address
     is_verified boolean default false not null
 );
 
@@ -68,20 +70,30 @@ create table public.crop_plans (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 5. Automate profile creation on Supabase Auth sign up
+-- 5. Automate profile creation on Supabase Auth sign up.
+--    `set search_path = public` is required here: SECURITY DEFINER
+--    functions don't reliably inherit the caller's search_path, and
+--    without it the unqualified enum cast below can fail to resolve,
+--    which surfaces to the client as "Database error saving new user".
 create or replace function public.handle_new_user()
-returns trigger as $$
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
 begin
-  insert into public.profiles (id, company_name, role, region_ava)
+  insert into public.profiles (id, company_name, full_name, role, region_ava, address)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'company_name', 'Independent Vineyard/Winery'),
-    coalesce((new.raw_user_meta_data->>'role')::user_role, 'buyer'::user_role),
-    new.raw_user_meta_data->>'region_ava'
+    new.raw_user_meta_data->>'company_name',
+    new.raw_user_meta_data->>'full_name',
+    coalesce((new.raw_user_meta_data->>'role')::public.user_role, 'buyer'::public.user_role),
+    new.raw_user_meta_data->>'region_ava',
+    new.raw_user_meta_data->>'address'
   );
   return new;
 end;
-$$ language plpgsql security definer;
+$$;
 
 create trigger on_auth_user_created
   after insert on auth.users
@@ -95,6 +107,7 @@ alter table public.crop_plans enable row level security;
 -- Profiles policies
 create policy "Public profiles are viewable by everyone." on public.profiles for select using (true);
 create policy "Users can update their own profile." on public.profiles for update using (auth.uid() = id);
+create policy "Users can insert their own profile." on public.profiles for insert with check (auth.uid() = id);
 
 -- Listings policies
 create policy "Listings are viewable by anyone." on public.listings for select using (true);

@@ -53,7 +53,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="border-t border-stone-100 pt-4">
           <div className="px-3">
             <p className="flex items-center gap-1.5 text-sm font-medium text-stone-900">
-              {profile?.company_name ?? "Your Account"}
+              {profile?.company_name || profile?.full_name || "Your Account"}
               {profile?.is_verified && <ShieldCheck className="size-3.5 text-emerald-600" />}
             </p>
             <p className="text-xs capitalize text-stone-500">{profile?.role ?? "member"}</p>

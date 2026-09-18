@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, type RegisterInput } from "@/lib/validation/auth";
 import { handleSignUp } from "./actions";
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { RegionOptionGroups } from "@/components/shared/SelectOptionGroups";
+import { AddressAutocomplete } from "@/components/shared/AddressAutocomplete";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -20,11 +21,15 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<RegisterInput>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: { role: "buyer" },
   });
+
+  const role = watch("role");
 
   async function onSubmit(data: RegisterInput) {
     setServerError(null);
@@ -69,20 +74,54 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input id="companyName" placeholder="Stagecoach Ridge Vineyards" {...register("companyName")} />
-            {errors.companyName && <p className="text-xs text-red-600">{errors.companyName.message}</p>}
-          </div>
+          {role === "grower" ? (
+            <>
+              <div className="space-y-1.5">
+                <Label htmlFor="companyName">Company Name</Label>
+                <Input id="companyName" placeholder="Stagecoach Ridge Vineyards" {...register("companyName")} />
+                {errors.companyName && <p className="text-xs text-red-600">{errors.companyName.message}</p>}
+              </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="regionAva">Operational AVA Region</Label>
-            <Select id="regionAva" {...register("regionAva")}>
-              <option value="">Select a region</option>
-              <RegionOptionGroups />
-            </Select>
-            {errors.regionAva && <p className="text-xs text-red-600">{errors.regionAva.message}</p>}
-          </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="regionAva">Operational AVA Region</Label>
+                <Select id="regionAva" {...register("regionAva")}>
+                  <option value="">Select a region</option>
+                  <RegionOptionGroups />
+                </Select>
+                {errors.regionAva && <p className="text-xs text-red-600">{errors.regionAva.message}</p>}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="space-y-1.5">
+                <Label htmlFor="fullName">Name</Label>
+                <Input id="fullName" placeholder="Jamie Rivera" {...register("fullName")} />
+                {errors.fullName && <p className="text-xs text-red-600">{errors.fullName.message}</p>}
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="companyName">Company Name (if applicable)</Label>
+                <Input id="companyName" placeholder="Rivera Wine Imports" {...register("companyName")} />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="address">Address</Label>
+                <Controller
+                  control={control}
+                  name="address"
+                  render={({ field }) => (
+                    <AddressAutocomplete
+                      id="address"
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder="Start typing your address…"
+                    />
+                  )}
+                />
+                {errors.address && <p className="text-xs text-red-600">{errors.address.message}</p>}
+              </div>
+            </>
+          )}
 
           <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>

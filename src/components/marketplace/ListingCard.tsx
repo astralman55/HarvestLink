@@ -32,8 +32,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
-            {listing.variety}
-            {listing.clone ? ` · ${listing.clone}` : ""}
+            {listing.profiles?.company_name ?? "HarvestLink Grower"}
           </p>
           <h3 className="mt-1 line-clamp-2 font-semibold text-stone-900">{listing.title}</h3>
         </div>
