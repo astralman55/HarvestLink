@@ -46,7 +46,7 @@ export function NdaPreviewDialog({ open, onOpenChange, previewRow, onConfirm, su
             <NdaBadge size="sm" />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Confidential Seller</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Confidential Seller</p>
             <h3 className="font-semibold text-stone-900">{preview.title}</h3>
           </div>
           <p className="text-sm text-stone-500">{preview.sub_ava ? `${preview.sub_ava}, ` : ""}{preview.region_ava}</p>
@@ -80,7 +80,7 @@ export function NdaPreviewDialog({ open, onOpenChange, previewRow, onConfirm, su
               <p className="text-xs text-stone-500">{formatTons(preview.estimated_tons)} available</p>
             </>
           )}
-          <p className="text-xs text-stone-400">Ref. {preview.reference_number}</p>
+          <p className="text-xs text-stone-500">Ref. {preview.reference_number}</p>
         </div>
 
         <p className="mt-3 text-xs text-stone-500">

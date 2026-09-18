@@ -96,9 +96,9 @@ export function ListingDetailContent({ listing, viewer, backHref, backLabel }: L
           </div>
 
           <div className="mt-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               {listing.variety}
-              {listing.is_confidential && <span className="ml-2 normal-case text-stone-400">Ref. {listing.reference_number}</span>}
+              {listing.is_confidential && <span className="ml-2 normal-case text-stone-500">Ref. {listing.reference_number}</span>}
             </p>
             <h1 className="mt-1 text-3xl font-semibold text-stone-900">{listing.title}</h1>
             <div className="mt-2 flex items-center gap-1.5 text-sm text-stone-500">
@@ -127,13 +127,13 @@ export function ListingDetailContent({ listing, viewer, backHref, backLabel }: L
                 .filter(([, value]) => value)
                 .map(([label, value]) => (
                   <div key={label}>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-stone-400">{label}</dt>
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-stone-500">{label}</dt>
                     <dd className="mt-1 text-sm font-medium text-stone-900">{value}</dd>
                   </div>
                 ))}
               {isBulkWine && totalLotValue != null && (
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-stone-400">Total Lot Value</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-stone-500">Total Lot Value</dt>
                   <dd className="mt-1 text-sm font-medium text-stone-900">≈ {formatCurrencyPrecise(totalLotValue)}</dd>
                 </div>
               )}
@@ -163,7 +163,7 @@ export function ListingDetailContent({ listing, viewer, backHref, backLabel }: L
 
             <Separator className="my-5" />
 
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Listed By</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Listed By</p>
             <p className="mt-1 flex items-center gap-1.5 font-medium text-stone-900">
               {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "HarvestLink Grower"}
               {listing.is_confidential && <NdaBadge size="sm" />}

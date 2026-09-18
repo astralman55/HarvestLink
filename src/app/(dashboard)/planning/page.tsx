@@ -71,7 +71,7 @@ export default async function PlanningPage() {
       <div className="mt-8 space-y-10">
         {years.map((year) => (
           <div key={year}>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
               {year} Harvest
             </h2>
             <div className="mt-3 divide-y divide-stone-100 rounded-2xl border border-stone-200 bg-white">

@@ -65,7 +65,7 @@ export function UsernameField({ id = "username", value, onChange, onAvailability
           className="pr-9"
         />
         <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
-          {state === "checking" && <Loader2 className="size-4 animate-spin text-stone-400" />}
+          {state === "checking" && <Loader2 className="size-4 animate-spin text-stone-500" />}
           {state === "available" && <Check className="size-4 text-emerald-600" />}
           {state === "unavailable" && <X className="size-4 text-red-500" />}
         </span>

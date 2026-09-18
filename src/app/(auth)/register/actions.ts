@@ -55,12 +55,17 @@ export async function handleSignUp(formData: RegisterInput) {
     });
 
     if (error) {
-      // The pre-check above passed, so if the profile insert trigger still
-      // failed while usernames are enabled, a same-instant username race is
-      // the most likely cause (USR-3) -- Supabase Auth's own error message
-      // for a failed trigger is a generic wrapper, not the underlying
-      // Postgres detail.
-      if (flags.usernames) {
+      // Bug caught in Phase 7 live testing (Decision 40): this used to
+      // treat *any* signUp failure as a username race whenever the flag was
+      // on, which mislabeled real errors (invalid email, Supabase's own
+      // signup rate limit) as "username taken." A failed `handle_new_user`
+      // trigger -- the actual username-race case (USR-3) -- is the one
+      // failure mode that reaches this branch as a raw 500: profiles.email
+      // uniqueness is enforced earlier by auth.users itself (a distinct,
+      // already-readable error), and username_normalized is the only other
+      // unique constraint the trigger can hit. Anything else (400s, 429s,
+      // etc.) is a real Supabase error and gets its real message shown.
+      if (flags.usernames && error.status === 500) {
         return { error: "That username was just taken by someone else. Please choose another and try again." };
       }
       return { error: error.message };

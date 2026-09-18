@@ -1,5 +1,6 @@
 "use client";
 
+import { cloneElement, useId, type ReactElement } from "react";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -24,11 +25,20 @@ interface FieldsProps {
   onChange: (patch: FilterPatch) => void;
 }
 
-function FieldShell({ label, children }: { label: string; children: React.ReactNode }) {
+// The <Label> here isn't nested around its control, so it needs an explicit
+// htmlFor/id pairing to actually be an accessible name for the Select/Input
+// -- a visible label with no programmatic association fails WCAG 4.1.2 /
+// axe's select-name rule even though it looks fine sighted (Phase 7 a11y
+// pass, Decision 40). useId() (not a slugified label) because FilterPanel
+// mounts this same field set twice at once -- desktop sidebar and mobile
+// Sheet drawer -- and a collided id would send the visible label's click
+// to the other, hidden instance's control.
+function FieldShell({ label, children }: { label: string; children: ReactElement<{ id?: string }> }) {
+  const id = useId();
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
-      {children}
+      <Label htmlFor={id}>{label}</Label>
+      {cloneElement(children, { id })}
     </div>
   );
 }

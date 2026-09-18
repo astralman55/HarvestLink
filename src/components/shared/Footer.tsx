@@ -51,7 +51,7 @@ export function Footer() {
           </div>
           {columns.map((col) => (
             <div key={col.heading}>
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-stone-400">
+              <h4 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                 {col.heading}
               </h4>
               <ul className="mt-3 space-y-2.5">
@@ -69,7 +69,7 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-stone-200 pt-6 text-xs text-stone-400">
+        <div className="mt-12 border-t border-stone-200 pt-6 text-xs text-stone-500">
           © {new Date().getFullYear()} HarvestLink. Built for growers and buyers who plan ahead.
         </div>
       </div>

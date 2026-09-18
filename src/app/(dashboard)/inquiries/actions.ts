@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const MESSAGE_MAX_LENGTH = 4000;
 
@@ -21,6 +22,13 @@ function validateMessage(message: string): string | null {
 export async function startInquiry(listingId: string, message: string) {
   const validationError = validateMessage(message);
   if (validationError) return { error: validationError };
+
+  // Phase 7 security review (Decision 40): message-sending had no rate
+  // limit at all, unlike every other write-heavy Server Action in this app
+  // -- a logged-in user could otherwise flood any seller's inbox with no
+  // throttle.
+  const { allowed } = await checkRateLimit("inquiry-message", { limit: 20, windowMs: 60_000 });
+  if (!allowed) return { error: "Too many messages sent. Please wait a moment and try again." };
 
   try {
     const supabase = await createClient();
@@ -70,6 +78,9 @@ export async function startInquiry(listingId: string, message: string) {
 export async function replyToInquiry(inquiryId: string, message: string) {
   const validationError = validateMessage(message);
   if (validationError) return { error: validationError };
+
+  const { allowed } = await checkRateLimit("inquiry-message", { limit: 20, windowMs: 60_000 });
+  if (!allowed) return { error: "Too many messages sent. Please wait a moment and try again." };
 
   try {
     const supabase = await createClient();

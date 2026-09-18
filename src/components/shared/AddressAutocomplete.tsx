@@ -188,7 +188,7 @@ function NominatimAddressAutocomplete({ id, value, onChange, placeholder }: Addr
                 }}
                 className="flex w-full items-start gap-2 px-3.5 py-2 text-left text-sm text-stone-700 hover:bg-stone-50"
               >
-                <MapPin className="mt-0.5 size-3.5 shrink-0 text-stone-400" />
+                <MapPin className="mt-0.5 size-3.5 shrink-0 text-stone-500" />
                 {suggestion.display_name}
               </button>
             </li>

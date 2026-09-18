@@ -13,7 +13,7 @@ export function RealtimeAlertBanner() {
       <Bell className="size-4 shrink-0 text-amber-400" />
       <span className="text-center">{alertMessage}</span>
       <button onClick={() => setAlertMessage(null)} aria-label="Dismiss">
-        <X className="size-4 text-stone-400 hover:text-white" />
+        <X className="size-4 text-stone-500 hover:text-white" />
       </button>
     </div>
   );

@@ -62,24 +62,23 @@ export default function RegisterPage() {
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm font-medium text-stone-700 has-[:checked]:border-[var(--color-brand)] has-[:checked]:bg-[var(--color-brand-50)] has-[:checked]:text-[var(--color-brand-dark)]"
-            >
+            {/* A plain div, not a button -- it has no click handler of its
+                own (the radio input inside is the real control), and a
+                <button> wrapping an <input> is an invalid nested-interactive
+                pattern that breaks assistive tech (Phase 7 a11y pass,
+                Decision 40). */}
+            <div className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm font-medium text-stone-700 has-[:checked]:border-[var(--color-brand)] has-[:checked]:bg-[var(--color-brand-50)] has-[:checked]:text-[var(--color-brand-dark)]">
               <label className="flex cursor-pointer items-center justify-center gap-2">
                 <input type="radio" value="buyer" className="sr-only" {...register("role")} />
                 I&apos;m a Buyer
               </label>
-            </button>
-            <button
-              type="button"
-              className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm font-medium text-stone-700 has-[:checked]:border-[var(--color-brand)] has-[:checked]:bg-[var(--color-brand-50)] has-[:checked]:text-[var(--color-brand-dark)]"
-            >
+            </div>
+            <div className="rounded-lg border border-stone-300 px-3 py-2.5 text-sm font-medium text-stone-700 has-[:checked]:border-[var(--color-brand)] has-[:checked]:bg-[var(--color-brand-50)] has-[:checked]:text-[var(--color-brand-dark)]">
               <label className="flex cursor-pointer items-center justify-center gap-2">
                 <input type="radio" value="grower" className="sr-only" {...register("role")} />
                 I&apos;m a Grower
               </label>
-            </button>
+            </div>
           </div>
 
           {role === "grower" ? (

@@ -175,7 +175,7 @@ export function BulkWineForm({
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="mt-8 space-y-8">
       <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50 px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Listing Title (auto-generated)</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Listing Title (auto-generated)</p>
         <p className="mt-1 text-sm font-medium text-stone-900">
           {generatedTitle || "Select a grape variety, vintage, and grape origin below to generate a title"}
         </p>

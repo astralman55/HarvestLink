@@ -118,7 +118,7 @@ function VineyardNameInput({ id, value, onChange }: { id: string; value: string;
                 }}
                 className="flex w-full items-center gap-2 px-3.5 py-2 text-left text-sm text-stone-700 hover:bg-stone-50"
               >
-                <MapPinned className="size-3.5 shrink-0 text-stone-400" />
+                <MapPinned className="size-3.5 shrink-0 text-stone-500" />
                 {suggestion}
               </button>
             </li>

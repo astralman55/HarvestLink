@@ -79,7 +79,7 @@ function BulkWineFilterFieldsPanel() {
         <h3 className="flex items-center gap-2 font-semibold text-stone-900">
           <SlidersHorizontal className="size-4" />
           Filters
-          {isPending && <span className="text-xs font-normal text-stone-400">syncing…</span>}
+          {isPending && <span className="text-xs font-normal text-stone-500">syncing…</span>}
         </h3>
         {activeCount > 0 && (
           <button
@@ -101,7 +101,7 @@ function BulkWineFilterFieldsPanel() {
       </div>
 
       <div className="space-y-4 border-t border-stone-100 pt-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Wine Detail</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Wine Detail</p>
         <BulkWineAdvancedFilterFields values={values} onChange={apply} />
       </div>
     </div>

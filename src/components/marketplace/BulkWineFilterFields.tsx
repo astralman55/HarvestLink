@@ -1,5 +1,6 @@
 "use client";
 
+import { cloneElement, useId, type ReactElement } from "react";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -17,11 +18,17 @@ interface FieldsProps {
   onChange: (patch: FilterPatch) => void;
 }
 
-function FieldShell({ label, children }: { label: string; children: React.ReactNode }) {
+// See the identical comment in ViticultureFilterFields.tsx (Phase 7 a11y
+// pass, Decision 40) -- the Label isn't nested around its control here, so
+// it needs an explicit htmlFor/id pairing; useId() (not a slugified label)
+// because BulkWineFilterPanel mounts this same field set twice at once
+// (desktop sidebar + mobile Sheet drawer).
+function FieldShell({ label, children }: { label: string; children: ReactElement<{ id?: string }> }) {
+  const id = useId();
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
-      {children}
+      <Label htmlFor={id}>{label}</Label>
+      {cloneElement(children, { id })}
     </div>
   );
 }

@@ -42,7 +42,10 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
    through `0006_scope_addendum_phase5_bulk_wine.sql` — Phase 4 needed no
-   new migration) in the Supabase SQL Editor.
+   new migration) in the Supabase SQL Editor. Rollback scripts for
+   `0003`–`0006` are in `supabase/rollback/` if you ever need to back the
+   addendum out (see the README there — written, not yet rehearsed against
+   live data).
 4. Restart `npm run dev`. Register an account — the `profiles` row is
    created automatically via trigger.
 
@@ -102,9 +105,21 @@ Status:
   bulk-wine browse filter set (vintage, wine location, ABV/price/quantity
   ranges, farming practice, max sulfites) with sort, and this project's
   first sitemap/robots.txt/per-listing metadata.
-- Phase 7 (hardening: extend the canary test to bulk wine end-to-end,
-  accessibility, mobile, performance, security review, docs) is not built
-  yet.
+- **Phase 7 (Hardening)** — done. Canary test extended to the surfaces
+  Phase 6 added (sitemap, per-listing metadata); an accessibility pass
+  (axe-core + a scripted keyboard-only pass) found and fixed three real
+  bugs — unlabeled filter fields, an invalid nested-interactive role
+  selector, and app-wide color-contrast failures — see
+  [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md),
+  Decision 40; mobile/tablet verified at 375px/768px/1280px with no
+  horizontal overflow; a security review fixed a misleading signup error
+  message, closed a middleware gap on `/admin`, and added rate limiting to
+  the inquiry relay (Decision 42); rollback scripts for migrations
+  0003–0006 added under `supabase/rollback/` (written, not rehearsed
+  against live data — Decision 43); a production build was reviewed for
+  performance (Decision 44). See
+  [`docs/how-to-test-manually.md`](./docs/how-to-test-manually.md) for a
+  step-by-step manual test of the whole addendum.
 - Everything new ships behind `NEXT_PUBLIC_FEATURE_USERNAMES` /
   `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` / `NEXT_PUBLIC_FEATURE_BULK_WINE` in
   `.env.local` (see `src/lib/flags.ts`), all `false` by default in

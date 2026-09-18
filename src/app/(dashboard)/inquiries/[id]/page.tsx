@@ -92,7 +92,7 @@ export default async function InquiryThreadPage({ params }: { params: Promise<{ 
                 }`}
               >
                 <p className="whitespace-pre-wrap">{message.body}</p>
-                <p className={`mt-1 text-[10px] ${isMine ? "text-white/70" : "text-stone-400"}`}>
+                <p className={`mt-1 text-[10px] ${isMine ? "text-white/70" : "text-stone-500"}`}>
                   {isMine ? "You" : counterpartLabel} · {new Date(message.created_at).toLocaleString()}
                 </p>
               </div>

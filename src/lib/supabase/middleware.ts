@@ -11,6 +11,10 @@ const PROTECTED_PREFIXES = [
   // Trailing slash so bare /sell (the public chooser) stays unprotected --
   // only the actual create forms underneath it require auth.
   "/sell/",
+  // The page itself already redirects a non-admin (Phase 7 security review,
+  // Decision 40) -- this just makes that the fast, consistent middleware
+  // path instead of the one route in the app that skips it.
+  "/admin",
 ];
 const EDIT_LISTING_PATTERN = /^\/listings\/[^/]+\/edit$/;
 
