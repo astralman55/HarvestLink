@@ -13,11 +13,15 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { RegionOptionGroups } from "@/components/shared/SelectOptionGroups";
 import { AddressAutocomplete } from "@/components/shared/AddressAutocomplete";
+import { UsernameField } from "@/components/shared/UsernameField";
+import { PasswordInput } from "@/components/shared/PasswordInput";
+import { flags } from "@/lib/flags";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const {
     register,
     handleSubmit,
@@ -26,12 +30,16 @@ export default function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterInput>({
     resolver: zodResolver(RegisterSchema),
-    defaultValues: { role: "buyer" },
+    defaultValues: { role: "buyer", username: "" },
   });
 
   const role = watch("role");
 
   async function onSubmit(data: RegisterInput) {
+    if (usernameAvailable === false) {
+      setServerError("Please choose an available username before continuing.");
+      return;
+    }
     setServerError(null);
     const result = await handleSignUp(data);
     if (result?.error) {
@@ -125,13 +133,33 @@ export default function RegisterPage() {
 
           <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="you@vineyard.com" {...register("email")} />
+            <Input id="email" type="email" autoComplete="email" placeholder="you@vineyard.com" {...register("email")} />
             {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
           </div>
 
+          {flags.usernames && (
+            <div className="space-y-1.5">
+              <Label htmlFor="username">Username</Label>
+              <Controller
+                control={control}
+                name="username"
+                render={({ field }) => (
+                  <UsernameField
+                    id="username"
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    onAvailabilityChange={setUsernameAvailable}
+                    helperText="This is your public handle. It may be visible to other members in the future. If you plan to sell confidentially, don't use your winery or vineyard name."
+                  />
+                )}
+              />
+              {errors.username && <p className="text-xs text-red-600">{errors.username.message}</p>}
+            </div>
+          )}
+
           <div className="space-y-1.5">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="••••••••" {...register("password")} />
+            <PasswordInput id="password" autoComplete="new-password" placeholder="••••••••" {...register("password")} />
             {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
           </div>
 

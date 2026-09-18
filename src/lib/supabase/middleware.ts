@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/listings/create", "/listings/mine", "/planning"];
+const PROTECTED_PREFIXES = ["/dashboard", "/listings/create", "/listings/mine", "/planning", "/choose-username"];
 const EDIT_LISTING_PATTERN = /^\/listings\/[^/]+\/edit$/;
 
 export async function updateSession(request: NextRequest) {

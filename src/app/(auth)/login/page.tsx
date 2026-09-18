@@ -10,6 +10,8 @@ import { handleSignIn } from "./actions";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/shared/PasswordInput";
+import { flags } from "@/lib/flags";
 
 function LoginForm() {
   const router = useRouter();
@@ -28,7 +30,12 @@ function LoginForm() {
       setServerError(result.error);
       return;
     }
-    router.push(searchParams.get("redirect_to") || "/dashboard");
+    const redirectTo = searchParams.get("redirect_to") || "/dashboard";
+    if (result.needsUsername) {
+      router.push(`/choose-username?redirect_to=${encodeURIComponent(redirectTo)}`);
+      return;
+    }
+    router.push(redirectTo);
   }
 
   return (
@@ -38,14 +45,20 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="you@vineyard.com" {...register("email")} />
-          {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
+          <Label htmlFor="identifier">{flags.usernames ? "Email or Username" : "Email"}</Label>
+          <Input
+            id="identifier"
+            type={flags.usernames ? "text" : "email"}
+            autoComplete="username"
+            placeholder={flags.usernames ? "you@vineyard.com or grapeguy" : "you@vineyard.com"}
+            {...register("identifier")}
+          />
+          {errors.identifier && <p className="text-xs text-red-600">{errors.identifier.message}</p>}
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" placeholder="••••••••" {...register("password")} />
+          <PasswordInput id="password" autoComplete="current-password" placeholder="••••••••" {...register("password")} />
           {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
         </div>
 

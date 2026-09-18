@@ -1,9 +1,23 @@
 import { z } from "zod";
+import { UsernameSchema } from "@/lib/validation/username";
+import { flags } from "@/lib/flags";
+
+// USR-5 (SHOULD): 10-12+ minimum, allow long passphrases, no forced
+// composition rules. Breach-list checking (HIBP) happens server-side in
+// the register action, since it needs a network call.
+export const PasswordSchema = z
+  .string()
+  .min(10, { message: "Use at least 10 characters." })
+  .max(128, { message: "That's a bit long -- 128 characters max." });
 
 export const RegisterSchema = z
   .object({
     email: z.string().email({ message: "Invalid commercial email address." }),
-    password: z.string().min(8, { message: "Security standard requires minimum 8 characters." }),
+    // Optional at the object level and enforced in superRefine below so
+    // this can be feature-flagged dark (docs/scope-addendum-decisions.md,
+    // Decision 4) without two parallel schemas.
+    username: z.string().optional(),
+    password: PasswordSchema,
     role: z.enum(["grower", "buyer"], { message: "Must define a primary marketplace intent." }),
     // Growers: company + operational AVA region. Buyers: name + address,
     // company optional. Cross-field requirements enforced below since
@@ -14,6 +28,16 @@ export const RegisterSchema = z
     address: z.string().optional(),
   })
   .superRefine((data, ctx) => {
+    if (flags.usernames) {
+      const usernameCheck = UsernameSchema.safeParse(data.username ?? "");
+      if (!usernameCheck.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["username"],
+          message: usernameCheck.error.issues[0]?.message ?? "Invalid username.",
+        });
+      }
+    }
     if (data.role === "grower") {
       if (!data.companyName || data.companyName.trim().length < 2) {
         ctx.addIssue({
@@ -49,9 +73,17 @@ export const RegisterSchema = z
 
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 
+// USR-6: login accepts email OR username in one field.
 export const LoginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address." }),
+  identifier: z.string().min(1, { message: "Enter your email or username." }),
   password: z.string().min(1, { message: "Password is required." }),
 });
 
 export type LoginInput = z.infer<typeof LoginSchema>;
+
+// USR-7: the blocking "choose your username" step for pre-existing accounts.
+export const ChooseUsernameSchema = z.object({
+  username: UsernameSchema,
+});
+
+export type ChooseUsernameInput = z.infer<typeof ChooseUsernameSchema>;

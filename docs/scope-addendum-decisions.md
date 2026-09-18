@@ -54,3 +54,35 @@ A trigger (`check_bulk_wine_listing_type`) enforces that a `bulk_wine_details` r
 ### Decision 6 — NDA-7's contact/inquiry relay: not built in Phase 1
 
 Per the audit, no messaging/contact system exists at all today ("Sign In to Contact Grower" is a dead link to `/login`). Per NDA-7's own instruction, building this is flagged as a scope expansion to raise with the project owner before implementing beyond the minimum described (buyer submits inquiry → seller notified by email with a link to reply on-site → replies relayed without exposing the seller's email). No schema for this was added in Phase 1; it lands in Phase 3 alongside the rest of Requirement 1, and needs an email provider decision first (none is currently configured — see audit 2.1).
+
+---
+
+## Phase 2 (Usernames)
+
+### Decision 7 — Login-by-username resolves the email server-side via a service-role-only Postgres function, not a new RPC exposed to the anon key
+
+**Problem:** Supabase Auth's `signInWithPassword` only accepts an email. USR-6 wants login by email *or* username, and USR-9 requires the email is "never exposed through any username lookup" — including to a caller hitting Supabase's REST API directly, not just through this app's own UI.
+
+**Decision:** Added `public.get_email_for_login(identifier)` (migration `0004`, `SECURITY DEFINER`), with `EXECUTE` revoked from `anon`/`authenticated` and granted only to `service_role`. The login Server Action (`src/app/(auth)/login/actions.ts`) calls it through a new server-only admin client (`src/lib/supabase/admin.ts`, `SUPABASE_SERVICE_ROLE_KEY` — already documented in `.env.example`/`.env.local` but unused until now) to resolve a username to its account's email, then calls the normal `signInWithPassword` exactly as before. This preserves GoTrue's own password verification, session issuance, and behavior entirely; the function only does the identifier→email translation, and can't be reached by anyone who only holds the anon key. Considered and rejected: reimplementing password checks in SQL against `auth.users.encrypted_password` (a known pattern via `pgcrypto`'s `crypt()`) — works, but throws away Supabase Auth's own verification/session logic for a login-by-username convenience that doesn't need it.
+
+A fixed dummy email (`no-such-account@harvestlink.invalid`) is used when the identifier doesn't resolve, so a failed sign-in still calls `signInWithPassword` on *something* — keeping response timing similar whether or not the username exists, as a secondary defense against username enumeration via timing.
+
+### Decision 8 — Rate limiting is in-memory, not a shared store
+
+USR-1 (availability check) and USR-6 (login attempts) both want rate limiting. No Redis/Upstash is configured. Added `src/lib/rate-limit.ts`: a fixed-window counter in a module-level `Map`, keyed by client IP (from `x-forwarded-for`/`x-real-ip`) + action name. This is a real deterrent for a single dev/small-scale deployment but is **not** correct once this app runs on multiple serverless instances or regions (each instance has its own Map, so the effective limit multiplies by instance count, and it resets on every redeploy/cold start). Flagged directly in the file's own doc comment. Revisit with Upstash Redis (or similar) before/at the point this ships on infrastructure that scales horizontally — there's no Vercel deployment yet (per the Phase 0 audit), so this hasn't mattered until now.
+
+### Decision 9 — Password breach checking (HIBP) implemented; profanity filtering via the `obscenity` package
+
+Both USR-5 ("reject passwords found in known-breach lists") and USR-4 ("apply a profanity/offensive-term filter") are phrased as SHOULD, with the spec's own rule being "do it unless you have a documented reason not to." Implemented both:
+- `src/lib/password-breach.ts` calls the Have I Been Pwned k-anonymity range API (only a 5-character SHA-1 prefix ever leaves the server; the password itself never does). Fails open (never blocks signup) on any network/API error, verified live against the real API during Phase 2 testing.
+- `src/lib/profanity.ts` wraps `obscenity` (MIT-licensed, purpose-built for exactly this, actively maintained), which also normalizes leetspeak/spacing tricks before matching. Verified live against known test strings.
+
+### Decision 10 — Dark-launch gating is concentrated at trigger points, not scattered through every new file
+
+Ground Rule: "Ship behind feature flags... merge dark, enable per environment." Rather than sprinkling `if (flags.usernames)` through every new function, gating was concentrated at the handful of places that actually change externally-visible behavior: the `RegisterSchema`'s `superRefine` (username only required/validated when the flag is on), the register/login page's conditional UI (username field shown, login label/type switches between "Email" and "Email or Username"), and the three points that would force existing users through the migration step (`login` action's `needsUsername`, the `/listings/create` page's redirect, and `/choose-username` itself redirecting away if the flag is off). Verified live with the dev server restarted in both states (`NEXT_PUBLIC_FEATURE_USERNAMES=false` shows zero trace of the username field/copy; `=true` shows the full flow) -- see CHANGELOG for what was checked.
+
+One accepted minor UX regression while the flag is off: the login field's Zod validation (`LoginSchema.identifier`) is a bare non-empty-string check rather than `z.string().email()`, since it must also accept a username once the flag is on. With the flag off, a malformed email now surfaces as the generic "incorrect email/username or password" error instead of a specific "invalid email address" formatting error (the HTML `type="email"` attribute still restores native browser validation in that state, which covers most of the gap). Not worth a second parallel schema for what's meant to be a temporary dark period.
+
+### Decision 11 (bug caught during live testing, fixed before commit) — the availability check was silently reporting DB query errors as "available"
+
+`checkUsernameAvailability` destructured only `data` from its two Supabase queries (`reserved_usernames`, `profiles.username_normalized`) and never checked `error`. Live-tested against the real Supabase project *before* migration `0003`/`0004` were applied there (so the queries genuinely errored, missing table/column) — the function fell through both `if (reserved)`/`if (taken)` checks (both `null` on error) and returned `{ available: true }`. That's the dangerous direction: a broken check silently approving a username instead of blocking it. Fixed by checking each query's `error` and throwing into the existing catch block, which returns `{ available: false, reason: "Couldn't check availability right now..." }` instead. Caught by testing against the live (not-yet-migrated) database rather than by code review -- worth remembering that Supabase JS query errors don't throw, they return an `error` field that's easy to silently ignore if only `data` is destructured.

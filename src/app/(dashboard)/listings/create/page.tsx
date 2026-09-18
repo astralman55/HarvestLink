@@ -1,17 +1,32 @@
-"use client";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { CreateListingForm } from "./CreateListingForm";
+import { flags } from "@/lib/flags";
 
-import { useRouter } from "next/navigation";
-import { ListingForm } from "@/components/listings/ListingForm";
-import { createNewListing } from "./actions";
-import type { CreateListingInput } from "@/lib/validation/listing";
+async function needsUsername(): Promise<boolean> {
+  if (!flags.usernames) return false;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return false;
+    const { data: profile } = await supabase.from("profiles").select("username").eq("id", user.id).single();
+    return !profile?.username;
+  } catch {
+    // Demo mode / unreachable Supabase: let the form's own Server Action
+    // surface a clear "couldn't reach Supabase" error instead.
+    return false;
+  }
+}
 
-export default function CreateListingPage() {
-  const router = useRouter();
-
-  async function handleSubmit(data: CreateListingInput) {
-    const result = await createNewListing(data);
-    if (result?.error) return { error: result.error };
-    router.push("/listings/mine");
+export default async function CreateListingPage() {
+  // USR-7: existing accounts can browse without a username, but must
+  // choose one before creating a listing. `redirect()` must run outside
+  // the try/catch above -- it throws a control-flow signal Next.js expects
+  // to propagate, not an error to swallow.
+  if (await needsUsername()) {
+    redirect(`/choose-username?redirect_to=${encodeURIComponent("/listings/create")}`);
   }
 
   return (
@@ -21,7 +36,7 @@ export default function CreateListingPage() {
         Publish tonnage, pricing, and full vineyard detail — buyers filter on every field below.
       </p>
 
-      <ListingForm onSubmit={handleSubmit} submitLabel="Publish Listing" submittingLabel="Publishing…" />
+      <CreateListingForm />
     </div>
   );
 }

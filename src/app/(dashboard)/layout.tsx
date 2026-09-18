@@ -57,7 +57,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
               {profile?.company_name || profile?.full_name || "Your Account"}
               {profile?.is_verified && <ShieldCheck className="size-3.5 text-emerald-600" />}
             </p>
-            <p className="text-xs capitalize text-stone-500">{profile?.role ?? "member"}</p>
+            <p className="text-xs capitalize text-stone-500">
+              {profile?.role ?? "member"}
+              {profile?.username && <span className="normal-case"> · @{profile.username}</span>}
+            </p>
           </div>
           <SignOutButton />
         </div>
