@@ -1,6 +1,5 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import type { NdaLocationPrecision } from "@/types";
 
@@ -19,22 +18,48 @@ interface NdaFieldsProps {
  * react-hook-form's Control/register) so it's reusable as-is by both the
  * grapes form and the bulk-wine form (Phase 5), which have two different
  * schemas.
+ *
+ * Given its own always-visible, colored container (not just a checkbox) so
+ * a seller can't miss a decision with real privacy consequences -- a Yes/No
+ * button pair, matching VineyardField's pattern, makes the current choice
+ * unambiguous at a glance instead of relying on a small checkmark.
  */
 export function NdaFields({ isNda, onIsNdaChange, ndaLocationPrecision, onNdaLocationPrecisionChange }: NdaFieldsProps) {
   return (
-    <div className="space-y-4">
-      <label htmlFor="is_nda" className="flex cursor-pointer items-start gap-3">
-        <Checkbox id="is_nda" checked={isNda} onCheckedChange={(checked) => onIsNdaChange(checked === true)} className="mt-0.5" />
-        <span>
-          <span className="block text-sm font-medium text-stone-900">Selling under NDA?</span>
-          <span className="mt-0.5 block text-xs text-stone-500">
-            Your name, business, and vineyard will be hidden from buyers. Buyers contact you through the site.
-          </span>
-        </span>
-      </label>
+    <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
+      <div className="space-y-1.5">
+        <Label className="text-sm font-semibold text-stone-900">Selling under NDA?</Label>
+        <p className="text-xs text-stone-600">
+          Your name, business, and vineyard will be hidden from buyers. Buyers contact you through the site.
+        </p>
+        <div className="grid max-w-xs grid-cols-2 gap-3 pt-1">
+          <button
+            type="button"
+            onClick={() => onIsNdaChange(false)}
+            className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+              !isNda
+                ? "border-[var(--color-brand)] bg-[var(--color-brand-50)] text-[var(--color-brand-dark)]"
+                : "border-stone-300 bg-white text-stone-700"
+            }`}
+          >
+            No
+          </button>
+          <button
+            type="button"
+            onClick={() => onIsNdaChange(true)}
+            className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+              isNda
+                ? "border-[var(--color-brand)] bg-[var(--color-brand-50)] text-[var(--color-brand-dark)]"
+                : "border-stone-300 bg-white text-stone-700"
+            }`}
+          >
+            Yes
+          </button>
+        </div>
+      </div>
 
       {isNda && (
-        <div className="space-y-4 rounded-lg bg-amber-50 p-4">
+        <div className="mt-4 space-y-4 border-t border-amber-200 pt-4">
           <div className="space-y-1.5">
             <Label htmlFor="nda_location_precision" className="text-xs uppercase tracking-wide text-amber-800">
               Location shown to buyers

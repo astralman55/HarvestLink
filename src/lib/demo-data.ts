@@ -290,7 +290,15 @@ export function filterDemoListings(filters: ListingSearchFilters): Listing[] {
     if (filters.slope_min && (listing.slope_percent ?? 0) < Number(filters.slope_min)) return false;
     if (filters.slope_max && (listing.slope_percent ?? 0) > Number(filters.slope_max)) return false;
     if (filters.min_tons && listing.estimated_tons < Number(filters.min_tons)) return false;
+    if (filters.max_tons && listing.estimated_tons > Number(filters.max_tons)) return false;
     if (filters.min_brix && (listing.brix_target ?? 0) < Number(filters.min_brix)) return false;
+    if (filters.max_brix && (listing.brix_target ?? 0) > Number(filters.max_brix)) return false;
+    // Homepage hero's price range slider -- branches by listing_type just
+    // like max_price below it always has.
+    if (filters.min_price) {
+      const price = listing.listing_type === "bulk_wine" ? bw?.price_per_gallon ?? 0 : listing.price_per_ton;
+      if (price < Number(filters.min_price)) return false;
+    }
 
     // 6.5: bulk-wine-only filters.
     if (filters.max_price) {

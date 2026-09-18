@@ -102,8 +102,11 @@ export interface ListingSearchFilters {
   slope_min?: string;
   slope_max?: string;
   min_tons?: string;
+  max_tons?: string;
+  min_price?: string;
   max_price?: string;
   min_brix?: string;
+  max_brix?: string;
   /** NDA-12: browse filter to exclude NDA listings. Default (unset) is include. */
   hide_nda?: string;
   /** VIN-7: matches non-NDA listings' vineyard names only -- see getListings(). */

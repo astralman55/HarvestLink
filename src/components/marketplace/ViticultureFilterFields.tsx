@@ -90,7 +90,11 @@ function slopeBandValue(values: FilterValues) {
   return match?.value ?? "";
 }
 
-export function AdvancedFilterFields({ values, onChange }: FieldsProps) {
+// Split out of AdvancedFilterFields so the homepage hero search (which
+// wants these same five fields but its own tonnage/price/brix/vineyard
+// treatment -- no vineyard name field, range sliders instead of plain
+// number inputs) can compose them without duplicating this markup.
+export function FarmingDetailFields({ values, onChange }: FieldsProps) {
   return (
     <>
       <FieldShell label="Farming Practice">
@@ -168,6 +172,14 @@ export function AdvancedFilterFields({ values, onChange }: FieldsProps) {
           ))}
         </Select>
       </FieldShell>
+    </>
+  );
+}
+
+export function AdvancedFilterFields({ values, onChange }: FieldsProps) {
+  return (
+    <>
+      <FarmingDetailFields values={values} onChange={onChange} />
 
       <FieldShell label="Min. Tonnage">
         <Input

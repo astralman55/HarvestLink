@@ -35,7 +35,7 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
       filters.min_gallons ||
       filters.max_gallons ||
       filters.max_so2 ||
-      (filters.listing_type === "bulk_wine" && filters.max_price);
+      (filters.listing_type === "bulk_wine" && (filters.min_price || filters.max_price));
     const needsFarmingPracticesInner = !!filters.farming_practices;
 
     let query = supabase
@@ -56,7 +56,9 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     if (filters.slope_min) query = query.gte("slope_percent", Number(filters.slope_min));
     if (filters.slope_max) query = query.lte("slope_percent", Number(filters.slope_max));
     if (filters.min_tons) query = query.gte("estimated_tons", Number(filters.min_tons));
+    if (filters.max_tons) query = query.lte("estimated_tons", Number(filters.max_tons));
     if (filters.min_brix) query = query.gte("brix_target", Number(filters.min_brix));
+    if (filters.max_brix) query = query.lte("brix_target", Number(filters.max_brix));
     // NDA-12: browse filter, default include.
     if (filters.hide_nda) query = query.eq("is_nda", false);
     if (filters.single_vineyard_only) query = query.eq("single_vineyard", true);
@@ -76,6 +78,15 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     if (filters.min_gallons) query = query.gte("bulk_wine_details.quantity_gallons", Number(filters.min_gallons));
     if (filters.max_gallons) query = query.lte("bulk_wine_details.quantity_gallons", Number(filters.max_gallons));
     if (filters.max_so2) query = query.lte("bulk_wine_details.total_so2_ppm", Number(filters.max_so2));
+    // Homepage hero's price range slider -- branches by listing_type just
+    // like max_price below it always has, since bulk wine rows carry a
+    // placeholder 0 in price_per_ton (Decision 29) and grapes rows have no
+    // price_per_gallon at all.
+    if (filters.listing_type === "bulk_wine" && filters.min_price) {
+      query = query.gte("bulk_wine_details.price_per_gallon", Number(filters.min_price));
+    } else if (filters.min_price) {
+      query = query.gte("price_per_ton", Number(filters.min_price));
+    }
     if (filters.listing_type === "bulk_wine" && filters.max_price) {
       query = query.lte("bulk_wine_details.price_per_gallon", Number(filters.max_price));
     } else if (filters.max_price) {

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapPinned } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { VINEYARD_NAME_HELPER } from "@/lib/validation/vineyard";
 import { getVineyardNameSuggestions } from "@/app/(dashboard)/listings/vineyard-actions";
 
@@ -16,47 +17,28 @@ interface VineyardFieldProps {
 }
 
 /**
- * VIN-2: "Is this a single-vineyard offering?" toggle plus, when Yes, a
- * free-text name field with non-binding typeahead suggestions (VIN-5).
- * Plain controlled props (not react-hook-form's Control) so this is
- * reusable as-is by both the grapes form and the bulk-wine form (Phase 5).
- * The caller keeps whatever was typed in its own form state when toggled
- * to No, so toggling back restores it -- only the server decides whether
- * to actually store it (VIN-2).
+ * VIN-2: "Is this a single-vineyard offering?" checkbox plus, when checked,
+ * a free-text name field with non-binding typeahead suggestions (VIN-5),
+ * grouped in one bordered "vineyard detail" box. Plain controlled props
+ * (not react-hook-form's Control) so this is reusable as-is by both the
+ * grapes form and the bulk-wine form (Phase 5). The caller keeps whatever
+ * was typed in its own form state when unchecked, so re-checking restores
+ * it -- only the server decides whether to actually store it (VIN-2).
  */
 export function VineyardField({ singleVineyard, onSingleVineyardChange, vineyardName, onVineyardNameChange, error }: VineyardFieldProps) {
   return (
-    <div className="space-y-3">
-      <div className="space-y-1.5">
-        <Label>Is this a single-vineyard offering?</Label>
-        <div className="grid max-w-xs grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => onSingleVineyardChange(false)}
-            className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-              !singleVineyard
-                ? "border-[var(--color-brand)] bg-[var(--color-brand-50)] text-[var(--color-brand-dark)]"
-                : "border-stone-300 text-stone-700"
-            }`}
-          >
-            No
-          </button>
-          <button
-            type="button"
-            onClick={() => onSingleVineyardChange(true)}
-            className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-              singleVineyard
-                ? "border-[var(--color-brand)] bg-[var(--color-brand-50)] text-[var(--color-brand-dark)]"
-                : "border-stone-300 text-stone-700"
-            }`}
-          >
-            Yes
-          </button>
-        </div>
-      </div>
+    <div className="rounded-xl border border-stone-200 bg-stone-50 p-4">
+      <label htmlFor="single_vineyard" className="flex cursor-pointer items-center gap-2.5">
+        <Checkbox
+          id="single_vineyard"
+          checked={singleVineyard}
+          onCheckedChange={(checked) => onSingleVineyardChange(checked === true)}
+        />
+        <span className="text-sm font-medium text-stone-900">Is this a single-vineyard offering?</span>
+      </label>
 
       {singleVineyard && (
-        <div className="space-y-1.5">
+        <div className="mt-3 space-y-1.5 border-t border-stone-200 pt-3">
           <Label htmlFor="vineyard_name">Vineyard Name</Label>
           <VineyardNameInput id="vineyard_name" value={vineyardName} onChange={onVineyardNameChange} />
           {error ? <p className="text-xs text-red-600">{error}</p> : <p className="text-xs text-stone-500">{VINEYARD_NAME_HELPER}</p>}

@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — UI refinements (post-addendum)
+
+Product-owner-requested polish on top of the finished scope addendum, not part of `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md` itself.
+
+- Header market switch ("Grapes" / "Bulk Wine") now takes you to the homepage for that market instead of straight to its results grid -- `/` reads a `?market=bulk-wine` query param to decide which hero copy and search form to show (`BulkWineSearchHero`, mirroring `GrapeSearchHero`). `/grapes` and `/bulk-wine` (the actual browse/results pages) are unchanged.
+- Homepage hero subtext rewritten without an em dash.
+- "Crop Planning" removed from the public header nav -- it's still reachable from the grower dashboard's own sidebar, where it always was.
+- Homepage search (both markets) no longer has a free-text "Vineyard Name" field -- the full filter set including vineyard name search is still on `/grapes`'s own browse filters.
+- Homepage search's tonnage, price, and brix (grapes) and ABV, price, and quantity (bulk wine) are now drag-to-search dual-handle range sliders (new `Slider` UI primitive on `@radix-ui/react-slider`, `RangeSliderField`) instead of separate min/max number inputs. Added matching `max_tons`/`min_price`/`max_brix` filters (grapes) so the full range is actually queryable, not just the existing single-bound ones.
+- "Selling under NDA?" on the listing form is now a highlighted, always-visible amber box with Yes/No buttons instead of a small checkbox, so a decision with real privacy consequences isn't easy to miss. "Is this a single-vineyard offering?" swapped the other way, to a plain checkbox that reveals the name field in its own bordered "vineyard detail" box when checked.
+
 ## Unreleased — Scope addendum (NDA listings, usernames, vineyard field, bulk wine)
 
 Per `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md`. All new behavior ships behind feature flags (`NEXT_PUBLIC_FEATURE_USERNAMES`, `NEXT_PUBLIC_FEATURE_NDA_LISTINGS`, `NEXT_PUBLIC_FEATURE_BULK_WINE`), default off.

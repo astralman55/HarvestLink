@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag } from "lucide-react";
 import { GrapeSearchHero } from "@/components/marketplace/GrapeSearchHero";
+import { BulkWineSearchHero } from "@/components/marketplace/BulkWineSearchHero";
 import { ListingCard } from "@/components/marketplace/ListingCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,20 @@ const VALUE_PROPS = [
   },
 ];
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ market?: string }>;
+}) {
+  const { market: marketParam } = await searchParams;
+  // The header switch's "Bulk Wine" option lands here -- there's no
+  // separate bulk-wine homepage route, just this same page showing
+  // different hero copy and search form (per the project owner's own
+  // choice among a few routing options, not the scope addendum). Falls
+  // back to grapes whenever the flag is off, same as every other
+  // bulk-wine surface.
+  const isBulkWineHome = flags.bulkWine && marketParam === "bulk-wine";
+
   const featured = (await getListings({})).slice(0, 6);
 
   return (
@@ -41,14 +55,17 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <span className="inline-flex items-center rounded-full bg-[var(--color-brand-50)] px-3 py-1 text-xs font-semibold text-[var(--color-brand-dark)]">
-              B2B Wine Grape Marketplace
+              {isBulkWineHome ? "B2B Bulk Wine Marketplace" : "B2B Wine Grape Marketplace"}
             </span>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
-              Source exceptional wine grapes, direct from growers.
+              {isBulkWineHome
+                ? "Source exceptional bulk wine, direct from the best winemakers."
+                : "Source exceptional wine grapes, direct from growers."}
             </h1>
             <p className="mt-4 text-lg text-stone-600">
-              Search by region, variety, farming practice, and the vineyard-level detail that
-              actually determines quality — trellis, soil, exposure, and slope.
+              {isBulkWineHome
+                ? "Search by varietal, vintage, wine location, and the specs that actually matter: ABV, sulfites, quantity, and farming practice."
+                : "Search by region, variety, farming practice, and the vineyard-level detail that actually determines quality: trellis, soil, exposure, and slope."}
             </p>
           </div>
 
@@ -73,7 +90,7 @@ export default async function HomePage() {
           )}
 
           <div className="mx-auto mt-10 max-w-4xl">
-            <GrapeSearchHero />
+            {isBulkWineHome ? <BulkWineSearchHero /> : <GrapeSearchHero />}
           </div>
         </div>
       </section>

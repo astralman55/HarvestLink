@@ -67,7 +67,12 @@ export function BulkWinePrimaryFilterFields({ values, onChange }: FieldsProps) {
   );
 }
 
-export function BulkWineAdvancedFilterFields({ values, onChange }: FieldsProps) {
+// Split out of BulkWineAdvancedFilterFields so the homepage hero search
+// (which wants wine location + farming practice, but sliders instead of
+// plain number inputs for ABV/price/quantity) can compose them without
+// duplicating this markup -- same reasoning as ViticultureFilterFields.tsx's
+// FarmingDetailFields split.
+export function WineLocationAndPracticeFields({ values, onChange }: FieldsProps) {
   const selectedPractices = values.farming_practices ? values.farming_practices.split(",").filter(Boolean) : [];
 
   function togglePractice(code: string, checked: boolean) {
@@ -95,6 +100,40 @@ export function BulkWineAdvancedFilterFields({ values, onChange }: FieldsProps) 
           onChange={(e) => onChange({ wine_location_county: e.target.value })}
         />
       </FieldShell>
+
+      <FieldShell label="Max Total Sulfites (ppm)">
+        <Input
+          type="number"
+          min={0}
+          max={1000}
+          placeholder="e.g. 350"
+          value={values.max_so2 ?? ""}
+          onChange={(e) => onChange({ max_so2: e.target.value })}
+        />
+      </FieldShell>
+
+      <div className="space-y-1.5 sm:col-span-2">
+        <Label>Farming Practice</Label>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {BULK_WINE_FARMING_PRACTICES.map((practice) => (
+            <label key={practice.value} className="flex items-center gap-2 text-sm text-stone-700">
+              <Checkbox
+                checked={selectedPractices.includes(practice.value)}
+                onCheckedChange={(checked) => togglePractice(practice.value, checked === true)}
+              />
+              {practice.label}
+            </label>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function BulkWineAdvancedFilterFields({ values, onChange }: FieldsProps) {
+  return (
+    <>
+      <WineLocationAndPracticeFields values={values} onChange={onChange} />
 
       <FieldShell label="Min. ABV %">
         <Input
@@ -150,32 +189,6 @@ export function BulkWineAdvancedFilterFields({ values, onChange }: FieldsProps) 
           onChange={(e) => onChange({ max_gallons: e.target.value })}
         />
       </FieldShell>
-
-      <FieldShell label="Max Total Sulfites (ppm)">
-        <Input
-          type="number"
-          min={0}
-          max={1000}
-          placeholder="e.g. 350"
-          value={values.max_so2 ?? ""}
-          onChange={(e) => onChange({ max_so2: e.target.value })}
-        />
-      </FieldShell>
-
-      <div className="space-y-1.5 sm:col-span-2">
-        <Label>Farming Practice</Label>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {BULK_WINE_FARMING_PRACTICES.map((practice) => (
-            <label key={practice.value} className="flex items-center gap-2 text-sm text-stone-700">
-              <Checkbox
-                checked={selectedPractices.includes(practice.value)}
-                onCheckedChange={(checked) => togglePractice(practice.value, checked === true)}
-              />
-              {practice.label}
-            </label>
-          ))}
-        </div>
-      </div>
 
       <label className="flex cursor-pointer items-center gap-2 pt-1 text-sm text-stone-700">
         <Checkbox

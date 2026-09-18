@@ -8,20 +8,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RangeSliderField } from "@/components/marketplace/RangeSliderField";
 import { flags } from "@/lib/flags";
 import {
-  PrimaryFilterFields,
-  FarmingDetailFields,
+  BulkWinePrimaryFilterFields,
+  WineLocationAndPracticeFields,
   type FilterValues,
   type FilterPatch,
-} from "@/components/marketplace/ViticultureFilterFields";
+} from "@/components/marketplace/BulkWineFilterFields";
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 const QUICK_FILTERS: { label: string; params: Record<string, string> }[] = [
-  { label: "Organic Cabernet", params: { variety: "Cabernet Sauvignon", farming_practice: "organic" } },
-  { label: "Napa Valley", params: { region_ava: "Napa Valley" } },
-  { label: "Biodynamic Pinot Noir", params: { variety: "Pinot Noir", farming_practice: "biodynamic" } },
-  { label: "Forward Contracts", params: { harvest_year: String(new Date().getFullYear() + 2) } },
+  { label: "Organic Chardonnay", params: { variety: "Chardonnay", farming_practices: "organic" } },
+  { label: "Sonoma County", params: { wine_location_county: "Sonoma" } },
+  { label: "Biodynamic Pinot Noir", params: { variety: "Pinot Noir", farming_practices: "biodynamic" } },
+  { label: `${CURRENT_YEAR} Vintage`, params: { vintage_year: String(CURRENT_YEAR) } },
 ];
 
-export function GrapeSearchHero() {
+/** The bulk-wine equivalent of GrapeSearchHero, shown on the homepage when
+ * the header switch's "Bulk Wine" option is active (query-param toggle on
+ * "/", no separate route). */
+export function BulkWineSearchHero() {
   const router = useRouter();
   const [advancedOpen, setAdvancedOpen] = useState(true);
   const [values, setValues] = useState<FilterValues>({});
@@ -46,13 +51,13 @@ export function GrapeSearchHero() {
     for (const [key, value] of Object.entries(source)) {
       if (value) params.set(key, String(value));
     }
-    router.push(`/grapes${params.toString() ? `?${params.toString()}` : ""}`);
+    router.push(`/bulk-wine${params.toString() ? `?${params.toString()}` : ""}`);
   }
 
   return (
     <div className="rounded-3xl border border-stone-200 bg-white p-5 shadow-xl shadow-stone-900/5 sm:p-7">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <PrimaryFilterFields values={values} onChange={patch} />
+        <BulkWinePrimaryFilterFields values={values} onChange={patch} />
       </div>
 
       <button
@@ -61,51 +66,46 @@ export function GrapeSearchHero() {
         className="mt-5 flex items-center gap-2 text-sm font-medium text-[var(--color-brand)]"
       >
         <SlidersHorizontal className="size-4" />
-        Farming practice, trellis, soil, exposure &amp; more
+        Wine location, farming practice &amp; more
         <ChevronUp className={`size-4 transition-transform ${advancedOpen ? "" : "rotate-180"}`} />
       </button>
 
       {advancedOpen && (
         <div className="mt-4 space-y-5 border-t border-stone-100 pt-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <FarmingDetailFields values={values} onChange={patch} />
+            <WineLocationAndPracticeFields values={values} onChange={patch} />
           </div>
 
-          {/* Drag-to-search ranges, not typed numbers -- and no vineyard
-              name field at all here, so a buyer can't search for (and
-              accidentally surface) a specific seller's vineyard from the
-              homepage. The full filter set, including vineyard name search,
-              is still available on the /grapes browse page. */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             <RangeSliderField
-              label="Tonnage (tons)"
-              min={0}
-              max={100}
-              step={1}
-              minValue={values.min_tons}
-              maxValue={values.max_tons}
-              onChange={(min, max) => patch({ min_tons: min, max_tons: max })}
-              formatValue={(v) => `${v}t`}
+              label="ABV %"
+              min={5}
+              max={25}
+              step={0.1}
+              minValue={values.abv_min}
+              maxValue={values.abv_max}
+              onChange={(min, max) => patch({ abv_min: min, abv_max: max })}
+              formatValue={(v) => `${v.toFixed(1)}%`}
             />
             <RangeSliderField
-              label="Price / Ton (USD)"
+              label="Price / Gal (USD)"
               min={0}
-              max={10000}
-              step={100}
+              max={50}
+              step={0.5}
               minValue={values.min_price}
               maxValue={values.max_price}
               onChange={(min, max) => patch({ min_price: min, max_price: max })}
-              formatValue={(v) => `$${v.toLocaleString()}`}
+              formatValue={(v) => `$${v.toFixed(2)}`}
             />
             <RangeSliderField
-              label="Brix Target"
-              min={10}
-              max={40}
-              step={0.5}
-              minValue={values.min_brix}
-              maxValue={values.max_brix}
-              onChange={(min, max) => patch({ min_brix: min, max_brix: max })}
-              formatValue={(v) => `${v}°`}
+              label="Quantity (gal)"
+              min={0}
+              max={100000}
+              step={500}
+              minValue={values.min_gallons}
+              maxValue={values.max_gallons}
+              onChange={(min, max) => patch({ min_gallons: min, max_gallons: max })}
+              formatValue={(v) => `${v.toLocaleString()} gal`}
             />
           </div>
 
@@ -146,7 +146,7 @@ export function GrapeSearchHero() {
         </div>
         <Button size="lg" onClick={() => runSearch()} className="shrink-0">
           <Search className="size-4" />
-          Search Grapes
+          Search Bulk Wine
         </Button>
       </div>
     </div>
