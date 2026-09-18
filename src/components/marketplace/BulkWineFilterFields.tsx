@@ -6,7 +6,7 @@ import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RegionOptionGroups, GrapeVarietyOptionGroups } from "@/components/shared/SelectOptionGroups";
-import { US_STATES, BULK_WINE_FARMING_PRACTICES, currentVintageYearOptions } from "@/lib/constants/bulk-wine";
+import { BULK_WINE_FARMING_PRACTICES, currentVintageYearOptions } from "@/lib/constants/bulk-wine";
 import { flags } from "@/lib/flags";
 import type { ListingSearchFilters } from "@/types";
 
@@ -33,9 +33,9 @@ function FieldShell({ label, children }: { label: string; children: ReactElement
   );
 }
 
-// 6.5: bulk wine's own browse filter set -- varietal, vintage, grape
-// origin, wine location, ABV/price/quantity ranges, farming practice
-// (any-of), max sulfites, single vineyard, NDA include/exclude.
+// 6.5: bulk wine's own browse filter set -- varietal, vintage, region,
+// ABV/price/quantity ranges, farming practice (any-of), max sulfites,
+// single vineyard, NDA include/exclude.
 export function BulkWinePrimaryFilterFields({ values, onChange }: FieldsProps) {
   return (
     <>
@@ -57,7 +57,7 @@ export function BulkWinePrimaryFilterFields({ values, onChange }: FieldsProps) {
         </Select>
       </FieldShell>
 
-      <FieldShell label="Grape Origin (AVA)">
+      <FieldShell label="Region">
         <Select value={values.region_ava ?? ""} onChange={(e) => onChange({ region_ava: e.target.value })}>
           <option value="">Any region</option>
           <RegionOptionGroups />
@@ -68,11 +68,13 @@ export function BulkWinePrimaryFilterFields({ values, onChange }: FieldsProps) {
 }
 
 // Split out of BulkWineAdvancedFilterFields so the homepage hero search
-// (which wants wine location + farming practice, but sliders instead of
-// plain number inputs for ABV/price/quantity) can compose them without
-// duplicating this markup -- same reasoning as ViticultureFilterFields.tsx's
-// FarmingDetailFields split.
-export function WineLocationAndPracticeFields({ values, onChange }: FieldsProps) {
+// (which wants farming practice, but sliders instead of plain number
+// inputs for ABV/price/quantity) can compose them without duplicating this
+// markup -- same reasoning as ViticultureFilterFields.tsx's
+// FarmingDetailFields split. No wine-location fields here anymore -- the
+// project owner removed the "wine is stored somewhere other than where it
+// was harvested" concept; region_ava/sub_ava is the only location.
+export function SulfitesAndPracticeFields({ values, onChange }: FieldsProps) {
   const selectedPractices = values.farming_practices ? values.farming_practices.split(",").filter(Boolean) : [];
 
   function togglePractice(code: string, checked: boolean) {
@@ -82,25 +84,6 @@ export function WineLocationAndPracticeFields({ values, onChange }: FieldsProps)
 
   return (
     <>
-      <FieldShell label="Wine Location (State)">
-        <Select value={values.wine_location_state ?? ""} onChange={(e) => onChange({ wine_location_state: e.target.value })}>
-          <option value="">Any state</option>
-          {US_STATES.map((state) => (
-            <option key={state} value={state}>
-              {state}
-            </option>
-          ))}
-        </Select>
-      </FieldShell>
-
-      <FieldShell label="Wine Location (County)">
-        <Input
-          placeholder="e.g. Sonoma"
-          value={values.wine_location_county ?? ""}
-          onChange={(e) => onChange({ wine_location_county: e.target.value })}
-        />
-      </FieldShell>
-
       <FieldShell label="Max Total Sulfites (ppm)">
         <Input
           type="number"
@@ -133,7 +116,7 @@ export function WineLocationAndPracticeFields({ values, onChange }: FieldsProps)
 export function BulkWineAdvancedFilterFields({ values, onChange }: FieldsProps) {
   return (
     <>
-      <WineLocationAndPracticeFields values={values} onChange={onChange} />
+      <SulfitesAndPracticeFields values={values} onChange={onChange} />
 
       <FieldShell label="Min. ABV %">
         <Input

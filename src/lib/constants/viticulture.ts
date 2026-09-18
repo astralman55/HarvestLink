@@ -1,297 +1,158 @@
-export interface AvaRegion {
-  /** The "big region" AVA — what buyers filter/search by. */
+export interface RegionOption {
+  /** A county — what buyers filter/search by and what growers pick as their region. */
   name: string;
   state: string;
-  /**
-   * Sub-AVAs (AVAs nested entirely within this region) — optional detail a
-   * grower can add on top of the big region; not a separate buyer filter.
-   *
-   * Compiled from the TTB-recognized AVA list (via Wikipedia's "List of
-   * American Viticultural Areas" and per-state cross-checks) for
-   * California, Washington, Oregon, and New York. Nesting reflects the
-   * most specific commonly-used parent for each sub-AVA rather than every
-   * legal level of containment (e.g. Rutherford is filed under Napa Valley,
-   * not under the broader North Coast AVA it also technically sits inside).
-   * Treat this as a thorough working reference, not a certified TTB filing
-   * — worth spot-checking before relying on it for compliance purposes.
-   */
-  subAvas: readonly string[];
 }
 
-export const AVA_REGIONS: readonly AvaRegion[] = [
+// Region picker is county-based, not AVA-based (per the project owner's own
+// request) -- growers pick the county the fruit/wine comes from, and can
+// optionally add a specific area/AVA as free text alongside it (see
+// ListingForm.tsx / BulkWineForm.tsx's "Specific Area" field). Covers every
+// county with meaningful wine grape acreage in the four states this app
+// has always covered (California, Washington, Oregon, New York) -- not
+// just the boutique/AVA-famous ones, since bulk wine in particular often
+// comes from high-volume Central Valley-style counties.
+export const REGIONS: readonly RegionOption[] = [
   // ---------------------------------------------------------------------
   // California — North Coast
   // ---------------------------------------------------------------------
-  {
-    name: "Napa Valley",
-    state: "California",
-    subAvas: [
-      "Atlas Peak",
-      "Calistoga",
-      "Chiles Valley",
-      "Coombsville",
-      "Crystal Springs of Napa Valley",
-      "Diamond Mountain District",
-      "Howell Mountain",
-      "Mt. Veeder",
-      "Oak Knoll District of Napa Valley",
-      "Oakville",
-      "Rutherford",
-      "Spring Mountain District",
-      "St. Helena",
-      "Stags Leap District",
-      "Wild Horse Valley",
-      "Yountville",
-    ],
-  },
-  { name: "Sonoma Valley", state: "California", subAvas: [] },
-  { name: "Sonoma Coast", state: "California", subAvas: ["Fort Ross-Seaview", "West Sonoma Coast"] },
-  { name: "Russian River Valley", state: "California", subAvas: ["Green Valley of Russian River Valley"] },
-  { name: "Dry Creek Valley", state: "California", subAvas: [] },
-  { name: "Alexander Valley", state: "California", subAvas: [] },
-  { name: "Knights Valley", state: "California", subAvas: [] },
-  { name: "Chalk Hill", state: "California", subAvas: [] },
-  { name: "Bennett Valley", state: "California", subAvas: [] },
-  { name: "Moon Mountain District Sonoma County", state: "California", subAvas: [] },
-  { name: "Fountaingrove District", state: "California", subAvas: [] },
-  { name: "Petaluma Gap", state: "California", subAvas: [] },
-  { name: "Rockpile", state: "California", subAvas: [] },
-  { name: "Northern Sonoma", state: "California", subAvas: [] },
-  { name: "Los Carneros", state: "California", subAvas: [] },
-  {
-    name: "Mendocino",
-    state: "California",
-    subAvas: [
-      "Anderson Valley",
-      "Cole Ranch",
-      "Comptche",
-      "Covelo",
-      "Dos Rios",
-      "Eagle Peak Mendocino County",
-      "McDowell Valley",
-      "Mendocino Ridge",
-      "Potter Valley",
-      "Redwood Valley",
-      "Yorkville Highlands",
-    ],
-  },
-  {
-    name: "Clear Lake",
-    state: "California",
-    subAvas: [
-      "Benmore Valley",
-      "Big Valley District-Lake County",
-      "Guenoc Valley",
-      "High Valley",
-      "Kelsey Bench-Lake County",
-      "Long Valley-Lake County",
-      "Red Hills Lake County",
-      "Upper Lake Valley",
-    ],
-  },
-  { name: "Suisun Valley", state: "California", subAvas: [] },
-  { name: "Solano County Green Valley", state: "California", subAvas: [] },
-  { name: "North Coast", state: "California", subAvas: [] },
+  { name: "Napa County", state: "California" },
+  { name: "Sonoma County", state: "California" },
+  { name: "Mendocino County", state: "California" },
+  { name: "Lake County", state: "California" },
+  { name: "Marin County", state: "California" },
+  { name: "Solano County", state: "California" },
+
+  // ---------------------------------------------------------------------
+  // California — Central Valley & Sacramento Valley
+  // ---------------------------------------------------------------------
+  { name: "Yolo County", state: "California" },
+  { name: "Sacramento County", state: "California" },
+  { name: "San Joaquin County", state: "California" },
+  { name: "Stanislaus County", state: "California" },
+  { name: "Merced County", state: "California" },
+  { name: "Madera County", state: "California" },
+  { name: "Fresno County", state: "California" },
+  { name: "Kings County", state: "California" },
+  { name: "Tulare County", state: "California" },
+  { name: "Kern County", state: "California" },
+  { name: "Butte County", state: "California" },
+  { name: "Glenn County", state: "California" },
+  { name: "Colusa County", state: "California" },
+  { name: "Sutter County", state: "California" },
+  { name: "Yuba County", state: "California" },
+  { name: "Tehama County", state: "California" },
+
+  // ---------------------------------------------------------------------
+  // California — Sierra Foothills
+  // ---------------------------------------------------------------------
+  { name: "Amador County", state: "California" },
+  { name: "Calaveras County", state: "California" },
+  { name: "El Dorado County", state: "California" },
+  { name: "Tuolumne County", state: "California" },
+  { name: "Nevada County", state: "California" },
+  { name: "Placer County", state: "California" },
 
   // ---------------------------------------------------------------------
   // California — Central Coast
   // ---------------------------------------------------------------------
-  {
-    name: "Paso Robles",
-    state: "California",
-    subAvas: [
-      "Adelaida District",
-      "Creston District",
-      "El Pomar District",
-      "Paso Robles Estrella District",
-      "Paso Robles Geneseo District",
-      "Paso Robles Highlands District",
-      "Paso Robles Willow Creek District",
-      "San Juan Creek",
-      "San Miguel District",
-      "Santa Margarita Ranch",
-      "Templeton Gap District",
-    ],
-  },
-  {
-    name: "Santa Ynez Valley",
-    state: "California",
-    subAvas: ["Alisos Canyon", "Ballard Canyon", "Happy Canyon of Santa Barbara", "Los Olivos District", "Sta. Rita Hills"],
-  },
-  { name: "Santa Maria Valley", state: "California", subAvas: [] },
-  { name: "Carmel Valley", state: "California", subAvas: [] },
-  { name: "Monterey", state: "California", subAvas: [] },
-  { name: "Santa Lucia Highlands", state: "California", subAvas: [] },
-  { name: "Arroyo Seco", state: "California", subAvas: [] },
-  { name: "Santa Cruz Mountains", state: "California", subAvas: [] },
-  { name: "Santa Clara Valley", state: "California", subAvas: [] },
-  { name: "San Francisco Bay", state: "California", subAvas: [] },
-  { name: "Livermore Valley", state: "California", subAvas: [] },
-  { name: "Lamorinda", state: "California", subAvas: [] },
-  { name: "Contra Costa", state: "California", subAvas: [] },
-  { name: "Ben Lomond Mountain", state: "California", subAvas: [] },
-  { name: "Edna Valley", state: "California", subAvas: [] },
-  { name: "Arroyo Grande Valley", state: "California", subAvas: [] },
-  { name: "San Luis Obispo Coast", state: "California", subAvas: [] },
-  { name: "York Mountain", state: "California", subAvas: [] },
-  { name: "Hames Valley", state: "California", subAvas: [] },
-  { name: "San Antonio Valley", state: "California", subAvas: [] },
-  { name: "San Bernabe", state: "California", subAvas: [] },
-  { name: "San Lucas", state: "California", subAvas: [] },
-  { name: "Gabilan Mountains", state: "California", subAvas: [] },
-  { name: "Pacheco Pass", state: "California", subAvas: [] },
-  {
-    name: "San Benito",
-    state: "California",
-    subAvas: ["Chalone", "Cienega Valley", "Lime Kiln Valley", "Mt. Harlan", "Paicines"],
-  },
-  { name: "Central Coast", state: "California", subAvas: [] },
+  { name: "San Luis Obispo County", state: "California" },
+  { name: "Santa Barbara County", state: "California" },
+  { name: "Ventura County", state: "California" },
+  { name: "Monterey County", state: "California" },
+  { name: "San Benito County", state: "California" },
+  { name: "Santa Clara County", state: "California" },
+  { name: "Santa Cruz County", state: "California" },
+  { name: "Alameda County", state: "California" },
+  { name: "Contra Costa County", state: "California" },
 
   // ---------------------------------------------------------------------
-  // California — Central Valley & Sierra Foothills
+  // California — South Coast & Southern California
   // ---------------------------------------------------------------------
-  {
-    name: "Lodi",
-    state: "California",
-    subAvas: ["Alta Mesa", "Borden Ranch", "Clements Hills", "Cosumnes River", "Jahant", "Mokelumne River", "Sloughhouse"],
-  },
-  { name: "Clarksburg", state: "California", subAvas: ["Merritt Island"] },
-  { name: "Capay Valley", state: "California", subAvas: [] },
-  { name: "Diablo Grande", state: "California", subAvas: [] },
-  { name: "Dunnigan Hills", state: "California", subAvas: [] },
-  { name: "Madera", state: "California", subAvas: [] },
-  { name: "Paulsell Valley", state: "California", subAvas: [] },
-  { name: "River Junction", state: "California", subAvas: [] },
-  { name: "Salado Creek", state: "California", subAvas: [] },
-  { name: "Squaw Valley-Miramonte", state: "California", subAvas: [] },
-  { name: "Tracy Hills", state: "California", subAvas: [] },
-  { name: "Winters Highlands", state: "California", subAvas: [] },
-  {
-    name: "Sierra Foothills",
-    state: "California",
-    subAvas: ["California Shenandoah Valley", "El Dorado", "Fair Play", "Fiddletown", "North Yuba"],
-  },
+  { name: "Los Angeles County", state: "California" },
+  { name: "Riverside County", state: "California" },
+  { name: "San Diego County", state: "California" },
+  { name: "San Bernardino County", state: "California" },
 
   // ---------------------------------------------------------------------
-  // California — South Coast & Northern mountains
+  // California — North coast & mountains
   // ---------------------------------------------------------------------
-  { name: "Temecula Valley", state: "California", subAvas: [] },
-  { name: "Cucamonga Valley", state: "California", subAvas: [] },
-  { name: "Malibu Coast", state: "California", subAvas: ["Malibu-Newton Canyon", "Saddle Rock-Malibu"] },
-  { name: "Palos Verdes Peninsula", state: "California", subAvas: [] },
-  { name: "Antelope Valley of the California High Desert", state: "California", subAvas: [] },
-  { name: "Leona Valley", state: "California", subAvas: [] },
-  { name: "Sierra Pelona Valley", state: "California", subAvas: [] },
-  { name: "Tehachapi Mountains", state: "California", subAvas: [] },
-  { name: "Ramona Valley", state: "California", subAvas: [] },
-  { name: "San Pasqual Valley", state: "California", subAvas: [] },
-  { name: "San Luis Rey", state: "California", subAvas: [] },
-  { name: "Yucaipa Valley", state: "California", subAvas: [] },
-  { name: "South Coast", state: "California", subAvas: [] },
-  { name: "Inwood Valley", state: "California", subAvas: [] },
-  { name: "Manton Valley", state: "California", subAvas: [] },
-  { name: "Seiad Valley", state: "California", subAvas: [] },
-  { name: "Trinity Lakes", state: "California", subAvas: [] },
-  { name: "Willow Creek", state: "California", subAvas: [] },
+  { name: "Humboldt County", state: "California" },
+  { name: "Trinity County", state: "California" },
+  { name: "Siskiyou County", state: "California" },
 
   // ---------------------------------------------------------------------
   // Washington
   // ---------------------------------------------------------------------
-  { name: "Columbia Valley", state: "Washington & Oregon", subAvas: [] },
-  {
-    name: "Yakima Valley",
-    state: "Washington",
-    subAvas: ["Rattlesnake Hills", "Snipes Mountain", "Red Mountain", "Goose Gap", "Candy Mountain"],
-  },
-  { name: "Walla Walla Valley", state: "Washington & Oregon", subAvas: ["The Rocks District of Milton-Freewater"] },
-  { name: "Horse Heaven Hills", state: "Washington", subAvas: [] },
-  { name: "Wahluke Slope", state: "Washington", subAvas: [] },
-  { name: "Royal Slope", state: "Washington", subAvas: [] },
-  { name: "Ancient Lakes of the Columbia Valley", state: "Washington", subAvas: [] },
-  { name: "Naches Heights", state: "Washington", subAvas: [] },
-  { name: "Lake Chelan", state: "Washington", subAvas: [] },
-  { name: "White Bluffs", state: "Washington", subAvas: [] },
-  { name: "Rocky Reach", state: "Washington", subAvas: [] },
-  { name: "Beverly", state: "Washington", subAvas: [] },
-  { name: "The Burn of Columbia Valley", state: "Washington", subAvas: [] },
-  { name: "Puget Sound", state: "Washington", subAvas: [] },
-  { name: "Lewis-Clark Valley", state: "Washington & Idaho", subAvas: [] },
-  { name: "Columbia Gorge", state: "Washington & Oregon", subAvas: [] },
+  { name: "Yakima County", state: "Washington" },
+  { name: "Benton County", state: "Washington" },
+  { name: "Franklin County", state: "Washington" },
+  { name: "Walla Walla County", state: "Washington" },
+  { name: "Columbia County", state: "Washington" },
+  { name: "Chelan County", state: "Washington" },
+  { name: "Klickitat County", state: "Washington" },
+  { name: "Okanogan County", state: "Washington" },
+  { name: "Whatcom County", state: "Washington" },
+  { name: "Skagit County", state: "Washington" },
+  { name: "King County", state: "Washington" },
 
   // ---------------------------------------------------------------------
   // Oregon
   // ---------------------------------------------------------------------
-  {
-    name: "Willamette Valley",
-    state: "Oregon",
-    subAvas: [
-      "Chehalem Mountains",
-      "Dundee Hills",
-      "Eola-Amity Hills",
-      "Laurelwood District",
-      "Lower Long Tom",
-      "McMinnville",
-      "Mount Pisgah, Polk County",
-      "Ribbon Ridge",
-      "Tualatin Hills",
-      "Van Duzer Corridor",
-      "Yamhill-Carlton",
-    ],
-  },
-  { name: "Rogue Valley", state: "Oregon", subAvas: ["Applegate Valley"] },
-  { name: "Umpqua Valley", state: "Oregon", subAvas: ["Elkton Oregon", "Red Hill Douglas County"] },
-  { name: "Southern Oregon", state: "Oregon", subAvas: [] },
-  { name: "Snake River Valley", state: "Oregon & Idaho", subAvas: [] },
+  { name: "Yamhill County", state: "Oregon" },
+  { name: "Washington County", state: "Oregon" },
+  { name: "Polk County", state: "Oregon" },
+  { name: "Marion County", state: "Oregon" },
+  { name: "Jackson County", state: "Oregon" },
+  { name: "Josephine County", state: "Oregon" },
+  { name: "Douglas County", state: "Oregon" },
+  { name: "Deschutes County", state: "Oregon" },
+  { name: "Umatilla County", state: "Oregon" },
 
   // ---------------------------------------------------------------------
   // New York
   // ---------------------------------------------------------------------
-  { name: "Finger Lakes", state: "New York", subAvas: ["Cayuga Lake", "Seneca Lake"] },
-  { name: "Long Island", state: "New York", subAvas: ["North Fork of Long Island", "The Hamptons, Long Island"] },
-  { name: "Hudson River Region", state: "New York", subAvas: [] },
-  { name: "Upper Hudson", state: "New York", subAvas: [] },
-  { name: "Champlain Valley of New York", state: "New York", subAvas: [] },
-  { name: "Niagara Escarpment", state: "New York", subAvas: [] },
-  { name: "Lake Erie", state: "New York, Pennsylvania & Ohio", subAvas: [] },
+  { name: "Ontario County", state: "New York" },
+  { name: "Seneca County", state: "New York" },
+  { name: "Yates County", state: "New York" },
+  { name: "Steuben County", state: "New York" },
+  { name: "Suffolk County", state: "New York" },
+  { name: "Niagara County", state: "New York" },
+  { name: "Erie County", state: "New York" },
+  { name: "Chautauqua County", state: "New York" },
 ] as const;
 
-/** Flat list of just the big-region names, for simple `.map()` rendering. */
-export const AVA_REGION_NAMES: readonly string[] = AVA_REGIONS.map((r) => r.name);
+/** Flat list of just the region names, for simple `.map()` rendering. */
+export const REGION_NAMES: readonly string[] = REGIONS.map((r) => r.name);
 
 /** A handful of widely-recognized regions for homepage "browse by region" tiles. */
-export const FEATURED_AVA_REGIONS = [
-  "Napa Valley",
-  "Sonoma Coast",
-  "Russian River Valley",
-  "Paso Robles",
-  "Santa Ynez Valley",
-  "Sierra Foothills",
-  "Willamette Valley",
-  "Yakima Valley",
-  "Walla Walla Valley",
-  "Finger Lakes",
-  "Long Island",
+export const FEATURED_REGIONS = [
+  "Napa County",
+  "Sonoma County",
+  "Mendocino County",
+  "San Luis Obispo County",
+  "Santa Barbara County",
+  "San Joaquin County",
+  "Yamhill County",
+  "Yakima County",
+  "Walla Walla County",
+  "Suffolk County",
 ] as const;
-
-export function getSubAvasForRegion(regionName: string | undefined): readonly string[] {
-  if (!regionName) return [];
-  return AVA_REGIONS.find((r) => r.name === regionName)?.subAvas ?? [];
-}
 
 /**
  * NDA-3/WINE-5: grapes listings have no county/state columns, only
  * region_ava/sub_ava. When an NDA listing's location precision is "state",
- * the public serializer generalizes down to the state this AVA sits in.
+ * the public serializer generalizes down to the state this county sits in.
  */
 export function getStateForRegion(regionName: string | undefined): string | null {
   if (!regionName) return null;
-  return AVA_REGIONS.find((r) => r.name === regionName)?.state ?? null;
+  return REGIONS.find((r) => r.name === regionName)?.state ?? null;
 }
 
 /** Groups regions by state, in the order states first appear, for <optgroup> rendering. */
-export function groupRegionsByState(): { state: string; regions: AvaRegion[] }[] {
-  const groups: { state: string; regions: AvaRegion[] }[] = [];
-  for (const region of AVA_REGIONS) {
+export function groupRegionsByState(): { state: string; regions: RegionOption[] }[] {
+  const groups: { state: string; regions: RegionOption[] }[] = [];
+  for (const region of REGIONS) {
     let group = groups.find((g) => g.state === region.state);
     if (!group) {
       group = { state: region.state, regions: [] };

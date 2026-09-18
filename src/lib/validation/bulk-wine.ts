@@ -12,14 +12,17 @@ const BULK_WINE_FARMING_PRACTICE_VALUES = [
 ] as const;
 
 // WINE-4/WINE-5: shared fields reuse the same components/validation as
-// grapes (variety, description, NDA, vineyard, grape origin via
-// region_ava/sub_ava); everything below "quantity_gallons" is bulk-wine-
-// specific. Wine location (wine_location_state/county) is a separate
-// field from grape origin and must never be synced with it (WINE-5).
+// grapes (variety, description, NDA, vineyard, region); everything below
+// "quantity_gallons" is bulk-wine-specific. wine_location_state/county are
+// optional and no longer collected by the form (the project owner removed
+// the "wine is stored somewhere other than where it was harvested" entry
+// -- region_ava/sub_ava is the only location a bulk wine listing captures
+// now). Kept in the schema, not deleted, so editing an older listing that
+// already has real wine-location data doesn't silently wipe it.
 export const CreateBulkWineListingSchema = z
   .object({
     variety: z.string().min(2),
-    region_ava: z.string().min(2, { message: "Select the grape origin (AVA)." }),
+    region_ava: z.string().min(2, { message: "Select a region." }),
     sub_ava: z.string().optional(),
     description: z.string().min(10, { message: "Add at least a short description (10+ characters)." }),
     status: z.enum(["available", "pending", "sold", "archived"]).optional(),
@@ -47,8 +50,8 @@ export const CreateBulkWineListingSchema = z
     total_so2_ppm: z.coerce.number().int().min(0).max(1000).optional(),
     vintage_year: z.coerce.number().int().optional(),
     is_multi_vintage: z.boolean().default(false),
-    wine_location_state: z.enum(US_STATES, { message: "Select a state." }),
-    wine_location_county: z.string().min(2, { message: "Enter a county or region." }).max(100),
+    wine_location_state: z.enum(US_STATES, { message: "Select a state." }).optional(),
+    wine_location_county: z.string().max(100).optional(),
     farming_practices: z.array(z.enum(BULK_WINE_FARMING_PRACTICE_VALUES)).default([]),
   })
   .superRefine((data, ctx) => {

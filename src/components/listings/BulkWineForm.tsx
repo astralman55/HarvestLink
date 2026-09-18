@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateBulkWineListingSchema, type CreateBulkWineListingInput } from "@/lib/validation/bulk-wine";
@@ -11,8 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { generateBulkWineTitle, formatCurrencyPrecise, computeTotalLotValue } from "@/lib/utils";
-import { getSubAvasForRegion } from "@/lib/constants/viticulture";
-import { US_STATES, BULK_WINE_FARMING_PRACTICES, currentVintageYearOptions } from "@/lib/constants/bulk-wine";
+import { BULK_WINE_FARMING_PRACTICES, currentVintageYearOptions } from "@/lib/constants/bulk-wine";
 import { RegionOptionGroups, GrapeVarietyOptionGroups } from "@/components/shared/SelectOptionGroups";
 import { NdaFields } from "@/components/listings/NdaFields";
 import { NdaPreviewDialog } from "@/components/listings/NdaPreviewDialog";
@@ -64,7 +63,6 @@ export function BulkWineForm({
   });
 
   const selectedRegion = watch("region_ava");
-  const subAvaOptions = getSubAvasForRegion(selectedRegion);
   const isNda = watch("is_nda");
   const singleVineyard = watch("single_vineyard");
   const isMultiVintage = watch("is_multi_vintage");
@@ -73,13 +71,6 @@ export function BulkWineForm({
   const abv = Number(watch("abv") || 0);
   const so2 = watch("total_so2_ppm");
   const farmingPractices = watch("farming_practices") ?? [];
-
-  useEffect(() => {
-    if (selectedRegion !== defaultValues?.region_ava) {
-      setValue("sub_ava", "");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRegion, setValue]);
 
   const watchedVintageYear = watch("vintage_year");
   const generatedTitle = generateBulkWineTitle(
@@ -226,8 +217,7 @@ export function BulkWineForm({
       </section>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <h2 className="col-span-full text-sm font-semibold text-stone-900">Varietal &amp; Grape Origin</h2>
-        <p className="col-span-full -mt-2 text-xs text-stone-500">Where the grapes were grown. This can be different from the wine location.</p>
+        <h2 className="col-span-full text-sm font-semibold text-stone-900">Varietal &amp; Region</h2>
         <div className="space-y-1.5">
           <Label htmlFor="variety">Grape Variety</Label>
           <Select id="variety" {...register("variety")}>
@@ -237,47 +227,16 @@ export function BulkWineForm({
           {errors.variety && <p className="text-xs text-red-600">{errors.variety.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="region_ava">Grape Origin (AVA)</Label>
+          <Label htmlFor="region_ava">Region</Label>
           <Select id="region_ava" {...register("region_ava")}>
             <option value="">Select region</option>
             <RegionOptionGroups />
           </Select>
           {errors.region_ava && <p className="text-xs text-red-600">{errors.region_ava.message}</p>}
         </div>
-        {subAvaOptions.length > 0 && (
-          <div className="space-y-1.5">
-            <Label htmlFor="sub_ava">Sub-AVA (optional)</Label>
-            <Select id="sub_ava" {...register("sub_ava")}>
-              <option value="">No sub-AVA</option>
-              {subAvaOptions.map((sub) => (
-                <option key={sub} value={sub}>
-                  {sub}
-                </option>
-              ))}
-            </Select>
-          </div>
-        )}
-      </section>
-
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <h2 className="col-span-full text-sm font-semibold text-stone-900">Wine Location</h2>
-        <p className="col-span-full -mt-2 text-xs text-stone-500">Where the wine is stored and available for pickup. Never synced with grape origin above.</p>
         <div className="space-y-1.5">
-          <Label htmlFor="wine_location_state">State</Label>
-          <Select id="wine_location_state" {...register("wine_location_state")}>
-            <option value="">Select state</option>
-            {US_STATES.map((state) => (
-              <option key={state} value={state}>
-                {state}
-              </option>
-            ))}
-          </Select>
-          {errors.wine_location_state && <p className="text-xs text-red-600">{errors.wine_location_state.message}</p>}
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="wine_location_county">County / Region</Label>
-          <Input id="wine_location_county" placeholder="e.g. Sonoma County" {...register("wine_location_county")} />
-          {errors.wine_location_county && <p className="text-xs text-red-600">{errors.wine_location_county.message}</p>}
+          <Label htmlFor="sub_ava">Specific Area (optional)</Label>
+          <Input id="sub_ava" placeholder="e.g. Rutherford, Estate Block 4" {...register("sub_ava")} />
         </div>
       </section>
 

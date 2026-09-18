@@ -90,7 +90,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="regionAva">Operational AVA Region</Label>
+                <Label htmlFor="regionAva">Operational Region</Label>
                 <Select id="regionAva" {...register("regionAva")}>
                   <option value="">Select a region</option>
                   <RegionOptionGroups />

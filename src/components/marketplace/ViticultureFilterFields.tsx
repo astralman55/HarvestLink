@@ -46,7 +46,7 @@ function FieldShell({ label, children }: { label: string; children: ReactElement
 export function PrimaryFilterFields({ values, onChange }: FieldsProps) {
   return (
     <>
-      <FieldShell label="Region (AVA)">
+      <FieldShell label="Region">
         <Select
           value={values.region_ava ?? ""}
           onChange={(e) => onChange({ region_ava: e.target.value })}

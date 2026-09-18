@@ -6,7 +6,7 @@ import { ListingCard } from "@/components/marketplace/ListingCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { getListings } from "@/lib/data/listings";
-import { FEATURED_AVA_REGIONS } from "@/lib/constants/viticulture";
+import { FEATURED_REGIONS } from "@/lib/constants/viticulture";
 import { flags } from "@/lib/flags";
 
 const VALUE_PROPS = [
@@ -139,7 +139,7 @@ export default async function HomePage({
       <section className="border-t border-stone-200 bg-stone-50 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between">
-            <h2 className="text-2xl font-semibold text-stone-900">Browse by AVA Region</h2>
+            <h2 className="text-2xl font-semibold text-stone-900">Browse by Region</h2>
             <Link
               href="/grapes"
               className="hidden text-sm font-medium text-[var(--color-brand)] sm:block"
@@ -148,7 +148,7 @@ export default async function HomePage({
             </Link>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {FEATURED_AVA_REGIONS.map((region) => (
+            {FEATURED_REGIONS.map((region) => (
               <Link
                 key={region}
                 href={`/grapes?region_ava=${encodeURIComponent(region)}`}

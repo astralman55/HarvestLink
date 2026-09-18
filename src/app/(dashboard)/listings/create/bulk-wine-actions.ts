@@ -93,8 +93,8 @@ export async function createNewBulkWineListing(data: CreateBulkWineListingInput)
       total_so2_ppm: validation.data.total_so2_ppm ?? null,
       vintage_year: vintageYear,
       is_multi_vintage: validation.data.is_multi_vintage,
-      wine_location_state: validation.data.wine_location_state,
-      wine_location_county: validation.data.wine_location_county,
+      wine_location_state: validation.data.wine_location_state ?? null,
+      wine_location_county: validation.data.wine_location_county ?? null,
     });
 
     if (detailsError) {

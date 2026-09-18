@@ -20,7 +20,7 @@ export const CANARY_STRINGS = [CANARY_COMPANY, CANARY_USERNAME, CANARY_VINEYARD,
 
 export const CANARY_SELLER: RawSellerProfile = {
   company_name: CANARY_COMPANY,
-  region_ava: "Napa Valley",
+  region_ava: "Napa County",
   is_verified: true,
   username: CANARY_USERNAME,
 };
@@ -29,11 +29,11 @@ export function ndaListing(overrides: Partial<Listing> = {}): Listing {
   return {
     id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
     user_id: CANARY_USER_ID,
-    title: "Cabernet Sauvignon (Clone 337) — Napa Valley",
+    title: "Cabernet Sauvignon (Clone 337) — Napa County",
     variety: "Cabernet Sauvignon",
     clone: "Clone 337",
     rootstock: "110R",
-    region_ava: "Napa Valley",
+    region_ava: "Napa County",
     sub_ava: "Atlas Peak",
     estimated_tons: 20,
     minimum_tons: 2,

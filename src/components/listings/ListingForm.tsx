@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateListingSchema, type CreateListingInput } from "@/lib/validation/listing";
@@ -16,7 +16,6 @@ import {
   SOIL_TYPES,
   SUN_EXPOSURES,
   currentHarvestYearOptions,
-  getSubAvasForRegion,
 } from "@/lib/constants/viticulture";
 import { RegionOptionGroups, GrapeVarietyOptionGroups } from "@/components/shared/SelectOptionGroups";
 import { NdaFields } from "@/components/listings/NdaFields";
@@ -70,18 +69,8 @@ export function ListingForm({
   });
 
   const selectedRegion = watch("region_ava");
-  const subAvaOptions = getSubAvasForRegion(selectedRegion);
   const isNda = watch("is_nda");
   const singleVineyard = watch("single_vineyard");
-
-  useEffect(() => {
-    if (selectedRegion !== defaultValues?.region_ava) {
-      setValue("sub_ava", "");
-    }
-    // Only reset the sub-AVA when the region actually changes away from
-    // whatever it was pre-filled with — not on the initial mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRegion, setValue]);
 
   const generatedTitle = generateListingTitle(
     watch("variety"),
@@ -218,24 +207,17 @@ export function ListingForm({
           {errors.variety && <p className="text-xs text-red-600">{errors.variety.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="region_ava">Region (AVA)</Label>
+          <Label htmlFor="region_ava">Region</Label>
           <Select id="region_ava" {...register("region_ava")}>
             <option value="">Select region</option>
             <RegionOptionGroups />
           </Select>
           {errors.region_ava && <p className="text-xs text-red-600">{errors.region_ava.message}</p>}
         </div>
-        {subAvaOptions.length > 0 && (
-          <div className="space-y-1.5">
-            <Label htmlFor="sub_ava">Sub-AVA (optional)</Label>
-            <Select id="sub_ava" {...register("sub_ava")}>
-              <option value="">No sub-AVA</option>
-              {subAvaOptions.map((sub) => (
-                <option key={sub} value={sub}>{sub}</option>
-              ))}
-            </Select>
-          </div>
-        )}
+        <div className="space-y-1.5">
+          <Label htmlFor="sub_ava">Specific Area (optional)</Label>
+          <Input id="sub_ava" placeholder="e.g. Rutherford, Estate Block 4" {...register("sub_ava")} />
+        </div>
         <div className="space-y-1.5">
           <Label htmlFor="clone">Clone</Label>
           <Input id="clone" placeholder="e.g. Dijon 777" {...register("clone")} />

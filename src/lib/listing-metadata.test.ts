@@ -27,7 +27,7 @@ describe("buildListingMetadata -- NDA canary", () => {
 
     const metadata = await buildListingMetadata("some-slug-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "grapes");
     assertNoCanaryLeak(metadata);
-    expect(metadata.title).toBe("Cabernet Sauvignon (Clone 337) — Napa Valley");
+    expect(metadata.title).toBe("Cabernet Sauvignon (Clone 337) — Napa County");
   });
 
   it("never leaks the canary seller through a bulk-wine NDA listing's metadata, including the withheld county", async () => {

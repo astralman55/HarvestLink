@@ -9,7 +9,7 @@ import { RangeSliderField } from "@/components/marketplace/RangeSliderField";
 import { flags } from "@/lib/flags";
 import {
   BulkWinePrimaryFilterFields,
-  WineLocationAndPracticeFields,
+  SulfitesAndPracticeFields,
   type FilterValues,
   type FilterPatch,
 } from "@/components/marketplace/BulkWineFilterFields";
@@ -18,7 +18,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 const QUICK_FILTERS: { label: string; params: Record<string, string> }[] = [
   { label: "Organic Chardonnay", params: { variety: "Chardonnay", farming_practices: "organic" } },
-  { label: "Sonoma County", params: { wine_location_county: "Sonoma" } },
+  { label: "Sonoma County", params: { region_ava: "Sonoma County" } },
   { label: "Biodynamic Pinot Noir", params: { variety: "Pinot Noir", farming_practices: "biodynamic" } },
   { label: `${CURRENT_YEAR} Vintage`, params: { vintage_year: String(CURRENT_YEAR) } },
 ];
@@ -66,14 +66,14 @@ export function BulkWineSearchHero() {
         className="mt-5 flex items-center gap-2 text-sm font-medium text-[var(--color-brand)]"
       >
         <SlidersHorizontal className="size-4" />
-        Wine location, farming practice &amp; more
+        Farming practice, sulfites &amp; more
         <ChevronUp className={`size-4 transition-transform ${advancedOpen ? "" : "rotate-180"}`} />
       </button>
 
       {advancedOpen && (
         <div className="mt-4 space-y-5 border-t border-stone-100 pt-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <WineLocationAndPracticeFields values={values} onChange={patch} />
+            <SulfitesAndPracticeFields values={values} onChange={patch} />
           </div>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">

@@ -51,7 +51,7 @@ describe("serializeListing -- NDA canary", () => {
       isAdmin: false,
     });
     expect(result.sub_ava).toBeNull();
-    expect(result.region_ava).toBe("Napa Valley");
+    expect(result.region_ava).toBe("Napa County");
   });
 
   it("generalizes down to the state when precision is 'state'", () => {
