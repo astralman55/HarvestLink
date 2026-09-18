@@ -20,7 +20,13 @@ export async function updateListing(listingId: string, data: CreateListingInput)
 
     if (!user) return { error: "Unauthorized access token context." };
 
-    // NDA-6: block identifying free text before it's ever published.
+    // VIN-2/VIN-8: never store a vineyard name when single_vineyard is off,
+    // regardless of what the (hidden) form field still holds in memory.
+    const vineyardName = validation.data.single_vineyard ? validation.data.vineyard_name?.trim() || null : null;
+
+    // NDA-6: block identifying free text before it's ever published. Checks
+    // this submission's own (possibly just-changed) vineyard name too, not
+    // just other listings.
     if (validation.data.is_nda) {
       const [{ data: profile }, { data: otherListings }] = await Promise.all([
         supabase.from("profiles").select("username, company_name, full_name").eq("id", user.id).single(),
@@ -31,7 +37,7 @@ export async function updateListing(listingId: string, data: CreateListingInput)
         companyName: profile?.company_name,
         fullName: profile?.full_name,
         username: profile?.username,
-        vineyardNames: (otherListings ?? []).map((l) => l.vineyard_name),
+        vineyardNames: [vineyardName, ...(otherListings ?? []).map((l) => l.vineyard_name)],
       });
       if (guard.blocked) return { error: guard.reason };
     }
@@ -45,6 +51,7 @@ export async function updateListing(listingId: string, data: CreateListingInput)
       .from("listings")
       .update({
         ...validation.data,
+        vineyard_name: vineyardName,
         title: generateListingTitle(
           validation.data.variety,
           validation.data.clone,

@@ -1,31 +1,51 @@
 import { z } from "zod";
+import { VineyardNameSchema } from "@/lib/validation/vineyard";
 
-export const CreateListingSchema = z.object({
-  variety: z.string().min(2),
-  clone: z.string().optional(),
-  rootstock: z.string().optional(),
-  region_ava: z.string().min(2),
-  sub_ava: z.string().optional(),
-  estimated_tons: z.coerce.number().positive(),
-  minimum_tons: z.coerce.number().positive().default(1),
-  price_per_ton: z.coerce.number().positive(),
-  brix_target: z.coerce.number().min(10).max(40).optional(),
-  description: z.string().min(10, { message: "Add at least a short description (10+ characters)." }),
-  farming_practice: z.enum(["conventional", "sustainable", "organic", "biodynamic"]),
-  trellis_system: z.string().optional(),
-  soil_type: z.string().optional(),
-  sun_exposure: z.string().optional(),
-  slope_percent: z.coerce.number().min(0).max(100).optional(),
-  harvest_year: z.coerce.number().int().min(2020).max(2100),
-  // Only ever shown/editable on the edit form — new listings always start
-  // "available" (set server-side in the create action).
-  status: z.enum(["available", "pending", "sold", "archived"]).optional(),
-  // NDA-1/NDA-2 (Requirement 1). Default off; nda_location_precision only
-  // matters when is_nda is true, so it's kept simple here rather than
-  // conditionally required.
-  is_nda: z.boolean().default(false),
-  nda_location_precision: z.enum(["county", "state"]).default("county"),
-});
+export const CreateListingSchema = z
+  .object({
+    variety: z.string().min(2),
+    clone: z.string().optional(),
+    rootstock: z.string().optional(),
+    region_ava: z.string().min(2),
+    sub_ava: z.string().optional(),
+    estimated_tons: z.coerce.number().positive(),
+    minimum_tons: z.coerce.number().positive().default(1),
+    price_per_ton: z.coerce.number().positive(),
+    brix_target: z.coerce.number().min(10).max(40).optional(),
+    description: z.string().min(10, { message: "Add at least a short description (10+ characters)." }),
+    farming_practice: z.enum(["conventional", "sustainable", "organic", "biodynamic"]),
+    trellis_system: z.string().optional(),
+    soil_type: z.string().optional(),
+    sun_exposure: z.string().optional(),
+    slope_percent: z.coerce.number().min(0).max(100).optional(),
+    harvest_year: z.coerce.number().int().min(2020).max(2100),
+    // Only ever shown/editable on the edit form — new listings always start
+    // "available" (set server-side in the create action).
+    status: z.enum(["available", "pending", "sold", "archived"]).optional(),
+    // NDA-1/NDA-2 (Requirement 1). Default off; nda_location_precision only
+    // matters when is_nda is true, so it's kept simple here rather than
+    // conditionally required.
+    is_nda: z.boolean().default(false),
+    nda_location_precision: z.enum(["county", "state"]).default("county"),
+    // VIN-1/VIN-2 (Requirement 3). vineyard_name is optional at this level
+    // and only required/validated below when single_vineyard is true --
+    // the form keeps whatever was typed in memory when toggled off, but the
+    // server always nulls it out for storage in that case (VIN-2, VIN-8).
+    single_vineyard: z.boolean().default(false),
+    vineyard_name: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.single_vineyard) {
+      const check = VineyardNameSchema.safeParse(data.vineyard_name ?? "");
+      if (!check.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["vineyard_name"],
+          message: check.error.issues[0]?.message ?? "Enter a vineyard name.",
+        });
+      }
+    }
+  });
 
 // react-hook-form needs the pre-coercion shape (z.input) since fields like
 // estimated_tons start as strings from <input type="number">; the server

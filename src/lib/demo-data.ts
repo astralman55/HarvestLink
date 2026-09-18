@@ -1,4 +1,4 @@
-import type { Listing } from "@/types";
+import type { Listing, ListingSearchFilters } from "@/types";
 
 /**
  * Sample catalog used only when no live Supabase project is configured yet
@@ -229,21 +229,15 @@ export const DEMO_LISTINGS: Listing[] = [
   },
 ];
 
-export function filterDemoListings(filters: {
-  region_ava?: string;
-  variety?: string;
-  farming_practice?: string;
-  trellis_system?: string;
-  soil_type?: string;
-  sun_exposure?: string;
-  harvest_year?: string;
-  slope_min?: string;
-  slope_max?: string;
-  min_tons?: string;
-  max_price?: string;
-  min_brix?: string;
-}): Listing[] {
+export function filterDemoListings(filters: ListingSearchFilters): Listing[] {
   return DEMO_LISTINGS.filter((listing) => {
+    if (filters.hide_nda && listing.is_nda) return false;
+    if (filters.single_vineyard_only && !listing.single_vineyard) return false;
+    if (
+      filters.vineyard_name &&
+      (listing.is_nda || !listing.vineyard_name?.toLowerCase().includes(filters.vineyard_name.toLowerCase()))
+    )
+      return false;
     if (filters.region_ava && listing.region_ava !== filters.region_ava) return false;
     if (filters.variety && listing.variety !== filters.variety) return false;
     if (filters.farming_practice && listing.farming_practice !== filters.farming_practice) return false;

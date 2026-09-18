@@ -22,6 +22,7 @@ import { RegionOptionGroups, GrapeVarietyOptionGroups } from "@/components/share
 import { NdaFields } from "@/components/listings/NdaFields";
 import { NdaPreviewDialog } from "@/components/listings/NdaPreviewDialog";
 import { NdaToggleConfirmDialog } from "@/components/listings/NdaToggleConfirmDialog";
+import { VineyardField } from "@/components/listings/VineyardField";
 import { flags } from "@/lib/flags";
 import type { Listing } from "@/types";
 
@@ -59,12 +60,20 @@ export function ListingForm({
     formState: { errors, isSubmitting },
   } = useForm<CreateListingInput>({
     resolver: zodResolver(CreateListingSchema),
-    defaultValues: { minimum_tons: 1, farming_practice: "conventional", is_nda: false, nda_location_precision: "county", ...defaultValues },
+    defaultValues: {
+      minimum_tons: 1,
+      farming_practice: "conventional",
+      is_nda: false,
+      nda_location_precision: "county",
+      single_vineyard: false,
+      ...defaultValues,
+    },
   });
 
   const selectedRegion = watch("region_ava");
   const subAvaOptions = getSubAvasForRegion(selectedRegion);
   const isNda = watch("is_nda");
+  const singleVineyard = watch("single_vineyard");
 
   useEffect(() => {
     if (selectedRegion !== defaultValues?.region_ava) {
@@ -129,8 +138,8 @@ export function ListingForm({
         soil_type: pendingData.soil_type || null,
         sun_exposure: pendingData.sun_exposure || null,
         slope_percent: pendingData.slope_percent ?? null,
-        single_vineyard: false,
-        vineyard_name: null,
+        single_vineyard: pendingData.single_vineyard ?? false,
+        vineyard_name: pendingData.single_vineyard ? pendingData.vineyard_name || null : null,
         vineyard_name_normalized: null,
         variety: pendingData.variety,
         region_ava: pendingData.region_ava,
@@ -171,7 +180,11 @@ export function ListingForm({
         </section>
       )}
 
-      {flags.ndaListings && <NdaFields control={control} register={register} isNda={!!isNda} />}
+      <section className="space-y-4 rounded-xl border border-stone-200 p-4">
+        <h2 className="text-sm font-semibold text-stone-900">Seller &amp; Source</h2>
+        <VineyardField control={control} singleVineyard={!!singleVineyard} error={errors.vineyard_name?.message} />
+        {flags.ndaListings && <NdaFields control={control} register={register} isNda={!!isNda} />}
+      </section>
 
       <section className="space-y-4">
         <h2 className="text-sm font-semibold text-stone-900">Listing Basics</h2>

@@ -29,6 +29,8 @@ export function EditListingForm({ listing }: { listing: Listing }) {
     status: listing.status,
     is_nda: listing.is_nda,
     nda_location_precision: listing.nda_location_precision,
+    single_vineyard: listing.single_vineyard,
+    vineyard_name: listing.vineyard_name ?? undefined,
   };
 
   async function handleSubmit(data: CreateListingInput) {

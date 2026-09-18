@@ -33,6 +33,13 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     if (filters.min_brix) query = query.gte("brix_target", Number(filters.min_brix));
     // NDA-12: browse filter, default include.
     if (filters.hide_nda) query = query.eq("is_nda", false);
+    if (filters.single_vineyard_only) query = query.eq("single_vineyard", true);
+    // VIN-7: "Searching 'Smith Vineyards' must not surface an NDA listing
+    // from Smith Vineyards" -- is_nda=false is ANDed in only for this
+    // specific filter, not applied to browsing in general.
+    if (filters.vineyard_name) {
+      query = query.ilike("vineyard_name", `%${filters.vineyard_name}%`).eq("is_nda", false);
+    }
 
     const { data, error } = await query;
     if (error) throw error;

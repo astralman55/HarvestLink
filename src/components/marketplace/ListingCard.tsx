@@ -49,6 +49,9 @@ export function ListingCard({ listing }: { listing: PublicListing }) {
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="outline">{PRACTICE_LABEL[listing.farming_practice]}</Badge>
           {listing.brix_target && <Badge variant="outline">{listing.brix_target}° Brix target</Badge>}
+          {listing.single_vineyard && (
+            <Badge variant="outline">Vineyard: {listing.vineyard_withheld ? "name withheld" : listing.vineyard_name}</Badge>
+          )}
         </div>
 
         <div className="mt-auto flex items-end justify-between pt-2">

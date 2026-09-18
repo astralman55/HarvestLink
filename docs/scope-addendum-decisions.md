@@ -130,3 +130,27 @@ No test framework, browser test runner, or CI existed before this phase (Phase 0
 ### Decision 20 — The admin identity view (NDA-11) is one page, not an admin console
 
 No admin infrastructure exists at all yet (Phase 0 audit -- the `admin` role exists in the enum but nothing gates on it anywhere). Built the minimum NDA-11 asks for: `/admin/listings/[id]`, gated by `profiles.role = 'admin'` (redirects non-admins to `/dashboard`), shows the real seller identity for an NDA listing, and writes one row to `admin_identity_view_log` per view. No listing/moderation console, no way to browse to it except by URL (an admin would need the listing ID) -- broader admin tooling is out of scope until the project owner asks for it.
+
+---
+
+## Phase 4 (Vineyard field)
+
+### Decision 21 — No new migration needed
+
+Phase 1's migration (`0003`) already added `listings.single_vineyard`, `vineyard_name`, `vineyard_name_normalized`, the CHECK constraint requiring `vineyard_name` to be null when `single_vineyard` is false, and the normalization trigger (lowercase, accents/punctuation stripped via `unaccent`) -- built forward-looking specifically for this phase. Phase 4 is UI, validation, and query logic only.
+
+### Decision 22 — The vineyard field ships without its own feature flag, unlike the other three requirements
+
+The spec's own Ground Rules table names exactly three flags for its four requirements: `feature.nda_listings`, `feature.bulk_wine`, `feature.usernames` -- Requirement 3 (vineyard) has no listed flag, and Phase 4's own delivery-plan row ("Vineyard field (Req. 3) incl. typeahead and NDA interplay | Vineyard criteria met") doesn't mention one either. Read this as deliberate: the field is purely additive (an optional Yes/No question defaulting to No, with no auth/security blast radius), builds entirely on infrastructure Phase 1 and Phase 3 already shipped and tested (the DB constraints, the normalization trigger, and `serializeListing()`'s `vineyard_withheld` handling, which was written NDA-aware from the start even though it stayed dormant until this phase). It ships live rather than dark. If this reading is wrong, it's a small, contained change to gate (`VineyardField` in `ListingForm.tsx`, `getVineyardNameSuggestions`, and the two new browse filters in `ViticultureFilterFields.tsx`).
+
+### Decision 23 — Vineyard-name character-set validation lives only in Zod, not also as a DB CHECK constraint
+
+Username format (Phase 2) is enforced both in Zod and as a DB CHECK constraint, as defense in depth. Considered doing the same for `vineyard_name`'s VIN-4 character allowlist (Unicode letters/numbers/spaces + `' . , - & ( ) # /`), but Postgres's native regex engine doesn't have a reliable Unicode-aware `\p{L}`-style letter class the way JavaScript does (`\p{L}` with the `u` flag) -- its POSIX character classes like `[[:alpha:]]` depend on the database's locale/collation in ways that are easy to get subtly wrong, and a wrong DB-side regex would silently reject legitimate accented vineyard names (e.g. "Clos Pégase") with a confusing generic constraint-violation error instead of Zod's specific, friendly message. Since there's no other insert/update path for listings besides the two Server Actions (both of which validate with the same `VineyardNameSchema` before ever reaching the database), Zod alone is the correct trust boundary here. The length (2-100) and single-vineyard-consistency CHECK constraints from Phase 1 remain as the DB-level backstop for the parts that don't need locale-sensitive regex.
+
+### Decision 24 — Vineyard-name search excludes NDA listings unconditionally, even for their own owner browsing publicly
+
+VIN-7 requires "searching 'Smith Vineyards' must not surface an NDA listing from Smith Vineyards" -- implemented in `getListings()` by ANDing `is_nda = false` onto the query only when a `vineyard_name` search term is present (general browsing is unaffected). This is enforced in the SQL query itself, before the per-viewer serializer ever runs, so it applies uniformly regardless of who's searching -- including the listing's own owner searching the public marketplace. A grower who wants to find their own NDA listing has `/listings/mine` for that; the public search page correctly treating "searchable by vineyard name" as mutually exclusive with "confidential" was judged more important than that small convenience.
+
+### Decision 25 — Typeahead matches the raw `vineyard_name` column with `ilike`, not the normalized column
+
+VIN-5's suggestions are explicitly "non-binding" and best-effort. Rather than reimplementing the DB trigger's `unaccent` + strip-non-alphanumeric normalization algorithm in JavaScript just to search `vineyard_name_normalized`, `getVineyardNameSuggestions()` does a case-insensitive substring match (`ilike`) against the plain display column. This won't catch every accent/punctuation variant (typing "Tokalon" won't suggest "To Kalon"), but it's simple, has no risk of drifting out of sync with the DB's own normalization logic, and still satisfies the requirement's actual purpose (reducing *spelling* variants for a still-free-text field, not guaranteeing exact-normalized recall). The privacy rule (VIN-5's real MUST) is independent of this choice and is covered by `filterVineyardSuggestions()` and its dedicated tests regardless of which column is searched.

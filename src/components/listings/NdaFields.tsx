@@ -13,14 +13,13 @@ interface NdaFieldsProps {
 
 /**
  * NDA-1: the "Selling under NDA?" control plus its live "what buyers will
- * see" panel (Appendix A copy). Kept as its own small, keyboard-accessible
- * section near where the vineyard field will land in Phase 4.
+ * see" panel (Appendix A copy). Rendered inside the same "Seller & Source"
+ * section as VineyardField, right below it, per the spec's own placement
+ * note ("near the vineyard field").
  */
 export function NdaFields({ control, register, isNda }: NdaFieldsProps) {
   return (
-    <section className="space-y-4 rounded-xl border border-stone-200 p-4">
-      <h2 className="text-sm font-semibold text-stone-900">Seller &amp; Source</h2>
-
+    <div className="space-y-4">
       <Controller
         control={control}
         name="is_nda"
@@ -70,6 +69,6 @@ export function NdaFields({ control, register, isNda }: NdaFieldsProps) {
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

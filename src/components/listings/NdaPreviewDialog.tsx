@@ -43,6 +43,11 @@ export function NdaPreviewDialog({ open, onOpenChange, previewRow, onConfirm, su
             <h3 className="font-semibold text-stone-900">{preview.title}</h3>
           </div>
           <p className="text-sm text-stone-500">{preview.sub_ava ? `${preview.sub_ava}, ` : ""}{preview.region_ava}</p>
+          {preview.single_vineyard && (
+            <p className="text-sm text-stone-500">
+              Vineyard: {preview.vineyard_withheld ? "Single vineyard (name withheld)" : preview.vineyard_name}
+            </p>
+          )}
           <p className="text-sm text-stone-600">{preview.description}</p>
           <p className="text-lg font-semibold text-stone-900">
             {formatCurrency(preview.price_per_ton)} <span className="text-sm font-normal text-stone-500">/ ton</span>

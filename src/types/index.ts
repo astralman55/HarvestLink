@@ -104,4 +104,7 @@ export interface ListingSearchFilters {
   min_brix?: string;
   /** NDA-12: browse filter to exclude NDA listings. Default (unset) is include. */
   hide_nda?: string;
+  /** VIN-7: matches non-NDA listings' vineyard names only -- see getListings(). */
+  vineyard_name?: string;
+  single_vineyard_only?: string;
 }

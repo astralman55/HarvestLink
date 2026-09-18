@@ -190,6 +190,22 @@ export function AdvancedFilterFields({ values, onChange }: FieldsProps) {
         />
       </FieldShell>
 
+      <FieldShell label="Vineyard Name">
+        <Input
+          placeholder="e.g. To Kalon"
+          value={values.vineyard_name ?? ""}
+          onChange={(e) => onChange({ vineyard_name: e.target.value })}
+        />
+      </FieldShell>
+
+      <label className="flex cursor-pointer items-center gap-2 text-sm text-stone-700">
+        <Checkbox
+          checked={values.single_vineyard_only === "true"}
+          onCheckedChange={(checked) => onChange({ single_vineyard_only: checked ? "true" : undefined })}
+        />
+        Single vineyard only
+      </label>
+
       {flags.ndaListings && (
         <label className="flex cursor-pointer items-center gap-2 pt-1 text-sm text-stone-700">
           <Checkbox

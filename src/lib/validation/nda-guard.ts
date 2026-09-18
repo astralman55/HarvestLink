@@ -19,8 +19,10 @@ export interface FreeTextGuardResult {
   reason?: string;
 }
 
-const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
-const URL_PATTERN = /\b((https?:\/\/)|(www\.))\S+/i;
+// Exported for reuse by VIN-4's vineyard-name validation, which also has to
+// reject emails/URLs.
+export const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
+export const URL_PATTERN = /\b((https?:\/\/)|(www\.))\S+/i;
 // Matches common phone groupings (US-style 3-3-4, with or without an area
 // code in parens, an optional country code, and space/dot/dash separators)
 // rather than "any run of digits" -- a plain run would false-positive on

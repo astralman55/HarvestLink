@@ -32,7 +32,14 @@ export async function createNewListing(data: CreateListingInput) {
       return { error: "Please choose a username before publishing a listing.", needsUsername: true };
     }
 
-    // NDA-6: block identifying free text before it's ever published.
+    // VIN-2/VIN-8: never store a vineyard name when single_vineyard is off,
+    // regardless of what the (hidden) form field still holds in memory.
+    const vineyardName = validation.data.single_vineyard ? validation.data.vineyard_name?.trim() || null : null;
+
+    // NDA-6: block identifying free text before it's ever published. Checks
+    // this submission's own vineyard name too, not just past listings --
+    // "any vineyard name the seller has entered on any of their listings"
+    // includes the one being created right now.
     if (validation.data.is_nda) {
       const { data: otherListings } = await supabase.from("listings").select("vineyard_name").eq("user_id", user.id);
       const guard = checkFreeTextForNdaLeak({
@@ -40,7 +47,7 @@ export async function createNewListing(data: CreateListingInput) {
         companyName: profile?.company_name,
         fullName: profile?.full_name,
         username: profile?.username,
-        vineyardNames: (otherListings ?? []).map((l) => l.vineyard_name),
+        vineyardNames: [vineyardName, ...(otherListings ?? []).map((l) => l.vineyard_name)],
       });
       if (guard.blocked) return { error: guard.reason };
     }
@@ -48,6 +55,7 @@ export async function createNewListing(data: CreateListingInput) {
     const { error } = await supabase.from("listings").insert({
       user_id: user.id,
       ...validation.data,
+      vineyard_name: vineyardName,
       title: generateListingTitle(
         validation.data.variety,
         validation.data.clone,

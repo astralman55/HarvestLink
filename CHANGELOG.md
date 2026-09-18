@@ -38,3 +38,11 @@ Per `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md`. All new behavior ships 
 - Fixed a real pre-existing leak: Realtime broadcast full raw listing rows (including `user_id`) to every browser tab via `postgres_changes`; replaced with a `realtime.send()` trigger that only ever sends the three fields the UI actually shows (Decision 14).
 - Added the mandatory NDA canary test (Section 8.1) as a Vitest suite against the serializer (`src/lib/serializers/listing.test.ts`, 18 tests) plus a minimal CI workflow (`.github/workflows/test.yml`) so it can never be silently skipped -- first test framework and CI this project has had (Decision 19).
 - All of the above is inert with `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` off — verified by restarting the dev server in both states.
+
+### Phase 4 — Vineyard field
+- "Is this a single-vineyard offering?" Yes/No toggle + name field (`VineyardField`) in the listing form's "Seller & Source" section, next to the NDA checkbox. No new migration -- Phase 1 already built the full data model for this. Ships live, no feature flag (see Decision 22 for why, unlike the other three requirements).
+- `src/lib/validation/vineyard.ts` (`VineyardNameSchema`, VIN-4): length, Unicode-aware character allowlist, and email/URL rejection (reuses the patterns from the NDA-6 guard).
+- VIN-5 typeahead: `getVineyardNameSuggestions` + a pure, separately-tested `filterVineyardSuggestions` (`src/lib/serializers/vineyard-suggestions.ts`, 6 new tests) that guarantees another user's NDA vineyard name is never suggested.
+- Cards and the detail page show "Vineyard: {name}" (or "name withheld" under NDA) for single-vineyard listings; the NDA preview dialog shows the same line. Two new browse filters: search by vineyard name (excludes NDA listings from matching, per VIN-7) and "Single vineyard only."
+- The create/edit Server Actions now null out `vineyard_name` server-side whenever `single_vineyard` is off, regardless of what the form still holds in memory (VIN-2), and include the listing's own (possibly just-typed) vineyard name in the NDA-6 free-text guard's check, not just past listings.
+- `serializeListing()`'s vineyard redaction (`vineyard_withheld`, written dormant back in Phase 3) is now genuinely exercised for the first time.

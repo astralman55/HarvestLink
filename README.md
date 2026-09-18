@@ -41,8 +41,8 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
-   through `0005_scope_addendum_phase3_nda.sql`, ...) in the Supabase SQL
-   Editor.
+   through `0005_scope_addendum_phase3_nda.sql`, ... — Phase 4 needed no
+   new migration) in the Supabase SQL Editor.
 4. Restart `npm run dev`. Register an account — the `profiles` row is
    created automatically via trigger.
 
@@ -72,9 +72,15 @@ Status:
   link; admins have a minimal, audit-logged identity view. Ships its own
   test suite (`npm run test`) and CI workflow — the mandatory NDA "canary"
   test (Section 8.1) runs there and must never be skipped.
-- Phases 4–7 (the vineyard field UI, the bulk-wine marketplace,
-  cross-cutting search/nav/type-awareness, and hardening) are not built
-  yet.
+- **Phase 4 (Vineyard field)** — done. "Is this a single-vineyard
+  offering?" on the listing form, with typeahead suggestions that never
+  leak another seller's NDA vineyard name, shown on cards/detail pages,
+  and searchable (excluding NDA listings) on the browse filters. Ships
+  live with no feature flag of its own — see
+  [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md),
+  Decision 22, for why.
+- Phases 5–7 (the bulk-wine marketplace, cross-cutting search/nav/
+  type-awareness, and hardening) are not built yet.
 - Everything new ships behind `NEXT_PUBLIC_FEATURE_USERNAMES` /
   `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` / `NEXT_PUBLIC_FEATURE_BULK_WINE` in
   `.env.local` (see `src/lib/flags.ts`), all `false` by default in

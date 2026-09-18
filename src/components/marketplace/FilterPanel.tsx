@@ -34,6 +34,8 @@ function readValues(searchParams: URLSearchParams): FilterValues {
     "max_price",
     "min_brix",
     "hide_nda",
+    "vineyard_name",
+    "single_vineyard_only",
   ] as const) {
     const value = searchParams.get(key);
     if (value) values[key] = value;
