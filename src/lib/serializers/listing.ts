@@ -1,5 +1,5 @@
 import { getStateForRegion } from "@/lib/constants/viticulture";
-import type { Listing, PublicProfile } from "@/types";
+import type { BulkWineFarmingPractice, Listing, PublicProfile } from "@/types";
 
 /**
  * NDA-4: the one central public-listing serializer every surface must go
@@ -18,6 +18,20 @@ export const ANONYMOUS_VIEWER: ViewerContext = { userId: null, isAdmin: false };
 
 export type RawSellerProfile = Omit<PublicProfile, "id">;
 export type PublicSeller = RawSellerProfile;
+
+export interface PublicBulkWineDetails {
+  quantity_gallons: number;
+  price_per_gallon: number;
+  abv: number;
+  total_so2_ppm: number | null;
+  vintage_year: number | null;
+  is_multi_vintage: boolean;
+  /** Always shown down to nda_location_precision -- see WINE-5/NDA-3. */
+  wine_location_state: string | null;
+  /** Hidden under NDA unless nda_location_precision is "county". */
+  wine_location_county: string | null;
+  farming_practices: BulkWineFarmingPractice[];
+}
 
 export interface PublicListing {
   id: string;
@@ -53,6 +67,8 @@ export interface PublicListing {
   is_confidential: boolean;
   /** For UI decisions only (e.g. hiding "inquire" on your own listing) -- never the raw user_id. */
   viewer_is_owner: boolean;
+  /** Only present when listing_type is "bulk_wine". */
+  bulk_wine: PublicBulkWineDetails | null;
 }
 
 function computeReferenceNumber(id: string, listingType: Listing["listing_type"]): string {
@@ -69,7 +85,10 @@ export function serializeListing(row: Listing, seller: RawSellerProfile | null, 
   // precision additionally generalizes region_ava itself. Grapes has no
   // county/state columns of its own, so "county" precision maps to "show
   // the AVA region, hide the sub-AVA" and "state" maps to "show only the
-  // state the AVA sits in" (docs/scope-addendum-decisions.md).
+  // state the AVA sits in" (docs/scope-addendum-decisions.md). For bulk
+  // wine, region_ava/sub_ava is "grape origin" (WINE-4), redacted the same
+  // way; wine_location (a separate field, below) gets its own, more
+  // literal county/state redaction since it actually has those columns.
   let region_ava = row.region_ava;
   let sub_ava = row.sub_ava;
   if (row.is_nda && !revealIdentity) {
@@ -81,6 +100,26 @@ export function serializeListing(row: Listing, seller: RawSellerProfile | null, 
 
   const isConfidential = row.is_nda && !revealIdentity;
   const vineyardWithheld = isConfidential && row.single_vineyard;
+
+  const rawBulkWine = row.bulk_wine_details;
+  const bulkWine: PublicBulkWineDetails | null = rawBulkWine
+    ? {
+        quantity_gallons: rawBulkWine.quantity_gallons,
+        price_per_gallon: rawBulkWine.price_per_gallon,
+        abv: rawBulkWine.abv,
+        total_so2_ppm: rawBulkWine.total_so2_ppm,
+        vintage_year: rawBulkWine.vintage_year,
+        is_multi_vintage: rawBulkWine.is_multi_vintage,
+        wine_location_state: rawBulkWine.wine_location_state,
+        // Unlike grapes' sub_ava (always hidden -- it's more specific than
+        // the "county" tier even means there), wine_location_county IS the
+        // literal county-precision tier, so it's only hidden when the
+        // seller chose the more-restrictive "state" precision, not for
+        // "county" precision (the default).
+        wine_location_county: isConfidential && row.nda_location_precision === "state" ? null : rawBulkWine.wine_location_county,
+        farming_practices: (row.listing_farming_practices ?? []).map((p) => p.practice_code),
+      }
+    : null;
 
   return {
     id: row.id,
@@ -112,5 +151,6 @@ export function serializeListing(row: Listing, seller: RawSellerProfile | null, 
     seller: isConfidential || !seller ? null : seller,
     is_confidential: isConfidential,
     viewer_is_owner: isOwner,
+    bulk_wine: bulkWine,
   };
 }

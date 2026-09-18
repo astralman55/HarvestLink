@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConnectSupabaseNotice } from "@/components/shared/ConnectSupabaseNotice";
 import { createClient } from "@/lib/supabase/server";
-import { formatCurrency, formatTons } from "@/lib/utils";
+import { formatCurrency, formatCurrencyPrecise, formatTons, formatGallons } from "@/lib/utils";
 import type { Listing, ListingStatus } from "@/types";
 
 const STATUS_VARIANT: Record<ListingStatus, "neutral" | "brand" | "success" | "outline"> = {
@@ -24,7 +24,7 @@ async function getMyListings(): Promise<{ connected: boolean; listings: Listing[
 
     const { data, error } = await supabase
       .from("listings")
-      .select("*")
+      .select("*, bulk_wine_details(*)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     if (error) throw error;
@@ -63,34 +63,42 @@ export default async function MyListingsPage() {
         <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-stone-300 py-16 text-center">
           <Grape className="size-10 text-stone-300" />
           <p className="mt-4 font-medium text-stone-700">No listings yet</p>
-          <p className="mt-1 text-sm text-stone-500">Publish your first grape lot to get started.</p>
+          <p className="mt-1 text-sm text-stone-500">Publish your first lot to get started.</p>
         </div>
       )}
 
       <div className="mt-8 divide-y divide-stone-100 rounded-2xl border border-stone-200 bg-white">
-        {listings.map((listing) => (
-          <Link
-            key={listing.id}
-            href={`/listings/${listing.id}/edit`}
-            className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-stone-50"
-          >
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="truncate font-medium text-stone-900">{listing.title}</p>
-                <Badge variant={STATUS_VARIANT[listing.status]} className="capitalize shrink-0">
-                  {listing.status}
-                </Badge>
+        {listings.map((listing) => {
+          const isBulkWine = listing.listing_type === "bulk_wine";
+          const bw = listing.bulk_wine_details;
+          return (
+            <Link
+              key={listing.id}
+              href={`/listings/${listing.id}/edit`}
+              className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-stone-50"
+            >
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="truncate font-medium text-stone-900">{listing.title}</p>
+                  <Badge variant="outline" className="shrink-0">
+                    {isBulkWine ? "Bulk Wine" : "Grapes"}
+                  </Badge>
+                  <Badge variant={STATUS_VARIANT[listing.status]} className="capitalize shrink-0">
+                    {listing.status}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-sm text-stone-500">
+                  {isBulkWine && bw
+                    ? `${bw.is_multi_vintage ? "NV" : bw.vintage_year} · ${formatGallons(bw.quantity_gallons)} · ${formatCurrencyPrecise(bw.price_per_gallon)}/gal`
+                    : `${listing.harvest_year} · ${formatTons(listing.estimated_tons)} · ${formatCurrency(listing.price_per_ton)}/ton`}
+                </p>
               </div>
-              <p className="mt-1 text-sm text-stone-500">
-                {listing.harvest_year} · {formatTons(listing.estimated_tons)} ·{" "}
-                {formatCurrency(listing.price_per_ton)}/ton
-              </p>
-            </div>
-            <span className="flex shrink-0 items-center gap-1.5 text-sm font-medium text-[var(--color-brand)]">
-              <Pencil className="size-3.5" /> Edit
-            </span>
-          </Link>
-        ))}
+              <span className="flex shrink-0 items-center gap-1.5 text-sm font-medium text-[var(--color-brand)]">
+                <Pencil className="size-3.5" /> Edit
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

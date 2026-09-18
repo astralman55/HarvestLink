@@ -1,40 +1,37 @@
 "use client";
 
-import { Controller, type Control, type UseFormRegister } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import type { CreateListingInput } from "@/lib/validation/listing";
+import type { NdaLocationPrecision } from "@/types";
 
 interface NdaFieldsProps {
-  control: Control<CreateListingInput>;
-  register: UseFormRegister<CreateListingInput>;
   isNda: boolean;
+  onIsNdaChange: (value: boolean) => void;
+  ndaLocationPrecision: NdaLocationPrecision;
+  onNdaLocationPrecisionChange: (value: NdaLocationPrecision) => void;
 }
 
 /**
  * NDA-1: the "Selling under NDA?" control plus its live "what buyers will
  * see" panel (Appendix A copy). Rendered inside the same "Seller & Source"
  * section as VineyardField, right below it, per the spec's own placement
- * note ("near the vineyard field").
+ * note ("near the vineyard field"). Plain controlled props (not
+ * react-hook-form's Control/register) so it's reusable as-is by both the
+ * grapes form and the bulk-wine form (Phase 5), which have two different
+ * schemas.
  */
-export function NdaFields({ control, register, isNda }: NdaFieldsProps) {
+export function NdaFields({ isNda, onIsNdaChange, ndaLocationPrecision, onNdaLocationPrecisionChange }: NdaFieldsProps) {
   return (
     <div className="space-y-4">
-      <Controller
-        control={control}
-        name="is_nda"
-        render={({ field }) => (
-          <label htmlFor="is_nda" className="flex cursor-pointer items-start gap-3">
-            <Checkbox id="is_nda" checked={field.value} onCheckedChange={field.onChange} className="mt-0.5" />
-            <span>
-              <span className="block text-sm font-medium text-stone-900">Selling under NDA?</span>
-              <span className="mt-0.5 block text-xs text-stone-500">
-                Your name, business, and vineyard will be hidden from buyers. Buyers contact you through the site.
-              </span>
-            </span>
-          </label>
-        )}
-      />
+      <label htmlFor="is_nda" className="flex cursor-pointer items-start gap-3">
+        <Checkbox id="is_nda" checked={isNda} onCheckedChange={(checked) => onIsNdaChange(checked === true)} className="mt-0.5" />
+        <span>
+          <span className="block text-sm font-medium text-stone-900">Selling under NDA?</span>
+          <span className="mt-0.5 block text-xs text-stone-500">
+            Your name, business, and vineyard will be hidden from buyers. Buyers contact you through the site.
+          </span>
+        </span>
+      </label>
 
       {isNda && (
         <div className="space-y-4 rounded-lg bg-amber-50 p-4">
@@ -44,10 +41,20 @@ export function NdaFields({ control, register, isNda }: NdaFieldsProps) {
             </Label>
             <div className="flex gap-4">
               <label className="flex items-center gap-1.5 text-sm text-stone-700">
-                <input type="radio" value="county" {...register("nda_location_precision")} /> County &amp; region
+                <input
+                  type="radio"
+                  checked={ndaLocationPrecision === "county"}
+                  onChange={() => onNdaLocationPrecisionChange("county")}
+                />{" "}
+                County &amp; region
               </label>
               <label className="flex items-center gap-1.5 text-sm text-stone-700">
-                <input type="radio" value="state" {...register("nda_location_precision")} /> State only
+                <input
+                  type="radio"
+                  checked={ndaLocationPrecision === "state"}
+                  onChange={() => onNdaLocationPrecisionChange("state")}
+                />{" "}
+                State only
               </label>
             </div>
             <p className="text-xs text-amber-800">

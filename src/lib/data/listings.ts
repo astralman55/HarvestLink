@@ -17,7 +17,11 @@ import type { Listing, ListingSearchFilters } from "@/types";
 export async function getListings(filters: ListingSearchFilters = {}): Promise<PublicListing[]> {
   try {
     const supabase = await createClient();
-    let query = supabase.from("listings").select("*").eq("status", "available").order("created_at", { ascending: false });
+    let query = supabase
+      .from("listings")
+      .select("*, bulk_wine_details(*), listing_farming_practices(practice_code)")
+      .eq("status", "available")
+      .order("created_at", { ascending: false });
 
     if (filters.region_ava) query = query.eq("region_ava", filters.region_ava);
     if (filters.variety) query = query.eq("variety", filters.variety);
@@ -55,7 +59,11 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
 export async function getListingById(id: string): Promise<PublicListing | null> {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from("listings").select("*").eq("id", id).single();
+    const { data, error } = await supabase
+      .from("listings")
+      .select("*, bulk_wine_details(*), listing_farming_practices(practice_code)")
+      .eq("id", id)
+      .single();
     if (error) throw error;
     const row = data as Listing;
 

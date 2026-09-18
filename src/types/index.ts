@@ -73,7 +73,9 @@ export interface Listing {
   vineyard_name: string | null;
   vineyard_name_normalized: string | null;
   profiles?: Pick<Profile, "company_name" | "region_ava" | "is_verified">;
-  bulk_wine_details?: BulkWineDetails;
+  bulk_wine_details?: BulkWineDetails | null;
+  /** Raw join rows as PostgREST embeds them: [{ practice_code: "organic" }, ...]. */
+  listing_farming_practices?: { practice_code: BulkWineFarmingPractice }[];
 }
 
 export interface CropPlan {

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { EditListingForm } from "./edit-form";
+import { BulkWineEditForm } from "./bulk-wine-edit-form";
 import type { Listing } from "@/types";
 
 async function getOwnedListing(id: string): Promise<Listing | null> {
@@ -12,7 +13,11 @@ async function getOwnedListing(id: string): Promise<Listing | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase.from("listings").select("*").eq("id", id).single();
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*, bulk_wine_details(*), listing_farming_practices(practice_code)")
+    .eq("id", id)
+    .single();
   if (error || !data) return null;
 
   // Don't reveal that a listing exists to anyone but its owner.
@@ -35,7 +40,7 @@ export default async function EditListingPage({ params }: { params: Promise<{ id
       <h1 className="mt-4 text-2xl font-semibold text-stone-900">Edit Listing</h1>
       <p className="mt-1 text-sm text-stone-500">{listing.title}</p>
 
-      <EditListingForm listing={listing} />
+      {listing.listing_type === "bulk_wine" ? <BulkWineEditForm listing={listing} /> : <EditListingForm listing={listing} />}
     </div>
   );
 }

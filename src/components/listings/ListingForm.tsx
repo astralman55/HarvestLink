@@ -53,7 +53,6 @@ export function ListingForm({
   const [submittingFinal, setSubmittingFinal] = useState(false);
   const {
     register,
-    control,
     handleSubmit,
     watch,
     setValue,
@@ -182,8 +181,21 @@ export function ListingForm({
 
       <section className="space-y-4 rounded-xl border border-stone-200 p-4">
         <h2 className="text-sm font-semibold text-stone-900">Seller &amp; Source</h2>
-        <VineyardField control={control} singleVineyard={!!singleVineyard} error={errors.vineyard_name?.message} />
-        {flags.ndaListings && <NdaFields control={control} register={register} isNda={!!isNda} />}
+        <VineyardField
+          singleVineyard={!!singleVineyard}
+          onSingleVineyardChange={(value) => setValue("single_vineyard", value)}
+          vineyardName={watch("vineyard_name") ?? ""}
+          onVineyardNameChange={(value) => setValue("vineyard_name", value)}
+          error={errors.vineyard_name?.message}
+        />
+        {flags.ndaListings && (
+          <NdaFields
+            isNda={!!isNda}
+            onIsNdaChange={(value) => setValue("is_nda", value)}
+            ndaLocationPrecision={watch("nda_location_precision") ?? "county"}
+            onNdaLocationPrecisionChange={(value) => setValue("nda_location_precision", value)}
+          />
+        )}
       </section>
 
       <section className="space-y-4">

@@ -59,6 +59,31 @@ function ndaListing(overrides: Partial<Listing> = {}): Listing {
   };
 }
 
+const CANARY_COUNTY = "Zzcanary County";
+
+function bulkWineListing(overrides: Partial<Listing> = {}): Listing {
+  return ndaListing({
+    listing_type: "bulk_wine",
+    single_vineyard: false,
+    vineyard_name: null,
+    vineyard_name_normalized: null,
+    bulk_wine_details: {
+      listing_id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      quantity_gallons: 5000,
+      price_per_gallon: 4.25,
+      abv: 13.5,
+      total_so2_ppm: 80,
+      vintage_year: 2024,
+      is_multi_vintage: false,
+      wine_location_state: "California",
+      wine_location_county: CANARY_COUNTY,
+      created_at: new Date().toISOString(),
+    },
+    listing_farming_practices: [{ practice_code: "organic" }, { practice_code: "biodynamic" }],
+    ...overrides,
+  });
+}
+
 function assertNoCanaryLeak(publicListing: unknown) {
   const json = JSON.stringify(publicListing);
   expect(json).not.toContain(CANARY_COMPANY);
@@ -143,6 +168,65 @@ describe("serializeListing -- NDA canary", () => {
     });
     expect(a.reference_number).not.toBe(b.reference_number);
     expect(a.reference_number).toMatch(/^G-[A-F0-9]{5}$/);
+  });
+});
+
+describe("serializeListing -- bulk wine (WINE-5, acceptance criterion 6.7 'NDA works identically on both types')", () => {
+  it("hides wine_location_county from an anonymous viewer under 'state' precision", () => {
+    const result = serializeListing(bulkWineListing({ nda_location_precision: "state" }), CANARY_SELLER, {
+      userId: null,
+      isAdmin: false,
+    });
+    assertNoCanaryLeak(result);
+    expect(result.bulk_wine?.wine_location_county).toBeNull();
+    expect(result.bulk_wine?.wine_location_state).toBe("California");
+  });
+
+  it("keeps wine_location_county visible under the default 'county' precision", () => {
+    const result = serializeListing(bulkWineListing({ nda_location_precision: "county" }), CANARY_SELLER, {
+      userId: null,
+      isAdmin: false,
+    });
+    expect(result.bulk_wine?.wine_location_county).toBe(CANARY_COUNTY);
+    expect(result.bulk_wine?.wine_location_state).toBe("California");
+  });
+
+  it("reveals wine_location_county to the owner regardless of precision", () => {
+    const result = serializeListing(bulkWineListing({ nda_location_precision: "state" }), CANARY_SELLER, {
+      userId: CANARY_USER_ID,
+      isAdmin: false,
+    });
+    expect(result.bulk_wine?.wine_location_county).toBe(CANARY_COUNTY);
+  });
+
+  it("never redacts wine specs (quantity, price, ABV, SO2, vintage, farming practices) -- those are always public", () => {
+    const result = serializeListing(bulkWineListing({ nda_location_precision: "state" }), CANARY_SELLER, {
+      userId: null,
+      isAdmin: false,
+    });
+    expect(result.bulk_wine?.quantity_gallons).toBe(5000);
+    expect(result.bulk_wine?.price_per_gallon).toBe(4.25);
+    expect(result.bulk_wine?.abv).toBe(13.5);
+    expect(result.bulk_wine?.total_so2_ppm).toBe(80);
+    expect(result.bulk_wine?.vintage_year).toBe(2024);
+    expect(result.bulk_wine?.farming_practices).toEqual(["organic", "biodynamic"]);
+  });
+
+  it("still redacts the seller identity and grape origin exactly like a grapes NDA listing", () => {
+    const result = serializeListing(bulkWineListing(), CANARY_SELLER, { userId: null, isAdmin: false });
+    expect(result.seller).toBeNull();
+    expect(result.is_confidential).toBe(true);
+    expect(result.sub_ava).toBeNull();
+  });
+
+  it("is null for a listing with no bulk_wine_details (a grapes listing)", () => {
+    const result = serializeListing(ndaListing({ is_nda: false }), CANARY_SELLER, { userId: null, isAdmin: false });
+    expect(result.bulk_wine).toBeNull();
+  });
+
+  it("computes a W- prefixed reference number for bulk wine", () => {
+    const result = serializeListing(bulkWineListing(), CANARY_SELLER, { userId: null, isAdmin: false });
+    expect(result.reference_number).toMatch(/^W-[A-F0-9]{5}$/);
   });
 });
 

@@ -41,7 +41,7 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
-   through `0005_scope_addendum_phase3_nda.sql`, ... — Phase 4 needed no
+   through `0006_scope_addendum_phase5_bulk_wine.sql` — Phase 4 needed no
    new migration) in the Supabase SQL Editor.
 4. Restart `npm run dev`. Register an account — the `profiles` row is
    created automatically via trigger.
@@ -79,16 +79,29 @@ Status:
   live with no feature flag of its own — see
   [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md),
   Decision 22, for why.
-- Phases 5–7 (the bulk-wine marketplace, cross-cutting search/nav/
-  type-awareness, and hardening) are not built yet.
+- **Phase 5 (Bulk wine marketplace: form, detail page, card)** — done.
+  See `supabase/migrations/0006_scope_addendum_phase5_bulk_wine.sql`.
+  `/listings/create` offers a Grapes/Bulk Wine chooser behind
+  `NEXT_PUBLIC_FEATURE_BULK_WINE`; the bulk-wine form covers grape
+  origin, a separate wine-location field, vintage, ABV, sulfites, a
+  farming-practices multi-select, and quantity/price with a live total
+  lot value; the serializer, cards, detail page, and "My Listings" are
+  all bulk-wine-aware, with NDA redaction working identically to grapes
+  (new canary tests cover this). Deliberately does **not** yet include
+  the `/grapes`/`/bulk-wine`/`/sell` routes, header nav, URL redirects,
+  or bulk-wine browse filters — see
+  [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md),
+  Decision 26: those are Phase 6's explicit scope per the addendum's own
+  delivery plan.
+- Phases 6–7 (cross-cutting search/nav/type-awareness/URL redirects, and
+  hardening) are not built yet.
 - Everything new ships behind `NEXT_PUBLIC_FEATURE_USERNAMES` /
   `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` / `NEXT_PUBLIC_FEATURE_BULK_WINE` in
   `.env.local` (see `src/lib/flags.ts`), all `false` by default in
   `.env.example` — existing behavior is unchanged until each phase lands
-  and a flag is flipped. Both `NEXT_PUBLIC_FEATURE_USERNAMES` and
-  `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` are turned on in this repo's own
-  `.env.local` so Phases 2–3 are testable once you've run the migrations
-  through `0005`.
+  and a flag is flipped. All three flags are turned on in this repo's own
+  `.env.local` so Phases 2, 3, and 5 are testable once you've run the
+  migrations through `0006`.
 
 ## Not included (needs your accounts/decisions)
 
