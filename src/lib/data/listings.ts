@@ -17,12 +17,35 @@ import type { Listing, ListingSearchFilters } from "@/types";
 export async function getListings(filters: ListingSearchFilters = {}): Promise<PublicListing[]> {
   try {
     const supabase = await createClient();
+    // Bulk-wine-only filters (ABV/quantity/SO2/wine location/farming
+    // practices/vintage) live on the embedded bulk_wine_details /
+    // listing_farming_practices tables, not on `listings` itself. An
+    // `!inner` embed is required for a filter on an embedded table to
+    // actually exclude non-matching parent rows rather than just leaving
+    // the embed empty -- safe here because /grapes and /bulk-wine always
+    // set listing_type explicitly (WINE-3: never a mixed list), so a
+    // bulk-wine-scoped query only ever touches rows that already have a
+    // bulk_wine_details row by construction (WINE-1/VIN-8).
+    const needsBulkWineInner =
+      filters.vintage_year ||
+      filters.wine_location_state ||
+      filters.wine_location_county ||
+      filters.abv_min ||
+      filters.abv_max ||
+      filters.min_gallons ||
+      filters.max_gallons ||
+      filters.max_so2 ||
+      (filters.listing_type === "bulk_wine" && filters.max_price);
+    const needsFarmingPracticesInner = !!filters.farming_practices;
+
     let query = supabase
       .from("listings")
-      .select("*, bulk_wine_details(*), listing_farming_practices(practice_code)")
-      .eq("status", "available")
-      .order("created_at", { ascending: false });
+      .select(
+        `*, bulk_wine_details${needsBulkWineInner ? "!inner" : ""}(*), listing_farming_practices${needsFarmingPracticesInner ? "!inner" : ""}(practice_code)`
+      )
+      .eq("status", "available");
 
+    if (filters.listing_type) query = query.eq("listing_type", filters.listing_type);
     if (filters.region_ava) query = query.eq("region_ava", filters.region_ava);
     if (filters.variety) query = query.eq("variety", filters.variety);
     if (filters.farming_practice) query = query.eq("farming_practice", filters.farming_practice);
@@ -33,7 +56,6 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     if (filters.slope_min) query = query.gte("slope_percent", Number(filters.slope_min));
     if (filters.slope_max) query = query.lte("slope_percent", Number(filters.slope_max));
     if (filters.min_tons) query = query.gte("estimated_tons", Number(filters.min_tons));
-    if (filters.max_price) query = query.lte("price_per_ton", Number(filters.max_price));
     if (filters.min_brix) query = query.gte("brix_target", Number(filters.min_brix));
     // NDA-12: browse filter, default include.
     if (filters.hide_nda) query = query.eq("is_nda", false);
@@ -43,6 +65,45 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     // specific filter, not applied to browsing in general.
     if (filters.vineyard_name) {
       query = query.ilike("vineyard_name", `%${filters.vineyard_name}%`).eq("is_nda", false);
+    }
+
+    // 6.5: bulk-wine-only filters.
+    if (filters.vintage_year) query = query.eq("bulk_wine_details.vintage_year", Number(filters.vintage_year));
+    if (filters.wine_location_state) query = query.eq("bulk_wine_details.wine_location_state", filters.wine_location_state);
+    if (filters.wine_location_county) query = query.ilike("bulk_wine_details.wine_location_county", `%${filters.wine_location_county}%`);
+    if (filters.abv_min) query = query.gte("bulk_wine_details.abv", Number(filters.abv_min));
+    if (filters.abv_max) query = query.lte("bulk_wine_details.abv", Number(filters.abv_max));
+    if (filters.min_gallons) query = query.gte("bulk_wine_details.quantity_gallons", Number(filters.min_gallons));
+    if (filters.max_gallons) query = query.lte("bulk_wine_details.quantity_gallons", Number(filters.max_gallons));
+    if (filters.max_so2) query = query.lte("bulk_wine_details.total_so2_ppm", Number(filters.max_so2));
+    if (filters.listing_type === "bulk_wine" && filters.max_price) {
+      query = query.lte("bulk_wine_details.price_per_gallon", Number(filters.max_price));
+    } else if (filters.max_price) {
+      query = query.lte("price_per_ton", Number(filters.max_price));
+    }
+    if (filters.farming_practices) {
+      const codes = filters.farming_practices.split(",").filter(Boolean);
+      if (codes.length > 0) query = query.in("listing_farming_practices.practice_code", codes);
+    }
+
+    // 6.5: sort -- newest (default), price/gal asc/desc, quantity, ABV.
+    // Grapes rows never set these bulk-wine sorts (their own page only
+    // offers "newest").
+    switch (filters.sort) {
+      case "price_asc":
+        query = query.order("price_per_gallon", { ascending: true, referencedTable: "bulk_wine_details" });
+        break;
+      case "price_desc":
+        query = query.order("price_per_gallon", { ascending: false, referencedTable: "bulk_wine_details" });
+        break;
+      case "quantity":
+        query = query.order("quantity_gallons", { ascending: false, referencedTable: "bulk_wine_details" });
+        break;
+      case "abv":
+        query = query.order("abv", { ascending: false, referencedTable: "bulk_wine_details" });
+        break;
+      default:
+        query = query.order("created_at", { ascending: false });
     }
 
     const { data, error } = await query;

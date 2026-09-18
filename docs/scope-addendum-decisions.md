@@ -186,3 +186,35 @@ Both components were built in Phases 3-4 typed directly against `Control<CreateL
 ### Decision 32 — `/listings/mine` got a type label and unit-aware summary line now, ahead of Phase 6's official "type-aware sweep"
 
 Section 6.6 lists "'My listings' dashboard (add type label + filter)" as Phase 6 work. Left unfixed, a grower who published a bulk-wine listing in this phase would see their own listing on their own management page captioned with grape units ("... 0.0 tons · $0/ton") -- a real, immediately-visible defect directly caused by this phase's own change, not a pre-existing one. Fixed the type badge and the summary line's units now; left the *filter* (browsing/narrowing by type) for Phase 6 as planned, since that's additive UI rather than a correctness fix.
+
+---
+
+## Phase 6 (Nav, routing, browse filters, cross-cutting sweep)
+
+### Decision 33 — Listing id parsing anchors on two known id shapes (UUID length, and the demo-N pattern), not a generic delimiter
+
+WINE-2's `/grapes/{slug}-{id}` puts the id at the end of a hyphenated string, but the id itself (a UUID) also contains hyphens, so a naive split on `-` can't tell slug from id. `parseListingIdFromSlugParam()` (`src/lib/utils.ts`) instead anchors on the fact that a real id is always exactly 36 characters (a UUID's fixed string length) and takes the last 36 characters as a candidate, validating it against the UUID shape. Demo-mode ids (`DEMO_LISTINGS`, used only when no real Supabase project is reachable) don't fit that pattern, so they're matched by a second, explicit `demo-\d+$` pattern. Caught while building this, not via live testing: an early version only handled the UUID case, which would have 404'd every demo-listing card's own slugged link (`buildListingSlugPath` always appends the real id, slug and all, so a demo click would never have resolved back to itself). Fixed before it shipped.
+
+### Decision 34 — Old-URL redirects split between next.config.ts (static, true 301) and a page-level permanentRedirect() (dynamic, 308)
+
+`/listings` → `/grapes` and `/listings/create` → `/sell/grapes` don't depend on anything beyond the URL itself, so they're declared in `next.config.ts`'s `redirects()` with `permanent: true`, which Next.js serves as a real 301 in production. `/listings/{id}`'s target depends on that listing's `listing_type` -- a database lookup next.config.ts's static rules can't express -- so it's handled in the route itself via `permanentRedirect()` from `next/navigation`, which issues a 308 (the modern, method-preserving equivalent of a 301; for the GET requests these are, browsers and crawlers treat 301 and 308 identically for link-equity/caching purposes). Both are "301 redirects" in the spec's intended sense even though the literal status code differs between the two mechanisms.
+
+### Decision 35 — No unified "global search" box; WINE-3's type tabs + counts apply to /grapes and /bulk-wine's own filter panels instead
+
+WINE-3 describes "global search returns results with type tabs and counts ('Grapes (24) | Bulk Wine (7)')," implying a single search surface spanning both sections. This app has never had a free-text/global search at all (Phase 0 audit) -- browsing has always meant structured filters landing on a results page, and that page has always been section-specific once Phase 6 split it into `/grapes` and `/bulk-wine`. Built the header's persistent Grapes/Bulk Wine switch (WINE-3's other, literal requirement) instead of a combined search-with-tabs UI; a buyer moving between sections uses that switch, not a shared search box with tabs. Revisit if/when a real global search is built.
+
+### Decision 36 — FilterPanel and BulkWineFilterPanel are separate components, not one generalized one
+
+Grapes' filters (region, variety, farming practice, trellis, soil, exposure, slope, brix) and bulk wine's (vintage, grape origin, wine location, ABV/price/quantity ranges, farming-practice multi-select, max sulfites) share almost no fields in common beyond variety and NDA/vineyard toggles. Rather than building one filter panel parameterized by listing type (which would need most of its internals branching anyway), `BulkWineFilterFields`/`BulkWineFilterPanel` mirror the structure of the existing `ViticultureFilterFields`/`FilterPanel` as siblings. `FilterPanel` gained a `basePath` prop (default `/grapes`, its only real caller) so the same component still works if reused elsewhere later.
+
+### Decision 37 — Sitemap, robots.txt, and per-listing metadata are new, not "made type-aware," since neither existed before this phase
+
+Section 6.6 lists "sitemap" and "share/OG images" among the things needing a type-aware sweep, but the Phase 0 audit found neither existed at all (no `generateMetadata` anywhere, no sitemap route, no canonical tags). Added `src/app/sitemap.ts` (lists both sections' listings under their canonical URLs), `src/app/robots.ts`, and `generateMetadata()` on both `[slug]` detail routes via a shared `buildListingMetadata()` helper. NDA-safe by construction, not by extra filtering: titles are always server-generated from controlled fields (Decision 17) and descriptions are already covered by the NDA-6 free-text guard, so neither needs redaction before going into `<title>`/OG/canonical tags -- there was simply nothing unsafe being added. No JSON-LD structured data or OG images were added (no image pipeline exists at all yet -- Appendix B parking-lot territory); left for later if the project owner wants it.
+
+### Decision 38 — Old chooser-embedded `/listings/create` page was deleted, not just superseded
+
+Once `next.config.ts` redirects `/listings/create` to `/sell/grapes`, the old `(dashboard)/listings/create/page.tsx` (which rendered a client-side type chooser before either form) becomes unreachable -- Next.js's redirect config runs before any page match. Deleted it and its `CreateListingForm.tsx` wrapper rather than leaving dead code; their logic now lives directly in the two new dedicated routes (`(dashboard)/sell/grapes/page.tsx`, `(dashboard)/sell/bulk-wine/page.tsx`), each skipping the chooser entirely since the route itself already says which type it is (WINE-1: type is fixed at creation). The "switch type mid-form, keep shared fields" behavior WINE-4 describes for a single unified form doesn't apply anymore either, now that choosing a type means navigating to a different route rather than toggling within one page -- the two forms simply don't share mutable state to carry over.
+
+### Decision 39 — The homepage's "Featured Lots" grid stays a mixed grapes/bulk-wine list, not split into two
+
+WINE-3's "never a mixed, confusing list" principle is stated for *search results*. The homepage's Featured Lots section is a highlights strip, not a filtered result set, and every card already self-identifies its type (icon, badge, units) via the Phase 5 card work -- so a buyer scanning it isn't confused about what they're looking at the way a mixed *search result* list would be. Left `getListings({})` unscoped there (as it already was); the two-entry-point buttons above it, plus the header switch, are what satisfy WINE-3's actual requirement for the homepage.

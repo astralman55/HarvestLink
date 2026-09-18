@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight } from "lucide-react";
+import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag } from "lucide-react";
 import { GrapeSearchHero } from "@/components/marketplace/GrapeSearchHero";
 import { ListingCard } from "@/components/marketplace/ListingCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { getListings } from "@/lib/data/listings";
 import { FEATURED_AVA_REGIONS } from "@/lib/constants/viticulture";
+import { flags } from "@/lib/flags";
 
 const VALUE_PROPS = [
   {
@@ -51,6 +52,26 @@ export default async function HomePage() {
             </p>
           </div>
 
+          {flags.bulkWine && (
+            <div className="mx-auto mt-8 flex max-w-md flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link href="/grapes">
+                  <Grape className="size-4" /> Browse Grapes
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                <Link href="/bulk-wine">
+                  <Wine className="size-4" /> Browse Bulk Wine
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
+                <Link href="/sell">
+                  <Tag className="size-4" /> Sell
+                </Link>
+              </Button>
+            </div>
+          )}
+
           <div className="mx-auto mt-10 max-w-4xl">
             <GrapeSearchHero />
           </div>
@@ -79,7 +100,7 @@ export default async function HomePage() {
               <p className="mt-1 text-sm text-stone-500">Fresh listings from growers across the country.</p>
             </div>
             <Link
-              href="/listings"
+              href="/grapes"
               className="hidden items-center gap-1 text-sm font-medium text-[var(--color-brand)] sm:flex"
             >
               Browse all lots <ArrowRight className="size-4" />
@@ -92,7 +113,7 @@ export default async function HomePage() {
           </div>
           <div className="mt-8 sm:hidden">
             <Button asChild variant="outline" className="w-full">
-              <Link href="/listings">Browse all lots</Link>
+              <Link href="/grapes">Browse all lots</Link>
             </Button>
           </div>
         </div>
@@ -103,7 +124,7 @@ export default async function HomePage() {
           <div className="flex items-end justify-between">
             <h2 className="text-2xl font-semibold text-stone-900">Browse by AVA Region</h2>
             <Link
-              href="/listings"
+              href="/grapes"
               className="hidden text-sm font-medium text-[var(--color-brand)] sm:block"
             >
               See all regions →
@@ -113,7 +134,7 @@ export default async function HomePage() {
             {FEATURED_AVA_REGIONS.map((region) => (
               <Link
                 key={region}
-                href={`/listings?region_ava=${encodeURIComponent(region)}`}
+                href={`/grapes?region_ava=${encodeURIComponent(region)}`}
                 className="rounded-xl border border-stone-200 bg-white px-4 py-3.5 text-sm font-medium text-stone-700 transition-colors hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
               >
                 {region}
@@ -169,7 +190,7 @@ export default async function HomePage() {
             and align future blocks with forward-contract planning.
           </p>
           <Button asChild variant="secondary" size="lg" className="mt-2 bg-white text-[var(--color-brand)] hover:bg-white/90">
-            <Link href="/register">Create a Grower Account</Link>
+            <Link href="/sell">List Your Harvest</Link>
           </Button>
         </div>
       </section>

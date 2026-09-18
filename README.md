@@ -93,14 +93,24 @@ Status:
   [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md),
   Decision 26: those are Phase 6's explicit scope per the addendum's own
   delivery plan.
-- Phases 6–7 (cross-cutting search/nav/type-awareness/URL redirects, and
-  hardening) are not built yet.
+- **Phase 6 (Nav, routing, browse filters, cross-cutting sweep)** — done.
+  No new migration. Real `/grapes` and `/bulk-wine` browse/detail routes
+  with old-URL 301s (`/listings` → `/grapes`, etc. — a dynamic
+  `/listings/{id}` gets a runtime, type-aware redirect instead), a
+  persistent Grapes/Bulk Wine header switch, `/sell` + `/sell/grapes` +
+  `/sell/bulk-wine` as the new create-listing entry points, the full
+  bulk-wine browse filter set (vintage, wine location, ABV/price/quantity
+  ranges, farming practice, max sulfites) with sort, and this project's
+  first sitemap/robots.txt/per-listing metadata.
+- Phase 7 (hardening: extend the canary test to bulk wine end-to-end,
+  accessibility, mobile, performance, security review, docs) is not built
+  yet.
 - Everything new ships behind `NEXT_PUBLIC_FEATURE_USERNAMES` /
   `NEXT_PUBLIC_FEATURE_NDA_LISTINGS` / `NEXT_PUBLIC_FEATURE_BULK_WINE` in
   `.env.local` (see `src/lib/flags.ts`), all `false` by default in
   `.env.example` — existing behavior is unchanged until each phase lands
   and a flag is flipped. All three flags are turned on in this repo's own
-  `.env.local` so Phases 2, 3, and 5 are testable once you've run the
+  `.env.local` so Phases 2, 3, 5, and 6 are testable once you've run the
   migrations through `0006`.
 
 ## Not included (needs your accounts/decisions)

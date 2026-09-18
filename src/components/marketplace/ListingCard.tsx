@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Grape, Wine, MapPin, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { NdaBadge } from "@/components/marketplace/NdaBadge";
-import { formatCurrency, formatCurrencyPrecise, formatTons, formatGallons } from "@/lib/utils";
+import { formatCurrency, formatCurrencyPrecise, formatTons, formatGallons, buildListingSlugPath } from "@/lib/utils";
 import { BULK_WINE_FARMING_PRACTICES } from "@/lib/constants/bulk-wine";
 import type { PublicListing } from "@/lib/serializers/listing";
 
@@ -21,9 +21,11 @@ export function ListingCard({ listing }: { listing: PublicListing }) {
   const isBulkWine = listing.listing_type === "bulk_wine";
   const bw = listing.bulk_wine;
 
+  const sectionPath = isBulkWine ? "bulk-wine" : "grapes";
+
   return (
     <Link
-      href={`/listings/${listing.id}`}
+      href={`/${sectionPath}/${buildListingSlugPath(listing.title, listing.id)}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
     >
       <div className="relative flex h-40 items-center justify-center bg-gradient-to-br from-[var(--color-brand-50)] to-stone-100 bg-grain">

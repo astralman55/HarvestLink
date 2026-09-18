@@ -1,7 +1,17 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/listings/create", "/listings/mine", "/planning", "/choose-username", "/inquiries"];
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/listings/create",
+  "/listings/mine",
+  "/planning",
+  "/choose-username",
+  "/inquiries",
+  // Trailing slash so bare /sell (the public chooser) stays unprotected --
+  // only the actual create forms underneath it require auth.
+  "/sell/",
+];
 const EDIT_LISTING_PATTERN = /^\/listings\/[^/]+\/edit$/;
 
 export async function updateSession(request: NextRequest) {

@@ -43,7 +43,7 @@ export function GrapeSearchHero() {
     for (const [key, value] of Object.entries(source)) {
       if (value) params.set(key, String(value));
     }
-    router.push(`/listings${params.toString() ? `?${params.toString()}` : ""}`);
+    router.push(`/grapes${params.toString() ? `?${params.toString()}` : ""}`);
   }
 
   return (

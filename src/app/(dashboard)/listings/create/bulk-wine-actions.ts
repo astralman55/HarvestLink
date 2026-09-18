@@ -113,6 +113,8 @@ export async function createNewBulkWineListing(data: CreateBulkWineListingInput)
     }
 
     revalidatePath("/listings");
+    revalidatePath("/grapes");
+    revalidatePath("/bulk-wine");
     revalidatePath("/dashboard");
     return { success: true, id: listing.id as string };
   } catch {

@@ -99,6 +99,8 @@ export async function updateBulkWineListing(listingId: string, data: CreateBulkW
     }
 
     revalidatePath("/listings");
+    revalidatePath("/grapes");
+    revalidatePath("/bulk-wine");
     revalidatePath("/listings/mine");
     revalidatePath(`/listings/${listingId}`);
     revalidatePath("/dashboard");

@@ -109,4 +109,25 @@ export interface ListingSearchFilters {
   /** VIN-7: matches non-NDA listings' vineyard names only -- see getListings(). */
   vineyard_name?: string;
   single_vineyard_only?: string;
+
+  // WINE-2/6.5: /grapes and /bulk-wine always set this explicitly so the
+  // two sections never show a mixed list (WINE-3). Typed as a plain string
+  // (not ListingType) so it fits the generic string-keyed filter-patch
+  // pattern the rest of this interface and FilterPanel.tsx use.
+  listing_type?: string;
+
+  // 6.5: bulk-wine-only browse filters.
+  vintage_year?: string;
+  wine_location_state?: string;
+  wine_location_county?: string;
+  abv_min?: string;
+  abv_max?: string;
+  min_gallons?: string;
+  max_gallons?: string;
+  max_so2?: string;
+  /** Comma-separated BulkWineFarmingPractice codes, matched "any of" (WINE-6). */
+  farming_practices?: string;
+
+  /** "newest" (default) | "price_asc" | "price_desc" | "quantity" | "abv" */
+  sort?: string;
 }

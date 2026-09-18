@@ -4,46 +4,43 @@ import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import {
-  PrimaryFilterFields,
-  AdvancedFilterFields,
+  BulkWinePrimaryFilterFields,
+  BulkWineAdvancedFilterFields,
+  BulkWineSortSelect,
   type FilterValues,
   type FilterPatch,
-} from "@/components/marketplace/ViticultureFilterFields";
+} from "@/components/marketplace/BulkWineFilterFields";
+
+const FILTER_KEYS = [
+  "variety",
+  "vintage_year",
+  "region_ava",
+  "wine_location_state",
+  "wine_location_county",
+  "abv_min",
+  "abv_max",
+  "max_price",
+  "min_gallons",
+  "max_gallons",
+  "max_so2",
+  "farming_practices",
+  "single_vineyard_only",
+  "hide_nda",
+  "sort",
+] as const;
 
 function readValues(searchParams: URLSearchParams): FilterValues {
   const values: FilterValues = {};
-  for (const key of [
-    "region_ava",
-    "variety",
-    "farming_practice",
-    "trellis_system",
-    "soil_type",
-    "sun_exposure",
-    "harvest_year",
-    "slope_min",
-    "slope_max",
-    "min_tons",
-    "max_price",
-    "min_brix",
-    "hide_nda",
-    "vineyard_name",
-    "single_vineyard_only",
-  ] as const) {
+  for (const key of FILTER_KEYS) {
     const value = searchParams.get(key);
     if (value) values[key] = value;
   }
   return values;
 }
 
-function FilterFieldsPanel({ basePath }: { basePath: string }) {
+function BulkWineFilterFieldsPanel() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -65,16 +62,16 @@ function FilterFieldsPanel({ basePath }: { basePath: string }) {
       if (value) params.set(key, String(value));
     }
     startTransition(() => {
-      router.push(`${basePath}${params.toString() ? `?${params.toString()}` : ""}`);
+      router.push(`/bulk-wine${params.toString() ? `?${params.toString()}` : ""}`);
     });
   }
 
   function clearAll() {
     setValues({});
-    startTransition(() => router.push(basePath));
+    startTransition(() => router.push("/bulk-wine"));
   }
 
-  const activeCount = Object.keys(values).length;
+  const activeCount = Object.keys(values).filter((k) => k !== "sort").length;
 
   return (
     <div className="space-y-5">
@@ -96,26 +93,28 @@ function FilterFieldsPanel({ basePath }: { basePath: string }) {
       </div>
 
       <div className="space-y-4">
-        <PrimaryFilterFields values={values} onChange={apply} />
+        <BulkWineSortSelect values={values} onChange={apply} />
       </div>
 
       <div className="space-y-4 border-t border-stone-100 pt-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
-          Viticulture Detail
-        </p>
-        <AdvancedFilterFields values={values} onChange={apply} />
+        <BulkWinePrimaryFilterFields values={values} onChange={apply} />
+      </div>
+
+      <div className="space-y-4 border-t border-stone-100 pt-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Wine Detail</p>
+        <BulkWineAdvancedFilterFields values={values} onChange={apply} />
       </div>
     </div>
   );
 }
 
-export function FilterPanel({ basePath = "/grapes" }: { basePath?: string }) {
+export function BulkWineFilterPanel() {
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden w-72 shrink-0 lg:block">
         <div className="sticky top-24 rounded-2xl border border-stone-200 bg-white p-5">
-          <FilterFieldsPanel basePath={basePath} />
+          <BulkWineFilterFieldsPanel />
         </div>
       </aside>
 
@@ -132,7 +131,7 @@ export function FilterPanel({ basePath = "/grapes" }: { basePath?: string }) {
             <SheetHeader>
               <SheetTitle>Refine Results</SheetTitle>
             </SheetHeader>
-            <FilterFieldsPanel basePath={basePath} />
+            <BulkWineFilterFieldsPanel />
           </SheetContent>
         </Sheet>
       </div>

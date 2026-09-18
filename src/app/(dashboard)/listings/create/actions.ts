@@ -67,6 +67,8 @@ export async function createNewListing(data: CreateListingInput) {
     if (error) return { error: error.message };
 
     revalidatePath("/listings");
+    revalidatePath("/grapes");
+    revalidatePath("/bulk-wine");
     revalidatePath("/dashboard");
     return { success: true };
   } catch {

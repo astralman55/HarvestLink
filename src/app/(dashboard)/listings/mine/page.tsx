@@ -47,7 +47,7 @@ export default async function MyListingsPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/listings/create">
+          <Link href="/sell">
             <PlusCircle className="size-4" /> Create Listing
           </Link>
         </Button>

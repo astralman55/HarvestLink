@@ -53,7 +53,7 @@ export default async function DashboardPage() {
           </Link>
           <CardContent className="pt-0">
             <Button asChild variant="link" className="h-auto p-0">
-              <Link href="/listings/create">
+              <Link href="/sell">
                 <PlusCircle className="size-3.5" /> Create a new listing
               </Link>
             </Button>

@@ -270,7 +270,9 @@ export const DEMO_LISTINGS: Listing[] = [
 ];
 
 export function filterDemoListings(filters: ListingSearchFilters): Listing[] {
-  return DEMO_LISTINGS.filter((listing) => {
+  const filtered = DEMO_LISTINGS.filter((listing) => {
+    const bw = listing.bulk_wine_details;
+    if (filters.listing_type && listing.listing_type !== filters.listing_type) return false;
     if (filters.hide_nda && listing.is_nda) return false;
     if (filters.single_vineyard_only && !listing.single_vineyard) return false;
     if (
@@ -288,8 +290,43 @@ export function filterDemoListings(filters: ListingSearchFilters): Listing[] {
     if (filters.slope_min && (listing.slope_percent ?? 0) < Number(filters.slope_min)) return false;
     if (filters.slope_max && (listing.slope_percent ?? 0) > Number(filters.slope_max)) return false;
     if (filters.min_tons && listing.estimated_tons < Number(filters.min_tons)) return false;
-    if (filters.max_price && listing.price_per_ton > Number(filters.max_price)) return false;
     if (filters.min_brix && (listing.brix_target ?? 0) < Number(filters.min_brix)) return false;
+
+    // 6.5: bulk-wine-only filters.
+    if (filters.max_price) {
+      const price = listing.listing_type === "bulk_wine" ? bw?.price_per_gallon ?? 0 : listing.price_per_ton;
+      if (price > Number(filters.max_price)) return false;
+    }
+    if (filters.vintage_year && String(bw?.vintage_year) !== filters.vintage_year) return false;
+    if (filters.wine_location_state && bw?.wine_location_state !== filters.wine_location_state) return false;
+    if (
+      filters.wine_location_county &&
+      !bw?.wine_location_county?.toLowerCase().includes(filters.wine_location_county.toLowerCase())
+    )
+      return false;
+    if (filters.abv_min && (bw?.abv ?? 0) < Number(filters.abv_min)) return false;
+    if (filters.abv_max && (bw?.abv ?? 0) > Number(filters.abv_max)) return false;
+    if (filters.min_gallons && (bw?.quantity_gallons ?? 0) < Number(filters.min_gallons)) return false;
+    if (filters.max_gallons && (bw?.quantity_gallons ?? 0) > Number(filters.max_gallons)) return false;
+    if (filters.max_so2 && (bw?.total_so2_ppm ?? 0) > Number(filters.max_so2)) return false;
+    if (filters.farming_practices) {
+      const codes = filters.farming_practices.split(",").filter(Boolean);
+      const listingCodes = (listing.listing_farming_practices ?? []).map((p) => p.practice_code);
+      if (!codes.some((code) => listingCodes.includes(code as (typeof listingCodes)[number]))) return false;
+    }
     return true;
   });
+
+  switch (filters.sort) {
+    case "price_asc":
+      return filtered.sort((a, b) => (a.bulk_wine_details?.price_per_gallon ?? 0) - (b.bulk_wine_details?.price_per_gallon ?? 0));
+    case "price_desc":
+      return filtered.sort((a, b) => (b.bulk_wine_details?.price_per_gallon ?? 0) - (a.bulk_wine_details?.price_per_gallon ?? 0));
+    case "quantity":
+      return filtered.sort((a, b) => (b.bulk_wine_details?.quantity_gallons ?? 0) - (a.bulk_wine_details?.quantity_gallons ?? 0));
+    case "abv":
+      return filtered.sort((a, b) => (b.bulk_wine_details?.abv ?? 0) - (a.bulk_wine_details?.abv ?? 0));
+    default:
+      return filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }
 }

@@ -7,7 +7,7 @@ import type { Profile } from "@/types";
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/listings/mine", label: "My Listings", icon: Package },
-  { href: "/listings/create", label: "Create Listing", icon: PlusCircle },
+  { href: "/sell", label: "Create Listing", icon: PlusCircle },
   { href: "/planning", label: "Crop Planning", icon: CalendarRange },
   { href: "/inquiries", label: "Inquiries", icon: MessageCircle },
 ];

@@ -1,33 +1,38 @@
 import Link from "next/link";
 import { Grape } from "lucide-react";
+import { flags } from "@/lib/flags";
 
-const COLUMNS = [
-  {
-    heading: "Marketplace",
-    links: [
-      { href: "/listings", label: "Browse All Lots" },
-      { href: "/register", label: "List Your Harvest" },
-      { href: "/planning", label: "Crop Planning" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { href: "/login", label: "Log In" },
-      { href: "/register", label: "Create an Account" },
-    ],
-  },
-  {
-    heading: "Resources",
-    links: [
-      { href: "/listings?farming_practice=organic", label: "Organic Fruit" },
-      { href: "/listings?farming_practice=biodynamic", label: "Biodynamic Fruit" },
-      { href: "/listings?region_ava=Napa+Valley", label: "Napa Valley Listings" },
-    ],
-  },
-];
+function getColumns() {
+  return [
+    {
+      heading: "Marketplace",
+      links: [
+        { href: "/grapes", label: "Browse Grapes" },
+        ...(flags.bulkWine ? [{ href: "/bulk-wine", label: "Browse Bulk Wine" }] : []),
+        { href: "/sell", label: "List Your Harvest" },
+        { href: "/planning", label: "Crop Planning" },
+      ],
+    },
+    {
+      heading: "Company",
+      links: [
+        { href: "/login", label: "Log In" },
+        { href: "/register", label: "Create an Account" },
+      ],
+    },
+    {
+      heading: "Resources",
+      links: [
+        { href: "/grapes?farming_practice=organic", label: "Organic Fruit" },
+        { href: "/grapes?farming_practice=biodynamic", label: "Biodynamic Fruit" },
+        { href: "/grapes?region_ava=Napa+Valley", label: "Napa Valley Listings" },
+      ],
+    },
+  ];
+}
 
 export function Footer() {
+  const columns = getColumns();
   return (
     <footer className="border-t border-stone-200 bg-stone-50">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -44,7 +49,7 @@ export function Footer() {
               forward contracts.
             </p>
           </div>
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <div key={col.heading}>
               <h4 className="text-xs font-semibold uppercase tracking-wide text-stone-400">
                 {col.heading}

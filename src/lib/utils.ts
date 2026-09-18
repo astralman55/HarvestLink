@@ -42,6 +42,51 @@ export function computeTotalLotValue(quantityGallons: number, pricePerGallon: nu
   return totalCents / 100;
 }
 
+// WINE-2: "/grapes/{slug}-{id}" and "/bulk-wine/{slug}-{id}" -- no slug
+// generation existed anywhere in the app before this (Phase 0 audit); the
+// slug is cosmetic/SEO-only, the id suffix is always the real lookup key.
+const UUID_LENGTH = 36;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "") // strip accents
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
+
+export function buildListingSlugPath(title: string, id: string): string {
+  const slug = slugify(title);
+  return slug ? `${slug}-${id}` : id;
+}
+
+/**
+ * UUIDs are always exactly 36 characters, so the last 36 characters of a
+ * "{slug}-{id}" path segment are unambiguously the id even though the slug
+ * portion may itself contain hyphens. Falls back to the raw param
+ * (demo listing ids like "demo-1", or a bare id typed with no slug at
+ * all) when that's not a UUID. Demo-mode ids (DEMO_LISTINGS, used when no
+ * real Supabase project is reachable) are a second known shape ("demo-1"
+ * etc.) and are matched explicitly too, since they don't have a fixed
+ * length to anchor on the way UUIDs do. Anything else falls back to the
+ * raw param -- getListingById()'s own not-found handling takes it from
+ * there.
+ */
+const DEMO_ID_PATTERN = /demo-\d+$/;
+
+export function parseListingIdFromSlugParam(param: string): string {
+  if (param.length >= UUID_LENGTH) {
+    const candidate = param.slice(-UUID_LENGTH);
+    if (UUID_PATTERN.test(candidate)) return candidate;
+  }
+  const demoMatch = param.match(DEMO_ID_PATTERN);
+  if (demoMatch) return demoMatch[0];
+  return param;
+}
+
 export function generateListingTitle(
   variety: string | undefined,
   clone: string | undefined,

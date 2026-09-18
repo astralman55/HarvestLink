@@ -68,6 +68,8 @@ export async function updateListing(listingId: string, data: CreateListingInput)
     }
 
     revalidatePath("/listings");
+    revalidatePath("/grapes");
+    revalidatePath("/bulk-wine");
     revalidatePath("/listings/mine");
     revalidatePath(`/listings/${listingId}`);
     revalidatePath("/dashboard");
