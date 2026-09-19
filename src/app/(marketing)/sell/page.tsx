@@ -5,7 +5,7 @@ import { ListingTypeChooser } from "@/components/listings/ListingTypeChooser";
 import { flags } from "@/lib/flags";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Sell Wine Grapes & Bulk Wine | HarvestLink",
+  title: "Sell Wine Grapes & Bulk Wine | BWG",
   description:
     "List your wine grapes or bulk wine for buyers across the country. Sell openly or confidentially under NDA and receive inquiries through the site.",
   path: "/sell",

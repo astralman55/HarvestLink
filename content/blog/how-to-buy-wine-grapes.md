@@ -17,7 +17,7 @@ faq:
   - q: "What is brix and why does it matter?"
     a: "Brix measures the sugar in grape juice and is used to decide when to pick and to estimate the alcohol the wine could reach. Buyers often set a brix target or range in the agreement."
   - q: "Can I buy grapes for home winemaking?"
-    a: "Most HarvestLink lots are commercial quantities measured in tons, and each seller sets their own minimums. Ask the seller whether a smaller purchase is possible."
+    a: "Most BWG lots are commercial quantities measured in tons, and each seller sets their own minimums. Ask the seller whether a smaller purchase is possible."
   - q: "Do I need a broker?"
     a: "No. You can buy directly from growers or through a marketplace. Brokers can help with sourcing and contracts, but they are optional."
 sources:
@@ -37,7 +37,7 @@ Buying grapes is buying a set of choices a grower has already made: which variet
 ## Step 1: Write your spec
 
 - **Variety, and clone if it matters.** Cabernet Sauvignon, Chardonnay, Pinot Noir, and so on.
-- **Region or appellation.** Especially if you want the label to name it. On HarvestLink you can filter by region, and regions are listed by county.
+- **Region or appellation.** Especially if you want the label to name it. On BWG you can filter by region, and regions are listed by county.
 - **Harvest year.**
 - **Tons.** How much you need, and whether you can take part of a block.
 - **Brix target and range.** See [what brix means](/blog/what-is-brix-in-winemaking).
@@ -47,7 +47,7 @@ Buying grapes is buying a set of choices a grower has already made: which variet
 
 ## Step 2: Compare vineyards on the details that affect quality
 
-HarvestLink grape listings include vineyard details that many classifieds leave out:
+BWG grape listings include vineyard details that many classifieds leave out:
 
 | Detail | Why it matters |
 |---|---|
@@ -62,7 +62,7 @@ Ask growers for more when you need it: yield history, spray records, the previou
 
 ## Step 3: Find growers and lots
 
-You can buy through brokers, directly from growers, through regional grower associations, or through a marketplace. On HarvestLink, browse [wine grape lots](/grapes) and filter by variety, region, harvest year, farming practice, tonnage, and price. Some sellers list confidentially, in which case you see the vineyard details and region at the level they chose, but not the name. Set a [saved search](/alerts) and get an email digest when a new lot matches.
+You can buy through brokers, directly from growers, through regional grower associations, or through a marketplace. On BWG, browse [wine grape lots](/grapes) and filter by variety, region, harvest year, farming practice, tonnage, and price. Some sellers list confidentially, in which case you see the vineyard details and region at the level they chose, but not the name. Set a [saved search](/alerts) and get an email digest when a new lot matches.
 
 ## Step 4: Agree on price and terms
 
@@ -76,7 +76,7 @@ Grapes are priced **per ton**. Multiply the price per ton by the tons for a roug
 - Rejection criteria and what happens to rejected fruit
 - Payment terms
 
-Because HarvestLink does not process payments, you and the grower arrange payment and delivery directly. Put it in writing. For structures and pitfalls, read [spot vs forward grape contracts](/blog/spot-vs-forward-wine-grape-contracts).
+Because BWG does not process payments, you and the grower arrange payment and delivery directly. Put it in writing. For structures and pitfalls, read [spot vs forward grape contracts](/blog/spot-vs-forward-wine-grape-contracts).
 
 ## Step 5: Plan harvest logistics
 

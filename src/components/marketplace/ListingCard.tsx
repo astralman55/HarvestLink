@@ -48,7 +48,7 @@ export function ListingCard({ listing }: { listing: PublicListing }) {
         <div>
           <div className="flex items-center gap-1.5">
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-              {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "HarvestLink Grower"}
+              {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "BWG Grower"}
             </p>
             {listing.is_confidential && <NdaBadge size="sm" interactive={false} />}
           </div>

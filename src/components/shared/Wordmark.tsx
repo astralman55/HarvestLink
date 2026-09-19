@@ -1,20 +1,9 @@
 import Image from "next/image";
 
 /**
- * The HarvestLink wordmark (grape-cluster mark + Playfair Display lettering,
- * converted to vector paths so it renders identically everywhere). Source
- * files live in /public/brand. Use `tone="light"` on dark backgrounds.
+ * The bulkwinegrapes.com wordmark. Source file: /public/brand/bwg-wordmark.png
+ * (transparent background, 1200 x 155). Size it by height; the width follows.
  */
-export function Wordmark({ tone = "dark", className = "h-8 w-auto" }: { tone?: "dark" | "light"; className?: string }) {
-  return (
-    <Image
-      src={tone === "light" ? "/brand/harvestlink-wordmark-light.svg" : "/brand/harvestlink-wordmark.svg"}
-      alt="HarvestLink"
-      width={310}
-      height={52}
-      unoptimized
-      priority
-      className={className}
-    />
-  );
+export function Wordmark({ className = "h-7 w-auto" }: { className?: string }) {
+  return <Image src="/brand/bwg-wordmark.png" alt="bulkwinegrapes.com" width={1200} height={155} unoptimized priority className={className} />;
 }

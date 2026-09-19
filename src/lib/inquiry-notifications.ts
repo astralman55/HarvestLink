@@ -61,7 +61,7 @@ export async function notifyNewInquiryMessage(inquiryId: string, senderId: strin
     await sendNotificationEmail({
       to: recipientUser.email,
       subject: `New message about "${listingTitle}"`,
-      text: `${senderLabel} sent you a message about "${listingTitle}" on HarvestLink.\n\nRead and reply: ${appUrl}/inquiries/${inquiryId}`,
+      text: `${senderLabel} sent you a message about "${listingTitle}" on bulkwinegrapes.com.\n\nRead and reply: ${appUrl}/inquiries/${inquiryId}`,
     });
   } catch (err) {
     console.error("Inquiry notification email failed:", err);

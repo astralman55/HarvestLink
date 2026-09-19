@@ -10,7 +10,7 @@ import { describeSearch, queryToFilters, sanitizeSearchParams } from "@/lib/aler
 import { getListings } from "@/lib/data/listings";
 import { getPost } from "@/lib/blog";
 import { flags } from "@/lib/flags";
-import { CANONICAL_DESCRIPTION, absoluteUrl, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
+import { CANONICAL_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, absoluteUrl, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 import { resolveViewerContext } from "@/lib/supabase/viewer";
 
 const SHOWN_PER_MARKET = 6;
@@ -60,7 +60,7 @@ export async function LandingView({ page }: { page: LandingPage }) {
             url: absoluteUrl(path),
             inLanguage: "en-US",
             image: absoluteUrl(page.image),
-            isPartOf: { "@type": "WebSite", name: "HarvestLink", url: absoluteUrl("/") },
+            isPartOf: { "@type": "WebSite", name: SITE_NAME, alternateName: SITE_SHORT_NAME, url: absoluteUrl("/") },
           },
           faqJsonLd(page.faq),
         ]}
@@ -240,8 +240,8 @@ export async function LandingView({ page }: { page: LandingPage }) {
         </p>
       </section>
 
-      <section className="mt-8 rounded-2xl border border-stone-200 bg-white p-5" aria-label="About HarvestLink">
-        <p className="text-sm font-semibold text-stone-900">About HarvestLink</p>
+      <section className="mt-8 rounded-2xl border border-stone-200 bg-white p-5" aria-label="About bulkwinegrapes.com">
+        <p className="text-sm font-semibold text-stone-900">About bulkwinegrapes.com</p>
         <p className="mt-1 text-sm text-stone-600">{CANONICAL_DESCRIPTION}</p>
       </section>
     </article>

@@ -4,14 +4,14 @@ import { LegalPage } from "@/components/shared/LegalPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "What HarvestLink collects, why, who else handles it, and how confidential (NDA) listings are protected.",
+  description: "What BWG collects, why, who else handles it, and how confidential (NDA) listings are protected.",
 };
 
 export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Policy" updated="September 2026">
       <p>
-        This explains what personal information HarvestLink (the &quot;Site&quot;) collects, what we do with it, and who
+        This explains what personal information bulkwinegrapes.com (the &quot;Site&quot; or &quot;BWG&quot;) collects, what we do with it, and who
         else handles it. It goes with our <Link href="/terms">Terms of Service</Link>.
       </p>
 

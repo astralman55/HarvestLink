@@ -15,7 +15,7 @@ export async function buildListingMetadata(slugParam: string, section: "grapes" 
   const listing = await getListingById(id);
   if (!listing) return {};
 
-  const description = listing.description ? listing.description.slice(0, 155) : `${listing.title} on HarvestLink.`;
+  const description = listing.description ? listing.description.slice(0, 155) : `${listing.title} on bulkwinegrapes.com.`;
   const canonicalPath = `/${section}/${buildListingSlugPath(listing.title, listing.id)}`;
 
   return {

@@ -19,9 +19,11 @@ export function ExploreMenu({ className = "" }: { className?: string }) {
   return (
     <Sheet>
       <SheetTrigger
-        className={`flex items-center gap-1.5 rounded-full border border-stone-300 px-3.5 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50 ${className}`}
+        className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border border-stone-300 px-3.5 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50 ${className}`}
       >
-        <Compass className="size-4" /> Regions &amp; Varieties
+        <Compass className="size-4" />
+        <span className="md:hidden">Explore</span>
+        <span className="hidden md:inline">Regions &amp; Varieties</span>
       </SheetTrigger>
       <SheetContent side="right" className="gap-2 overflow-y-auto">
         <SheetHeader>

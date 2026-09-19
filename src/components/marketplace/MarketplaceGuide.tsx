@@ -15,9 +15,9 @@ const COPY: Record<
   }
 > = {
   grapes: {
-    heading: "Buying wine grapes on HarvestLink",
+    heading: "Buying wine grapes on BWG",
     intro:
-      "Wine grapes on HarvestLink are listed by the ton, direct from growers. Each lot shows the variety, harvest year, region, farming practice, estimated tons, minimum order, price per ton, and brix target, plus vineyard details such as trellis, soil, exposure, and slope. Sellers can list openly or confidentially under NDA. Use the filters to narrow by variety, region, and price, contact sellers through the site, and agree price, payment, and delivery directly with them. Save a search to get an email when new lots match.",
+      "Wine grapes on BWG are listed by the ton, direct from growers. Each lot shows the variety, harvest year, region, farming practice, estimated tons, minimum order, price per ton, and brix target, plus vineyard details such as trellis, soil, exposure, and slope. Sellers can list openly or confidentially under NDA. Use the filters to narrow by variety, region, and price, contact sellers through the site, and agree price, payment, and delivery directly with them. Save a search to get an email when new lots match.",
     pricingTitle: "How grape pricing works",
     pricing:
       "Wine grapes are priced per ton. Multiply the price per ton by the tons you want for a rough lot value. Final price and quality terms, such as the brix range and harvest timing, are agreed with the seller.",
@@ -27,12 +27,12 @@ const COPY: Record<
       { href: "/blog/gallons-of-wine-per-ton-of-grapes", label: "Gallons of wine per ton of grapes (calculator)" },
       { href: "/blog/spot-vs-forward-wine-grape-contracts", label: "Spot vs forward grape contracts" },
     ],
-    faq: ["How are wine grapes priced?", "Does HarvestLink charge fees?", "How do payment and delivery work?", "How do email alerts work?"],
+    faq: ["How are wine grapes priced?", "Does BWG charge fees?", "How do payment and delivery work?", "How do email alerts work?"],
   },
   "bulk-wine": {
-    heading: "Buying bulk wine on HarvestLink",
+    heading: "Buying bulk wine on BWG",
     intro:
-      "Bulk wine on HarvestLink is listed by the gallon, before bottling. Each lot shows the varietal, vintage, ABV, total sulfites in parts per million, region, wine location, farming practices, quantity, price per gallon, and total lot value. Sellers can list openly or confidentially under NDA, so some of the best lots never carry a winery name. Use the filters to narrow your search, contact sellers through the site, and arrange samples, lab analysis, payment, and transport directly with them. Save a search to get an email when new lots match.",
+      "Bulk wine on BWG is listed by the gallon, before bottling. Each lot shows the varietal, vintage, ABV, total sulfites in parts per million, region, wine location, farming practices, quantity, price per gallon, and total lot value. Sellers can list openly or confidentially under NDA, so some of the best lots never carry a winery name. Use the filters to narrow your search, contact sellers through the site, and arrange samples, lab analysis, payment, and transport directly with them. Save a search to get an email when new lots match.",
     pricingTitle: "How bulk wine pricing works",
     pricing:
       "Bulk wine is priced per gallon. Each listing multiplies quantity by price per gallon to show the total lot value. Price depends on varietal, vintage, appellation, quality, and market conditions, so compare lots on the same basis and ask each seller what the price includes.",

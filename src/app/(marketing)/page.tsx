@@ -41,7 +41,7 @@ const VALUE_PROPS = [
 // ?market=bulk-wine is a view of this same page, so every variant declares the
 // homepage itself as canonical and never competes with /bulk-wine.
 export const metadata: Metadata = {
-  title: { absolute: "Wine Grapes & Bulk Wine Marketplace | HarvestLink" },
+  title: { absolute: "Wine Grapes & Bulk Wine Marketplace | bulkwinegrapes.com" },
   description:
     "Buy and sell wine grapes and bulk wine direct. Search by variety, region, vintage and price per ton or gallon. Confidential NDA listings available.",
   alternates: { canonical: "/" },
@@ -137,7 +137,7 @@ export default async function HomePage({
             <p className="max-w-2xl text-white/85">
               Top producers don&apos;t advertise when they have fruit or wine to move. Sellers here can list under NDA, so
               their name, winery, and vineyard stay private while you still see everything that matters: varietal,
-              vintage, region, quantity, price, and farming practice. Reach out through HarvestLink, and the seller decides
+              vintage, region, quantity, price, and farming practice. Reach out through BWG, and the seller decides
               what to share and when.
             </p>
             <Button asChild variant="outline" size="lg" className="mt-2">
@@ -152,7 +152,7 @@ export default async function HomePage({
       <section className="border-b border-stone-200 bg-white py-10" aria-labelledby="what-is-heading">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 id="what-is-heading" className="text-xl font-semibold text-stone-900">
-            What is HarvestLink?
+            What is bulkwinegrapes.com?
           </h2>
           <p className="mt-3 leading-relaxed text-stone-700">{CANONICAL_DESCRIPTION}</p>
           <p className="mt-3 leading-relaxed text-stone-600">
@@ -316,7 +316,7 @@ export default async function HomePage({
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
-          <h2 className="text-2xl font-semibold text-stone-900">How HarvestLink Works</h2>
+          <h2 className="text-2xl font-semibold text-stone-900">How BWG Works</h2>
           <div className="relative mt-6 h-44 w-full max-w-4xl overflow-hidden rounded-2xl sm:h-56">
             <Image
               src="/images/harvest-bin-grapes.webp"

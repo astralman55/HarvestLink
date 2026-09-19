@@ -38,7 +38,7 @@ heroAlt: "A glass of red wine in front of pale wooden crate slats"
 
 ## What is ABV?
 
-ABV stands for **alcohol by volume**. It is the share of the liquid that is pure alcohol. A wine that is 13.5 percent ABV is 13.5 percent alcohol by volume. It is the standard way to state alcohol in wine, and it is a field on every HarvestLink bulk wine listing.
+ABV stands for **alcohol by volume**. It is the share of the liquid that is pure alcohol. A wine that is 13.5 percent ABV is 13.5 percent alcohol by volume. It is the standard way to state alcohol in wine, and it is a field on every BWG bulk wine listing.
 
 ## How much alcohol does wine usually have?
 
@@ -102,4 +102,4 @@ Alcohol by weight is a different measurement. Alcohol is lighter than water, so 
 
 ## Search bulk wine by ABV
 
-Use the [bulk wine page](/bulk-wine) to filter by minimum and maximum ABV along with varietal, vintage, region, and sulfites. Save your search and HarvestLink emails you when new lots match. Curious about the rest of the process? See [how wine is made](/blog/how-is-wine-made).
+Use the [bulk wine page](/bulk-wine) to filter by minimum and maximum ABV along with varietal, vintage, region, and sulfites. Save your search and BWG emails you when new lots match. Curious about the rest of the process? See [how wine is made](/blog/how-is-wine-made).

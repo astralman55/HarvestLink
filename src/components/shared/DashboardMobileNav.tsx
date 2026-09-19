@@ -22,8 +22,8 @@ export function DashboardMobileNav({ name, subtitle }: DashboardMobileNavProps) 
 
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-stone-200 bg-white/95 px-4 backdrop-blur md:hidden">
-      <Link href="/" className="flex items-center" aria-label="HarvestLink home">
-        <Wordmark className="h-6 w-auto" />
+      <Link href="/" className="flex items-center" aria-label="bulkwinegrapes.com home">
+        <Wordmark className="h-[22px] w-auto" />
       </Link>
 
       <Sheet>
@@ -48,8 +48,8 @@ export function DashboardMobileNav({ name, subtitle }: DashboardMobileNavProps) 
             ))}
           </nav>
 
-          <nav aria-label="HarvestLink" className="mt-4 flex flex-col gap-1 border-t border-stone-100 pt-4">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-stone-500">HarvestLink</p>
+          <nav aria-label="BWG" className="mt-4 flex flex-col gap-1 border-t border-stone-100 pt-4">
+            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-stone-500">BWG</p>
             {site.map((item) => (
               <SheetClose asChild key={item.href}>
                 <Link href={item.href} className="rounded-lg px-3 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-100">

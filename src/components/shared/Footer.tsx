@@ -47,11 +47,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2">
-            <Link href="/" className="inline-flex items-center" aria-label="HarvestLink home">
+            <Link href="/" className="inline-flex items-center" aria-label="bulkwinegrapes.com home">
               <Wordmark className="h-8 w-auto" />
             </Link>
             <p className="mt-3 max-w-xs text-sm text-stone-500">
-              HarvestLink is an online marketplace where wine grape growers, wineries, and wine brands buy and sell
+              bulkwinegrapes.com (BWG) is an online marketplace where wine grape growers, wineries, and wine brands buy and sell
               wine grapes and bulk wine directly, including confidential listings under NDA.
             </p>
           </div>
@@ -76,7 +76,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-12 flex flex-col gap-3 border-t border-stone-200 pt-6 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} HarvestLink. Buyers and sellers arrange terms, payment and delivery directly.</p>
+          <p>© {new Date().getFullYear()} bulkwinegrapes.com. Buyers and sellers arrange terms, payment and delivery directly.</p>
           <div className="flex gap-5">
             <Link href="/terms" className="hover:text-stone-900">
               Terms of Service

@@ -50,7 +50,7 @@ Sulfur dioxide in wine is measured in **parts per million (ppm)**, which is like
 - **Free SO₂:** the active form that protects the wine.
 - **Total SO₂:** free plus bound SO₂, which has combined with other compounds in the wine.
 
-The **total** is the number used for labeling and legal limits. It is also a field on every HarvestLink bulk wine listing, so you can filter by a maximum.
+The **total** is the number used for labeling and legal limits. It is also a field on every BWG bulk wine listing, so you can filter by a maximum.
 
 ## What does the US label rule say?
 

@@ -11,7 +11,7 @@ const GENERIC_ERROR = "Incorrect email/username or password.";
 // Used only to keep the sign-in call's timing similar whether or not the
 // identifier resolves, so a failed username lookup isn't distinguishable
 // from a wrong password by response time alone.
-const DUMMY_EMAIL = "no-such-account@harvestlink.invalid";
+const DUMMY_EMAIL = "no-such-account@bulkwinegrapes.invalid";
 
 async function resolveEmail(identifier: string): Promise<string> {
   if (!flags.usernames || identifier.includes("@")) return identifier;

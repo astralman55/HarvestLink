@@ -73,7 +73,7 @@ Markets change. In a tight market, buyers want forward contracts to secure the f
 
 ## How do you plan multi-year supply?
 
-Growers can use the crop planner in the HarvestLink dashboard to record future harvest blocks by year, so they know what they will have to offer. Buyers can browse [current grape lots](/grapes) to see how growers describe their fruit, and set a [saved search](/alerts) to be told when matching lots are listed. HarvestLink is where you find each other. The agreement itself is arranged directly between buyer and grower.
+Growers can use the crop planner in the BWG dashboard to record future harvest blocks by year, so they know what they will have to offer. Buyers can browse [current grape lots](/grapes) to see how growers describe their fruit, and set a [saved search](/alerts) to be told when matching lots are listed. BWG is where you find each other. The agreement itself is arranged directly between buyer and grower.
 
 ## Red flags
 

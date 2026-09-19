@@ -166,7 +166,7 @@ export function ListingDetailContent({ listing, viewer, backHref, backLabel }: L
 
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Listed By</p>
             <p className="mt-1 flex items-center gap-1.5 font-medium text-stone-900">
-              {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "HarvestLink Grower"}
+              {listing.is_confidential ? "Confidential Seller" : listing.seller?.company_name ?? "BWG Grower"}
               {listing.is_confidential && <NdaBadge size="sm" />}
             </p>
             <p className="text-sm text-stone-500">

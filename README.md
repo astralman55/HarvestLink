@@ -1,4 +1,4 @@
-# HarvestLink — Wine Grape Marketplace
+# bulkwinegrapes.com (BWG): Wine Grape Marketplace
 
 A B2B marketplace connecting wine grape growers and buyers, built from
 [`vintnerlink_blueprint.md`](./vintnerlink_blueprint.md) on Next.js 15 (App
@@ -173,4 +173,4 @@ marketing navbar/footer shell, while the authenticated app
 (`(dashboard)` route group: overview, create listing, planning) uses a
 sidebar app shell — both share the same `/listings` URL space via Next.js
 route groups.
-# HarvestLink
+# bulkwinegrapes.com (BWG)

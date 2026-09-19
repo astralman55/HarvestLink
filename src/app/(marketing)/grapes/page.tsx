@@ -22,7 +22,7 @@ export async function generateMetadata({
   // index but let crawlers follow the links, and point them at the clean URL.
   const filtered = Object.values(params).some((value) => (Array.isArray(value) ? value.length > 0 : !!value));
   const base = pageMetadata({
-    title: "Wine Grapes for Sale by the Ton | HarvestLink",
+    title: "Wine Grapes for Sale by the Ton | BWG",
     description:
       "Browse wine grape lots for sale direct from growers. Filter by variety, region, harvest year, farming practice, tonnage and price per ton.",
     path: "/grapes",

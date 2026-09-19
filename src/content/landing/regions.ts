@@ -14,7 +14,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Napa Valley is a narrow valley, about 30 miles long and 5 miles across at its widest, with a dry Mediterranean climate and elevations from sea level to about 2,600 feet. Napa Valley Vintners counts 17 approved sub-appellations inside it, from valley-floor areas such as Oakville and Rutherford to mountain areas such as Howell Mountain and Spring Mountain District.",
       "For buyers, the small scale is the main story. The valley supplies only about 4 percent of California's wine grape harvest, and Cabernet Sauvignon alone makes up roughly 54 percent of its planted acreage. That concentration gives Napa a clear identity and keeps supply tight, which is why the same variety can carry very different prices depending on the sub-appellation and the vineyard.",
-      "On HarvestLink, Napa County lots are listed by the ton for grapes and by the gallon for bulk wine. Some sellers list confidentially under NDA, in which case you still see the variety, vintage, quantity and price, but not the winery or vineyard name.",
+      "On BWG, Napa County lots are listed by the ton for grapes and by the gallon for bulk wine. Some sellers list confidentially under NDA, in which case you still see the variety, vintage, quantity and price, but not the winery or vineyard name.",
     ],
     facts: [
       { label: "Valley size", value: "About 30 miles long, 5 miles across at its widest" },
@@ -32,7 +32,7 @@ export const REGION_PAGES: LandingPage[] = [
     faq: [
       { q: "Is Napa County the same as Napa Valley?", a: "Not exactly. Napa Valley is an American Viticultural Area inside Napa County, and the county has some vineyard land outside the valley appellation. Check the exact appellation a seller lists before you plan to name it on a label." },
       { q: "Why are Napa grapes and bulk wine priced higher?", a: "Supply is small compared with the region's reputation, and Cabernet Sauvignon from named sub-appellations is in strong demand. Price also reflects vintage, farming practice and quality, so compare lots on the same basis." },
-      { q: "How do I find Napa lots on HarvestLink?", a: "Use the buttons on this page to see current Napa County grape and bulk wine lots, or save a search and HarvestLink emails you once a day when a new matching lot is listed." },
+      { q: "How do I find Napa lots on BWG?", a: "Use the buttons on this page to see current Napa County grape and bulk wine lots, or save a search and BWG emails you once a day when a new matching lot is listed." },
     ],
     sources: [
       { title: "Napa Valley Vintners: Napa Valley fast facts", url: "https://napavalley.wine/fast-facts" },
@@ -56,7 +56,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Sonoma County is larger and more varied than its neighbor Napa. Sonoma County Winegrowers reports more than 49,000 acres of vineyards, over 750 growers, 180 bonded wineries and 19 appellations, and says 95 percent of vineyards are family owned. The range of conditions runs from cool, foggy coastal sites to warm inland valleys.",
       "Seven varieties account for more than 90 percent of plantings. Chardonnay leads at about 15,500 acres, followed by Pinot Noir at about 13,000 and Cabernet Sauvignon at about 12,700. Zinfandel (4,760), Merlot (4,200), Sauvignon Blanc (2,600) and Syrah (1,380) complete the group. That breadth means a buyer can source sparkling base, cool-climate Pinot and Chardonnay, old-vine Zinfandel or Cabernet from one county.",
-      "Sonoma County lots on HarvestLink are listed by the ton for grapes and by the gallon for bulk wine, and sellers can list openly or under NDA.",
+      "Sonoma County lots on BWG are listed by the ton for grapes and by the gallon for bulk wine, and sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Vineyard acres", value: "More than 49,000" },
@@ -97,7 +97,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Mendocino is one of California's larger wine counties by area, yet grapes cover only about 0.8 percent of the land. Mendocino Winegrowers reports about 17,470 planted acres and roughly 570 vineyards, most held by family farmers, spread across twelve approved appellations. Anderson Valley is the best known, and Mendocino Ridge is the only non-contiguous appellation in the United States.",
       "What sets the county apart for many buyers is organic farming. The grower group reports that about 25 percent of Mendocino's wine grapes are certified organic, and that the county holds about one third of all organic wine grape acreage in California. Pinot Noir, Cabernet Sauvignon, Zinfandel, Merlot and Syrah are the most common reds, with Chardonnay and Sauvignon Blanc the leading whites.",
-      "If organic or sustainable fruit matters to your brand, the farming practice filter on HarvestLink lets you narrow Mendocino lots by declared practice. Practices are declared by the seller, so ask for the certificate.",
+      "If organic or sustainable fruit matters to your brand, the farming practice filter on BWG lets you narrow Mendocino lots by declared practice. Practices are declared by the seller, so ask for the certificate.",
     ],
     facts: [
       { label: "Planted acres", value: "About 17,470" },
@@ -114,7 +114,7 @@ export const REGION_PAGES: LandingPage[] = [
     ],
     faq: [
       { q: "How much of Mendocino is organic?", a: "Mendocino Winegrowers reports that about 25 percent of the county's wine grapes are certified organic, and that Mendocino holds about one third of California's organic wine grape acreage. Figures come from the grower group and change over time." },
-      { q: "Are farming practices verified on HarvestLink?", a: "No. Practices such as organic, biodynamic or sustainable are declared by the seller. Ask for the certificate, the certifier, the scope and the expiry date before you rely on a claim." },
+      { q: "Are farming practices verified on BWG?", a: "No. Practices such as organic, biodynamic or sustainable are declared by the seller. Ask for the certificate, the certifier, the scope and the expiry date before you rely on a claim." },
       { q: "What is Mendocino Ridge?", a: "It is an appellation made up of separate high-elevation areas above the fog line, and it is the only non-contiguous American Viticultural Area in the United States." },
     ],
     sources: [
@@ -139,7 +139,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Paso Robles is the county's best-known appellation, and it has grown quickly. When it was established in 1983 it had about 17 wineries and 5,000 vineyard acres, with Zinfandel as the heritage grape. Today it is reported to have more than 200 wineries and roughly 40,000 vineyard acres, and it is about three times the size of Napa. About 95 percent of its wineries are family owned.",
       "The variety list is unusually wide. More than 40 varieties are grown, including Cabernet Sauvignon (the most widely planted), Zinfandel, Merlot, Syrah, Grenache, Petite Sirah, Chardonnay and a long list of Rhone and Italian varieties. Cooler coastal parts of the county, such as Edna Valley, are known for Chardonnay and Pinot Noir.",
-      "That range makes the county useful for blenders and brands that want several varieties from one region. Lots on HarvestLink are listed by the ton for grapes and by the gallon for bulk wine, openly or under NDA.",
+      "That range makes the county useful for blenders and brands that want several varieties from one region. Lots on BWG are listed by the ton for grapes and by the gallon for bulk wine, openly or under NDA.",
     ],
     facts: [
       { label: "Paso Robles AVA established", value: "1983, with about 17 wineries and 5,000 vineyard acres" },
@@ -157,7 +157,7 @@ export const REGION_PAGES: LandingPage[] = [
     faq: [
       { q: "Is Paso Robles the same as San Luis Obispo County?", a: "No. Paso Robles is one large appellation inside San Luis Obispo County. The county also includes other growing areas, such as Edna Valley on the cooler coast." },
       { q: "What grape is Paso Robles best known for?", a: "Cabernet Sauvignon is the most widely planted, and Zinfandel is the heritage grape. The area also grows many Rhone and Italian varieties." },
-      { q: "How do I get notified about new lots?", a: "Save a search on this page or on the Grapes or Bulk Wine page, and HarvestLink emails you once a day when a new matching lot is listed." },
+      { q: "How do I get notified about new lots?", a: "Save a search on this page or on the Grapes or Bulk Wine page, and BWG emails you once a day when a new matching lot is listed." },
     ],
     sources: [
       { title: "Wikipedia: Paso Robles AVA", url: "https://en.wikipedia.org/wiki/Paso_Robles_AVA" },
@@ -181,7 +181,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Most of California's coastal ranges run north to south. In Santa Barbara County the valleys run east to west, which lets Pacific breezes and fog travel a long way inland. The result is a steep temperature gradient: the cooler western areas are well suited to Chardonnay and Pinot Noir, while the warmer eastern areas ripen Bordeaux and Rhone varieties.",
       "The county has seven official appellations: Santa Maria Valley, Santa Ynez Valley, Sta. Rita Hills, Ballard Canyon, Los Olivos District, Happy Canyon of Santa Barbara and Alisos Canyon. Santa Maria Valley has roughly 7,500 planted acres and Sta. Rita Hills about 2,700, and both are known for cool-climate Chardonnay, Pinot Noir and Syrah.",
-      "Because conditions change over short distances, buyers do better asking for the specific appellation and site than treating the county as one style. Lots on HarvestLink are listed by the ton and by the gallon, and sellers can list confidentially under NDA.",
+      "Because conditions change over short distances, buyers do better asking for the specific appellation and site than treating the county as one style. Lots on BWG are listed by the ton and by the gallon, and sellers can list confidentially under NDA.",
     ],
     facts: [
       { label: "Appellations", value: "Seven, including Santa Maria Valley, Sta. Rita Hills and Santa Ynez Valley" },
@@ -224,7 +224,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Lodi is the region most buyers mean when they search San Joaquin County. The Lodi appellation was recognized in February 1986 and spans San Joaquin and Sacramento counties. The Lodi Winegrape Commission reports that wine grape acreage has grown from about 39,000 acres in 1991 to more than 100,000, and it represents roughly 750 growers.",
       "The scale matters for buyers. A large, established grower base means volume for both premium and everyday wines, and it is a common source of fruit for blends and bulk wine. Lodi has a long history with Zinfandel, and the commission's own pest-management work grew into the Lodi Rules for Sustainable Winegrowing, a third-party certification you can ask a grower about.",
-      "On HarvestLink, San Joaquin County lots are listed by the ton for grapes and by the gallon for bulk wine. Sellers can list openly or confidentially under NDA.",
+      "On BWG, San Joaquin County lots are listed by the ton for grapes and by the gallon for bulk wine. Sellers can list openly or confidentially under NDA.",
     ],
     facts: [
       { label: "Lodi appellation recognized", value: "February 1986" },
@@ -266,7 +266,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "The Willamette Valley is Oregon's main wine region, and Pinot Noir is what it is best known for. The valley's appellation dates to 1983, and in 2004 growers and wineries obtained smaller appellations for the northern hillsides, including Dundee Hills, Yamhill-Carlton, McMinnville, Ribbon Ridge, Eola-Amity Hills and Chehalem Mountains. Several of these lie wholly or partly in Yamhill County.",
       "The scale of the sub-appellations is modest. Yamhill-Carlton covers about 8,500 acres with about 2,844 planted across 127 vineyards, growing mainly Pinot Noir, Pinot Gris and Chardonnay. Dundee Hills covers about 6,490 acres with about 1,300 planted. Smaller vineyards and hillside sites mean supply of any one appellation is limited.",
-      "On HarvestLink, Yamhill County lots are listed by the ton for grapes and by the gallon for bulk wine, and sellers can list under NDA to keep the vineyard name private.",
+      "On BWG, Yamhill County lots are listed by the ton for grapes and by the gallon for bulk wine, and sellers can list under NDA to keep the vineyard name private.",
     ],
     facts: [
       { label: "Willamette Valley AVA", value: "Established 1983" },
@@ -284,7 +284,7 @@ export const REGION_PAGES: LandingPage[] = [
     faq: [
       { q: "Is Yamhill County the same as the Willamette Valley?", a: "No. The Willamette Valley is a large appellation that covers several counties. Yamhill County contains parts of it, including several of its smaller appellations." },
       { q: "What is Yamhill-Carlton known for?", a: "Mainly Pinot Noir, along with Pinot Gris and Chardonnay, grown on hillsides. It has about 127 vineyards on about 2,844 planted acres." },
-      { q: "Can I buy Oregon Pinot Noir grapes by the ton here?", a: "Yes, when a grower lists a lot. Set up a saved search for Yamhill County and Pinot Noir, and HarvestLink emails you when a new match appears." },
+      { q: "Can I buy Oregon Pinot Noir grapes by the ton here?", a: "Yes, when a grower lists a lot. Set up a saved search for Yamhill County and Pinot Noir, and BWG emails you when a new match appears." },
     ],
     sources: [
       { title: "Wikipedia: Willamette Valley AVA", url: "https://en.wikipedia.org/wiki/Willamette_Valley_AVA" },
@@ -309,7 +309,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "The Yakima Valley was recognized on March 23, 1983 as the first federally designated wine grape growing region in Washington, and the first north of California. Its total area is about 699,520 acres, of which about 18,924 are planted to vineyards, so grapes are a small part of a large, mostly dry agricultural landscape.",
       "The range of varieties is wide. Chardonnay, Riesling, Merlot and Cabernet Sauvignon are the top varieties, and the warmer sites yield a significant share of Washington's Merlot, Cabernet Sauvignon and Syrah. The appellation also contains sub-appellations, including Snipes Mountain, Rattlesnake Hills, Red Mountain and Candy Mountain, some of which sit in neighboring counties.",
-      "Yakima County lots on HarvestLink are listed by the ton for grapes and by the gallon for bulk wine, and sellers can list openly or under NDA.",
+      "Yakima County lots on BWG are listed by the ton for grapes and by the gallon for bulk wine, and sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Designated", value: "March 23, 1983, Washington's first appellation" },
@@ -327,7 +327,7 @@ export const REGION_PAGES: LandingPage[] = [
     faq: [
       { q: "Is the Yakima Valley the same as Washington's Columbia Valley?", a: "No. The Yakima Valley is a smaller appellation, and the Columbia Valley is a much larger one. Ask a seller which appellation the fruit or wine actually qualifies for." },
       { q: "What grapes is the Yakima Valley known for?", a: "Its top varieties are Chardonnay, Riesling, Merlot and Cabernet Sauvignon, and its warmer sites produce much of the state's Merlot, Cabernet and Syrah." },
-      { q: "How do I get alerts for Washington lots?", a: "Save a search on the Grapes or Bulk Wine page with the region filter set, and HarvestLink emails you once a day when a new matching lot is listed." },
+      { q: "How do I get alerts for Washington lots?", a: "Save a search on the Grapes or Bulk Wine page with the region filter set, and BWG emails you once a day when a new matching lot is listed." },
     ],
     sources: [
       { title: "HistoryLink: Yakima Valley designated Washington's first AVA", url: "https://www.historylink.org/file/22768" },
@@ -351,7 +351,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "The Walla Walla Valley appellation is unusual because it crosses a state line. Established in 1984, it covers about 300,000 acres in a diamond shape in southeastern Washington and northeastern Oregon, with about two thirds of the land in Washington.",
       "The vineyard area is small, about 2,933 planted acres, but the region has more than 120 wineries, including some of the oldest in Washington. That combination, limited fruit and many wineries, tends to make grape supply competitive. The region is known for Cabernet Sauvignon, Syrah and Merlot, and for Rhone-style blends.",
-      "Because the appellation includes Oregon land, it is worth confirming which side of the state line a lot comes from, since some wine can carry the state name only if enough of the fruit is from that state. Lots on HarvestLink are listed by the ton and the gallon, openly or under NDA.",
+      "Because the appellation includes Oregon land, it is worth confirming which side of the state line a lot comes from, since some wine can carry the state name only if enough of the fruit is from that state. Lots on BWG are listed by the ton and the gallon, openly or under NDA.",
     ],
     facts: [
       { label: "Established", value: "1984" },
@@ -393,7 +393,7 @@ export const REGION_PAGES: LandingPage[] = [
     intro: [
       "Long Island is the East Coast's best-known maritime wine region, and nearly all of it lies in Suffolk County. The Long Island appellation has two sub-appellations, the North Fork of Long Island and The Hamptons, Long Island. The North Fork is by far the more planted, with roughly 3,000 acres of vineyards, while The Hamptons has only a few dozen.",
       "The Atlantic Ocean and Long Island Sound moderate temperatures, which gives a long, mild growing season. That maritime climate lets dark-skinned Vitis vinifera varieties such as Merlot and Cabernet Franc ripen well, and the region is known for black-fruit wines with balanced tannins.",
-      "Supply is small compared with the West Coast, which makes East Coast lots relatively rare on the market. HarvestLink lists Suffolk County grapes by the ton and bulk wine by the gallon, openly or under NDA.",
+      "Supply is small compared with the West Coast, which makes East Coast lots relatively rare on the market. BWG lists Suffolk County grapes by the ton and bulk wine by the gallon, openly or under NDA.",
     ],
     facts: [
       { label: "Sub-appellations", value: "North Fork of Long Island and The Hamptons, Long Island" },

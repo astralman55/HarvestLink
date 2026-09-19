@@ -22,7 +22,7 @@ export async function generateMetadata({
   const params = await searchParams;
   const filtered = Object.values(params).some((value) => (Array.isArray(value) ? value.length > 0 : !!value));
   const base = pageMetadata({
-    title: "Bulk Wine for Sale by the Gallon | HarvestLink",
+    title: "Bulk Wine for Sale by the Gallon | BWG",
     description:
       "Find bulk wine for sale, priced per gallon. Filter by varietal, vintage, ABV, region and farming practice. Confidential (NDA) lots available.",
     path: "/bulk-wine",

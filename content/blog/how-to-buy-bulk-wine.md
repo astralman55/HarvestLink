@@ -15,7 +15,7 @@ faq:
   - q: "How much bulk wine can I buy?"
     a: "It depends on the seller. Some lots are whole tanks of thousands of gallons, and some sellers will sell a few barrels. Ask each seller for their minimum before you plan around a quantity."
   - q: "Do I need a broker to buy bulk wine?"
-    a: "No. You can buy directly from a winery or through a marketplace such as HarvestLink. Brokers can help with sourcing and paperwork, but they are optional."
+    a: "No. You can buy directly from a winery or through a marketplace such as BWG. Brokers can help with sourcing and paperwork, but they are optional."
   - q: "How do bulk wine samples work?"
     a: "The seller sends a sample from the lot, usually a bottle or two, and often lab analysis for the same lot. You taste it, review the numbers, and only then agree to a purchase. Ask who pays for the sample and shipping."
   - q: "What if the delivered wine does not match the sample?"
@@ -53,11 +53,11 @@ Confirm this before you agree to buy. It is general information, not legal advic
 
 | Source | Good for | Watch for |
 |---|---|---|
-| Marketplace (like [HarvestLink](/bulk-wine)) | Comparing many lots by spec and price per gallon | You arrange samples, payment, and delivery directly |
+| Marketplace (like [BWG](/bulk-wine)) | Comparing many lots by spec and price per gallon | You arrange samples, payment, and delivery directly |
 | Broker | Sourcing help and paperwork | Broker fees and less direct contact |
 | Directly from a winery | Building a relationship | Fewer lots to compare |
 
-Some of the strongest lots are listed confidentially. On HarvestLink you can send an inquiry without ever learning the seller's name until they choose to share it. See [how NDA listings work](/blog/selling-wine-anonymously-nda-listings).
+Some of the strongest lots are listed confidentially. On BWG you can send an inquiry without ever learning the seller's name until they choose to share it. See [how NDA listings work](/blog/selling-wine-anonymously-nda-listings).
 
 ## Step 4: Get samples and lab analysis
 
@@ -74,7 +74,7 @@ Ask whether the sample and the tank are the same wine, and when the analysis was
 
 ## Step 5: Agree on terms in writing
 
-Because HarvestLink does not process payments or handle shipping, you and the seller arrange the deal directly. Put it in writing. A clear agreement covers:
+Because BWG does not process payments or handle shipping, you and the seller arrange the deal directly. Put it in writing. A clear agreement covers:
 
 1. Exact wine, vintage, and quantity in gallons
 2. Price per gallon and total price
@@ -117,4 +117,4 @@ Sample the delivered wine before you accept it and compare it to the original sa
 
 ## Set an alert instead of checking every day
 
-Set your filters on the [bulk wine page](/bulk-wine), choose Save this search, and HarvestLink emails you a daily digest when new lots match. You can [manage your alerts](/alerts) any time. To understand what price ranges to expect, see the [FAQ](/faq) and the guide on [starting a wine brand](/blog/how-to-start-a-wine-brand-without-a-vineyard).
+Set your filters on the [bulk wine page](/bulk-wine), choose Save this search, and BWG emails you a daily digest when new lots match. You can [manage your alerts](/alerts) any time. To understand what price ranges to expect, see the [FAQ](/faq) and the guide on [starting a wine brand](/blog/how-to-start-a-wine-brand-without-a-vineyard).

@@ -86,7 +86,7 @@ function LoginForm() {
       </form>
 
       <p className="mt-6 text-center text-sm text-stone-500">
-        New to HarvestLink?{" "}
+        New to BWG?{" "}
         <Link href="/register" className="font-medium text-[var(--color-brand)]">
           Create an account
         </Link>

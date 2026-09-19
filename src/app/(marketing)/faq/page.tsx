@@ -5,8 +5,8 @@ import { FAQ_ITEMS } from "@/content/faq";
 import { CANONICAL_DESCRIPTION, breadcrumbJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "HarvestLink FAQ | Bulk Wine & Wine Grape Questions",
-  description: "Answers about bulk wine, wine grape pricing, NDA listings, email alerts, and how to buy or sell on HarvestLink.",
+  title: "BWG FAQ | Bulk Wine & Wine Grape Questions",
+  description: "Answers about bulk wine, wine grape pricing, NDA listings, email alerts, and how to buy or sell on BWG.",
   path: "/faq",
 });
 

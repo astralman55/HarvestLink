@@ -82,7 +82,7 @@ If you know the volume of wine you want, divide by the gallons per ton to find t
 Conversions go wrong most often because of units, not arithmetic.
 
 - **Short ton vs metric tonne.** In the United States, a ton is a short ton of 2,000 pounds, about 907 kilograms. A metric tonne is 1,000 kilograms, about 10 percent more. Grape prices and yields quoted outside the US may use tonnes, so check which one a source means.
-- **US gallon vs imperial gallon.** A US gallon is 3.785 liters. An imperial (UK) gallon is about 4.546 liters, roughly 20 percent larger. HarvestLink and this guide use US gallons.
+- **US gallon vs imperial gallon.** A US gallon is 3.785 liters. An imperial (UK) gallon is about 4.546 liters, roughly 20 percent larger. BWG and this guide use US gallons.
 
 If a quote, a yield figure, or a piece of equipment is described in units you did not expect, convert first and compare second.
 

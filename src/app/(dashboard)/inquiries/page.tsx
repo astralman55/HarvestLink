@@ -80,7 +80,7 @@ export default async function InquiriesPage() {
   return (
     <div className="max-w-3xl">
       <h1 className="text-2xl font-semibold text-stone-900">Inquiries</h1>
-      <p className="mt-1 text-sm text-stone-500">Messages between you and buyers or sellers on HarvestLink.</p>
+      <p className="mt-1 text-sm text-stone-500">Messages between you and buyers or sellers on BWG.</p>
 
       {!connected && (
         <div className="mt-6">

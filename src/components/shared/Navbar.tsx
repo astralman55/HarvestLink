@@ -32,7 +32,7 @@ function BulkWineToggle() {
     <div className="flex items-center rounded-full border border-stone-200 bg-stone-50 p-1">
       <Link
         href="/"
-        className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+        className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
           !isBulkWine ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-900"
         }`}
       >
@@ -40,7 +40,7 @@ function BulkWineToggle() {
       </Link>
       <Link
         href="/?market=bulk-wine"
-        className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+        className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
           isBulkWine ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-900"
         }`}
       >
@@ -77,8 +77,8 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center" aria-label="HarvestLink home">
-          <Wordmark className="h-7 w-auto sm:h-8" />
+        <Link href="/" className="flex shrink-0 items-center" aria-label="bulkwinegrapes.com home">
+          <Wordmark className="h-[22px] w-auto sm:h-8" />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex" aria-label="Main">

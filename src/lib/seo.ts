@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-export const SITE_NAME = "HarvestLink";
+export const SITE_NAME = "bulkwinegrapes.com";
+export const SITE_SHORT_NAME = "BWG";
 export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://bulkwinegrapes.com").replace(/\/$/, "");
 
 /**
@@ -10,7 +11,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://bulkwinegra
  * JSON-LD, llms.txt and every blog post's boilerplate.
  */
 export const CANONICAL_DESCRIPTION =
-  "HarvestLink is an online marketplace where wine grape growers, wineries, and wine brands buy and sell wine grapes and bulk wine directly, including confidential listings under NDA.";
+  "bulkwinegrapes.com (BWG) is an online marketplace where wine grape growers, wineries, and wine brands buy and sell wine grapes and bulk wine directly, including confidential listings under NDA.";
 
 export const TITLE_MAX = 60;
 export const DESCRIPTION_MAX = 155;
@@ -75,9 +76,9 @@ export function organizationJsonLd() {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
-    alternateName: ["Bulk Wine Grapes", "bulkwinegrapes.com"],
+    alternateName: [SITE_SHORT_NAME, "Bulk Wine Grapes"],
     url: SITE_URL,
-    logo: absoluteUrl("/brand/harvestlink-logo-512.png"),
+    logo: absoluteUrl("/brand/bwg-logo-512.png"),
     description: CANONICAL_DESCRIPTION,
   };
 }
@@ -88,6 +89,7 @@ export function websiteJsonLd() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
+    alternateName: SITE_SHORT_NAME,
     url: SITE_URL,
     description: CANONICAL_DESCRIPTION,
     publisher: { "@id": `${SITE_URL}/#organization` },

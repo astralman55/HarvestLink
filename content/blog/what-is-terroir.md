@@ -19,7 +19,7 @@ faq:
   - q: "Does terroir only apply to Old World wine?"
     a: "No. The word is French, but the idea applies to any wine region. New World regions use it too, including California, Oregon, and Washington."
   - q: "How can buyers use terroir information?"
-    a: "Look at the vineyard facts that influence ripening: region, elevation and slope, sun exposure, soil type, trellis, and farming practice. HarvestLink grape listings include many of these fields."
+    a: "Look at the vineyard facts that influence ripening: region, elevation and slope, sun exposure, soil type, trellis, and farming practice. BWG grape listings include many of these fields."
 sources:
   - title: "OIV: Definition of vitivinicultural terroir (Resolution OIV/VITI 333/2010)"
     url: "https://www.oiv.int/node/3362"
@@ -71,7 +71,7 @@ If you buy grapes or bulk wine, you want to know what made the fruit what it is.
 - **Slope**
 - **Farming practice**, such as organic or biodynamic (see [what the labels mean](/blog/organic-biodynamic-sustainable-wine-labels))
 
-HarvestLink grape listings include these fields, and you can filter by them on the [wine grapes page](/grapes). For an example of a region known for a strong identity, read [why Napa Valley wine is special](/blog/why-napa-valley-wine-is-special).
+BWG grape listings include these fields, and you can filter by them on the [wine grapes page](/grapes). For an example of a region known for a strong identity, read [why Napa Valley wine is special](/blog/why-napa-valley-wine-is-special).
 
 ## Can a wine taste the same everywhere?
 

@@ -7,7 +7,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 // delivers to the email address on the Resend account itself. Swap
 // RESEND_FROM_EMAIL to something on a verified domain to notify real
 // buyers/sellers; no code change needed, just the env var.
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "HarvestLink <onboarding@resend.dev>";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "bulkwinegrapes.com <onboarding@resend.dev>";
 
 /**
  * Best-effort email send -- a failure here must never surface as an error

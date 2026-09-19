@@ -13,7 +13,7 @@ export default function RegionsPage() {
   return (
     <LandingHub
       title="Wine Grape Regions"
-      intro="Ten regions with the most activity on HarvestLink. Each page has the facts a buyer or seller should know, what to check before agreeing on a lot, and the current grape and bulk wine listings."
+      intro="Ten regions with the most activity on BWG. Each page has the facts a buyer or seller should know, what to check before agreeing on a lot, and the current grape and bulk wine listings."
       path="/regions"
       pages={REGION_PAGES}
     />

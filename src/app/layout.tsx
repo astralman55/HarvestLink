@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   // Makes relative canonical / Open Graph URLs resolve against the real domain.
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Wine Grapes & Bulk Wine Marketplace | HarvestLink",
+    default: "Wine Grapes & Bulk Wine Marketplace | bulkwinegrapes.com",
     template: `%s | ${SITE_NAME}`,
   },
   description:

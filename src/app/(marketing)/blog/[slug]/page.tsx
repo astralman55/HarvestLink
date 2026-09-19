@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             inLanguage: "en-US",
             image: [absoluteUrl(post.heroImage), absoluteUrl(`/og/blog/${post.slug}`)],
             author: { "@type": "Person", name: post.author },
-            publisher: { "@type": "Organization", name: SITE_NAME, url: absoluteUrl("/"), logo: { "@type": "ImageObject", url: absoluteUrl("/brand/harvestlink-logo-512.png") } },
+            publisher: { "@type": "Organization", name: SITE_NAME, url: absoluteUrl("/"), logo: { "@type": "ImageObject", url: absoluteUrl("/brand/bwg-logo-512.png") } },
           },
           faqJsonLd(post.faq),
         ]}
@@ -193,8 +193,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
-      <section className="mt-12 rounded-2xl border border-stone-200 bg-stone-50 p-5" aria-label="About HarvestLink">
-        <p className="text-sm font-semibold text-stone-900">About HarvestLink</p>
+      <section className="mt-12 rounded-2xl border border-stone-200 bg-stone-50 p-5" aria-label="About bulkwinegrapes.com">
+        <p className="text-sm font-semibold text-stone-900">About bulkwinegrapes.com</p>
         <p className="mt-1 text-sm text-stone-600">{CANONICAL_DESCRIPTION}</p>
         <p className="mt-3 text-xs text-stone-500">
           Educational information, not legal, tax, or financial advice. Confirm permit and licensing requirements with the

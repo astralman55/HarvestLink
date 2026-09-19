@@ -67,7 +67,7 @@ Barrel math is simple: 225 liters divided by 3.785 liters per US gallon is about
 
 ## How is bulk wine measured and priced?
 
-Bulk wine is priced **per gallon** in the United States, and per liter in much of the world. A lot of 10,000 gallons at $6 per gallon has a total lot value of $60,000. Every [HarvestLink bulk wine listing](/bulk-wine) shows the price per gallon and the total lot value, so you can compare lots on the same basis.
+Bulk wine is priced **per gallon** in the United States, and per liter in much of the world. A lot of 10,000 gallons at $6 per gallon has a total lot value of $60,000. Every [BWG bulk wine listing](/bulk-wine) shows the price per gallon and the total lot value, so you can compare lots on the same basis.
 
 Price depends on the varietal, the vintage, the appellation, the quality of the wine, farming practices, quantity, and market conditions. When you compare quotes, check what the price includes. **FOB** (free on board) means the buyer pays to move the wine from the seller's location. **Delivered** means transport is included.
 
@@ -83,7 +83,7 @@ A useful listing gives you enough to decide whether to ask for a sample:
 - Where the wine is stored
 - Farming practices, such as organic or biodynamic (see [what those labels mean](/blog/organic-biodynamic-sustainable-wine-labels))
 
-Every one of these is a field on HarvestLink bulk wine listings, and you can filter by them.
+Every one of these is a field on BWG bulk wine listings, and you can filter by them.
 
 ## Who can buy bulk wine?
 
@@ -108,6 +108,6 @@ The details depend on who you are and what you plan to do with the wine, so conf
 
 ## Where to find bulk wine
 
-Bulk wine is sold through brokers, directly by wineries, and through marketplaces. On HarvestLink, sellers list lots with the details above, and you contact them through the site. Payment, samples, and delivery are arranged directly between you and the seller. Set up a [saved search](/alerts) and HarvestLink emails you when a new lot matches.
+Bulk wine is sold through brokers, directly by wineries, and through marketplaces. On BWG, sellers list lots with the details above, and you contact them through the site. Payment, samples, and delivery are arranged directly between you and the seller. Set up a [saved search](/alerts) and BWG emails you when a new lot matches.
 
 Ready to buy? Read [how to buy bulk wine](/blog/how-to-buy-bulk-wine) for a step-by-step process.

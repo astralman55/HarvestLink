@@ -4,21 +4,21 @@ import { LegalPage } from "@/components/shared/LegalPage";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "The terms that apply when you use HarvestLink to list, browse, or buy wine grapes and bulk wine.",
+  description: "The terms that apply when you use BWG to list, browse, or buy wine grapes and bulk wine.",
 };
 
 export default function TermsPage() {
   return (
     <LegalPage title="Terms of Service" updated="September 2026">
       <p>
-        These terms apply to your use of HarvestLink (the &quot;Site&quot;), a marketplace where growers and winemakers
+        These terms apply to your use of bulkwinegrapes.com (the &quot;Site&quot; or &quot;BWG&quot;), a marketplace where growers and winemakers
         list wine grapes and bulk wine, and buyers find and contact them. By creating an account or using the Site you
         agree to them. If you don&apos;t agree, please don&apos;t use the Site.
       </p>
 
-      <h2>1. What HarvestLink is, and isn&apos;t</h2>
+      <h2>1. What BWG is, and isn&apos;t</h2>
       <p>
-        HarvestLink helps buyers and sellers find each other. We are not a party to any sale. We don&apos;t set prices or
+        BWG helps buyers and sellers find each other. We are not a party to any sale. We don&apos;t set prices or
         terms, process payments, inspect fruit or wine, arrange shipping, or guarantee that a listing is accurate or that
         a deal will happen. Any agreement is between the buyer and the seller, and you are responsible for doing your own
         due diligence before you commit to one.
@@ -90,7 +90,7 @@ export default function TermsPage() {
 
       <h2>7. Fees</h2>
       <p>
-        HarvestLink is currently free to use. If we introduce fees we&apos;ll tell you before they apply to you.
+        BWG is currently free to use. If we introduce fees we&apos;ll tell you before they apply to you.
       </p>
 
       <h2>8. Your content</h2>
@@ -109,7 +109,7 @@ export default function TermsPage() {
 
       <h2>10. Limitation of liability</h2>
       <p>
-        To the fullest extent the law allows, HarvestLink and the people behind it aren&apos;t liable for indirect,
+        To the fullest extent the law allows, BWG and the people behind it aren&apos;t liable for indirect,
         incidental, special, or consequential damages, or for lost profits or data, arising from your use of the Site or
         from any transaction or dispute between users. Our total liability for any claim relating to the Site is limited
         to the greater of the amount you paid us in the past 12 months or $100.

@@ -7,7 +7,7 @@ import { getAllPosts, formatPostDate, thumbFor } from "@/lib/blog";
 import { CANONICAL_DESCRIPTION, absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Wine Grape & Bulk Wine Buying Guides | HarvestLink Blog",
+  title: "Wine Grape & Bulk Wine Buying Guides | BWG Blog",
   description:
     "Guides on how wine is made, terroir, Napa Valley, and how to buy and sell wine grapes and bulk wine: pricing, contracts, and farming practices.",
   path: "/blog",
@@ -29,9 +29,9 @@ export default function BlogIndexPage() {
           {
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "The HarvestLink Blog",
+            name: "The BWG Blog",
             url: absoluteUrl("/blog"),
-            description: "Guides on wine, wine grapes and bulk wine from HarvestLink.",
+            description: "Guides on wine, wine grapes and bulk wine from BWG.",
             hasPart: posts.map((post) => ({
               "@type": "BlogPosting",
               headline: post.title,
@@ -45,7 +45,7 @@ export default function BlogIndexPage() {
       />
 
       <header className="max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl">The HarvestLink Blog</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl">The BWG Blog</h1>
         <p className="mt-3 text-lg text-stone-600">
           Plain-English guides on how wine is made, what makes a wine region special, and how to buy and sell wine grapes and
           bulk wine.

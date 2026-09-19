@@ -76,9 +76,9 @@ It depends entirely on who says it. Some programs are audited and have detailed 
 
 There is no legal definition in the United States. People generally use it for wine made with minimal intervention, such as native yeast and low or no added sulfites, but there is no shared rule. Ask the seller to describe exactly what they do.
 
-## Are these claims verified on HarvestLink?
+## Are these claims verified on BWG?
 
-HarvestLink bulk wine listings can select organic, biodynamic, natural, sustainable, regenerative organic, and Demeter certified biodynamic. Grape listings can select conventional, sustainable, organic, or biodynamic. These are **declared by the seller** and HarvestLink does not verify them. Ask for documentation before you rely on a label.
+BWG bulk wine listings can select organic, biodynamic, natural, sustainable, regenerative organic, and Demeter certified biodynamic. Grape listings can select conventional, sustainable, organic, or biodynamic. These are **declared by the seller** and BWG does not verify them. Ask for documentation before you rely on a label.
 
 This article describes farming and labeling, not health. Organic or biodynamic status does not make a wine better for you or worse for you.
 

@@ -14,7 +14,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Cabernet Sauvignon is a cross of Cabernet Franc and Sauvignon Blanc, a parentage confirmed by DNA work at UC Davis in the 1990s. Its small berries and thick skins give a high ratio of skin to juice, which is why the wines are dark and tannic and age well. It buds and ripens late, so it does best where the season is long and warm enough to fully ripen it.",
       "In this marketplace the variety shows up in most of the big red regions. It covers about 54 percent of Napa Valley's vineyards, is among the top three plantings in Sonoma County at about 12,700 acres, and is the most widely planted grape in Paso Robles. Washington's warmer sites also grow a lot of it. That spread means prices range widely, and the region and the appellation usually explain more of the difference than the variety does.",
-      "Grapes on HarvestLink are priced per ton and bulk wine per gallon. Some sellers list confidentially under NDA, in which case you see the variety, vintage, quantity and price, but not the winery or vineyard name.",
+      "Grapes on BWG are priced per ton and bulk wine per gallon. Some sellers list confidentially under NDA, in which case you see the variety, vintage, quantity and price, but not the winery or vineyard name.",
     ],
     facts: [
       { label: "Parentage", value: "Cabernet Franc x Sauvignon Blanc" },
@@ -57,7 +57,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Chardonnay is a cross of Pinot and Gouais Blanc that comes from Burgundy, and its neutral character is a large part of its appeal. The grape does not have strong aromas of its own, so the wine reflects the climate, the site and the winemaking: oak, malolactic fermentation and time on the lees shape the style more than they do for most whites.",
       "That flexibility explains its footprint. Chardonnay is the most planted variety in Sonoma County at about 15,500 acres, it is a leading white in Mendocino, and it is grown in Santa Barbara, Yamhill County and the Yakima Valley. It also serves as a base for sparkling wine, where the cool-climate fruit is picked earlier at lower sugar and higher acid.",
-      "On HarvestLink, Chardonnay grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
+      "On BWG, Chardonnay grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Skin color", value: "Green" },
@@ -75,7 +75,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     faq: [
       { q: "What is the difference between oaked and unoaked Chardonnay?", a: "Oaked Chardonnay is fermented or aged in oak barrels and tastes of toast, vanilla and spice. Unoaked is usually made in stainless steel and tastes cleaner and more fruit-driven." },
       { q: "Is Chardonnay used for sparkling wine?", a: "Yes. It is one of the main grapes used for sparkling wine, picked earlier for lower sugar and higher acidity." },
-      { q: "How do I get notified about Chardonnay lots?", a: "Save a search from this page, and HarvestLink emails you once a day when a new matching lot is listed." },
+      { q: "How do I get notified about Chardonnay lots?", a: "Save a search from this page, and BWG emails you once a day when a new matching lot is listed." },
     ],
     sources: [
       { title: "Sonoma County Winegrowers: About", url: "https://sonomawinegrape.org/about-scw/" },
@@ -99,7 +99,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Pinot Noir is one of the oldest cultivated wine grapes and comes from Burgundy. Its thin skin makes it prone to rot in wet weather, its tight clusters ripen unevenly in heat, and it reflects the site more clearly than most varieties. The result is a grape that rewards careful farming and punishes the wrong climate.",
       "In the regions on this site it shows up in cool places: Sonoma County has about 13,000 acres, Mendocino's Anderson Valley and Santa Barbara's Sta. Rita Hills are known for it, and it is the core of Oregon's Willamette Valley, including Yamhill County. It is also a main grape for sparkling wine, where it is picked early for high acid.",
-      "Lots on HarvestLink are priced per ton for grapes and per gallon for bulk wine. Because supply of good blocks is limited, a saved search is the easiest way to see new lots first.",
+      "Lots on BWG are priced per ton for grapes and per gallon for bulk wine. Because supply of good blocks is limited, a saved search is the easiest way to see new lots first.",
     ],
     facts: [
       { label: "Skin", value: "Thin, light color" },
@@ -116,7 +116,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     ],
     faq: [
       { q: "Why is Pinot Noir harder to grow than other reds?", a: "Its thin skins are prone to rot, its tight clusters can ripen unevenly, and it reflects small differences in site. It needs a cool, careful growing season." },
-      { q: "Where is Pinot Noir grown on HarvestLink?", a: "Mainly in cool areas: Sonoma County, Mendocino County, Santa Barbara County and Oregon's Yamhill County are the most common." },
+      { q: "Where is Pinot Noir grown on BWG?", a: "Mainly in cool areas: Sonoma County, Mendocino County, Santa Barbara County and Oregon's Yamhill County are the most common." },
       { q: "Can Pinot Noir be used for sparkling wine?", a: "Yes. Along with Chardonnay it is a main grape for sparkling wine, picked earlier at higher acidity." },
     ],
     sources: [
@@ -142,7 +142,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Merlot is a Bordeaux variety, and one of the parents is Cabernet Franc. It buds and ripens earlier than Cabernet Sauvignon, which lowers the risk in cooler or wetter years, and its wines are usually softer, rounder and lower in tannin. It is a workhorse for blending and also stands alone in the right site.",
       "Its footprint reflects that. Sonoma County has about 4,200 acres, Washington's warmer sites produce a significant share of the state's Merlot, and Long Island's maritime climate suits it. Quality and price vary widely, so lots priced by the ton or gallon are best compared with the appellation and the vintage in mind.",
-      "HarvestLink lists Merlot grapes by the ton and bulk wine by the gallon, openly or under NDA.",
+      "BWG lists Merlot grapes by the ton and bulk wine by the gallon, openly or under NDA.",
     ],
     facts: [
       { label: "Type", value: "Red Bordeaux variety" },
@@ -184,7 +184,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Zinfandel is genetically the same grape as Italy's Primitivo, and is closely tied to California, where it has been grown for well over a century. Its clusters ripen unevenly, so a single bunch can hold raisined berries next to green ones, and the timing of the pick matters more than it does for most varieties.",
       "It is a stronghold variety in several regions on this site. Sonoma County has about 4,760 acres, Paso Robles has long treated it as its heritage grape, and Lodi is known for it too. Old-vine Zinfandel is a selling point in its own right, but only if the grower can document the age of the vines.",
-      "Zinfandel grapes on HarvestLink are priced by the ton and bulk wine by the gallon. Sellers can list openly or under NDA.",
+      "Zinfandel grapes on BWG are priced by the ton and bulk wine by the gallon. Sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Same grape as", value: "Primitivo (Italy)" },
@@ -226,7 +226,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Sauvignon Blanc is an aromatic white variety from France that ripens relatively early and holds its acid, so the wines are fresh, citrus and herbal in cool sites and more tropical in warmer ones. It is one of the two parents of Cabernet Sauvignon, alongside Cabernet Franc.",
       "It is a smaller planting than Chardonnay in most places, but it is widely grown. Sonoma County has about 2,600 acres, and it is a leading white in Mendocino. Most of it is made in stainless steel for freshness, though some producers use oak or concrete to add texture.",
-      "On HarvestLink, Sauvignon Blanc grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
+      "On BWG, Sauvignon Blanc grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Type", value: "Aromatic white" },
@@ -268,7 +268,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Syrah is the same grape as Shiraz. It comes from the northern Rhone Valley, where it makes dark, savory, peppery wines, and it has become a fixture in California and Washington. Cooler sites give more pepper, olive and floral notes, and warmer sites give riper, darker fruit.",
       "It appears in several regions on this site. Santa Barbara's Sta. Rita Hills and Santa Maria Valley are known for cool-climate Syrah, Walla Walla and the Yakima Valley grow it in Washington, and Sonoma County has about 1,380 acres. It is also a frequent partner in Rhone-style blends with Grenache and Mourvedre.",
-      "On HarvestLink, Syrah grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
+      "On BWG, Syrah grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Also called", value: "Shiraz" },
@@ -310,14 +310,14 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Riesling comes from Germany's Rhine region, and it is prized because it stays high in acid even when fully ripe, which lets it carry sweetness without tasting heavy. It also buds late and tolerates cold winters well, which is why it grows where other quality varieties struggle.",
       "In this marketplace its main strongholds are Washington and New York. It is one of the top varieties in the Yakima Valley, and it is a signature white in the cold-climate Finger Lakes region. Styles range from bone dry to sweet, so buyers should decide the style before they compare prices.",
-      "On HarvestLink, Riesling grapes are priced by the ton and bulk wine by the gallon. Sellers can list openly or under NDA.",
+      "On BWG, Riesling grapes are priced by the ton and bulk wine by the gallon. Sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Origin", value: "Germany" },
       { label: "Acidity", value: "High, even when ripe" },
       { label: "Cold tolerance", value: "Good" },
       { label: "Styles", value: "Dry, off-dry and sweet" },
-      { label: "Known for on HarvestLink", value: "Yakima Valley, Washington" },
+      { label: "Known for on BWG", value: "Yakima Valley, Washington" },
     ],
     buyerNotes: [
       "Decide dry, off-dry or sweet first. Residual sugar, acid and brix targets differ, and a bulk lot can be either.",
@@ -352,7 +352,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Cabernet Franc is one of the founding grapes of Bordeaux. It is a parent of Cabernet Sauvignon, which it created with Sauvignon Blanc, and of Merlot. Compared with Cabernet Sauvignon it ripens earlier and copes better with cool weather, and its wines are lighter, more fragrant and more herbal.",
       "That cold tolerance makes it a good fit for cooler places. It is a signature red on Long Island's North Fork, and it is grown in California, Washington and the Finger Lakes. It is used as a single variety and as a blending partner, adding perfume and lift to Cabernet and Merlot blends.",
-      "On HarvestLink, Cabernet Franc grapes are priced by the ton and bulk wine by the gallon, openly or under NDA. Volume is smaller than for the major reds, so a saved search is useful.",
+      "On BWG, Cabernet Franc grapes are priced by the ton and bulk wine by the gallon, openly or under NDA. Volume is smaller than for the major reds, so a saved search is useful.",
     ],
     facts: [
       { label: "Relationship", value: "Parent of Cabernet Sauvignon and Merlot" },
@@ -394,7 +394,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     intro: [
       "Pinot Gris is a color mutation of Pinot Noir, with grey to pinkish skins that give the wine a slightly copper tone if it gets skin contact. The name is the French one. The same grape is called Pinot Grigio in Italy, and the two labels generally point to a style: Grigio for crisp and light, Gris for rounder and richer.",
       "In this marketplace Oregon is the main source. Yamhill-Carlton lists Pinot Gris alongside Pinot Noir and Chardonnay as a leading grape, and it grows across the Willamette Valley, as well as in California and Washington. It is normally made in stainless steel, so timing and tank space matter.",
-      "On HarvestLink, Pinot Gris grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
+      "On BWG, Pinot Gris grapes are priced by the ton and bulk wine by the gallon, and sellers can list openly or under NDA.",
     ],
     facts: [
       { label: "Also called", value: "Pinot Grigio" },
@@ -412,7 +412,7 @@ export const VARIETY_PAGES: LandingPage[] = [
     faq: [
       { q: "Is Pinot Gris the same as Pinot Grigio?", a: "Yes. It is the same grape, and the two names usually signal a style: Grigio is typically lighter and crisper, and Gris richer." },
       { q: "Why is Pinot Gris not white?", a: "The grape has grey to pinkish skins because it is a color mutation of Pinot Noir, but the juice is clear, so most wines are white." },
-      { q: "Where is Pinot Gris grown on HarvestLink?", a: "Most commonly in Oregon's Willamette Valley, including Yamhill County, and also in California and Washington." },
+      { q: "Where is Pinot Gris grown on BWG?", a: "Most commonly in Oregon's Willamette Valley, including Yamhill County, and also in California and Washington." },
     ],
     sources: [
       { title: "Wikipedia: Yamhill-Carlton AVA", url: "https://en.wikipedia.org/wiki/Yamhill-Carlton_AVA" },

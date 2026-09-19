@@ -95,4 +95,4 @@ It fits if you are strong at brand, sales, and sourcing, and want to start small
 
 ## Find your first lot
 
-Browse [bulk wine on HarvestLink](/bulk-wine), set a [saved search](/alerts) for the varietals you want, and contact sellers through the site. Sellers can list confidentially, so a strong lot may come without a winery name attached. Read [how that works](/blog/selling-wine-anonymously-nda-listings), then arrange samples, payment, and delivery directly with the seller.
+Browse [bulk wine on BWG](/bulk-wine), set a [saved search](/alerts) for the varietals you want, and contact sellers through the site. Sellers can list confidentially, so a strong lot may come without a winery name attached. Read [how that works](/blog/selling-wine-anonymously-nda-listings), then arrange samples, payment, and delivery directly with the seller.

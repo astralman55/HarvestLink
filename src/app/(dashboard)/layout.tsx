@@ -39,8 +39,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       <div className="flex flex-1">
         <aside className="hidden w-64 shrink-0 flex-col border-r border-stone-200 bg-white px-4 py-6 md:flex">
-          <Link href="/" className="flex items-center px-2" aria-label="HarvestLink home">
-            <Wordmark className="h-7 w-auto" />
+          <Link href="/" className="flex items-center px-2" aria-label="bulkwinegrapes.com home">
+            <Wordmark className="h-6 w-auto" />
           </Link>
 
           <nav aria-label="Your account" className="mt-8 flex flex-col gap-1">
@@ -56,8 +56,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
             ))}
           </nav>
 
-          <nav aria-label="HarvestLink" className="mt-6 flex flex-1 flex-col gap-0.5 border-t border-stone-100 pt-4">
-            <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-stone-500">HarvestLink</p>
+          <nav aria-label="BWG" className="mt-6 flex flex-1 flex-col gap-0.5 border-t border-stone-100 pt-4">
+            <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-stone-500">BWG</p>
             {site.map((item) => (
               <Link key={item.href} href={item.href} className="rounded-lg px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100 hover:text-stone-900">
                 {item.label}

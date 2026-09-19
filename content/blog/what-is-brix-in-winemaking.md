@@ -106,7 +106,7 @@ For buyers, this is also why contracts describe how and where fruit is sampled a
 
 ## How does brix show up when you buy grapes?
 
-- **Listing.** HarvestLink grape listings include a brix target so you can filter by it.
+- **Listing.** BWG grape listings include a brix target so you can filter by it.
 - **Contract.** Agreements often state a target range and how the price changes above or below it.
 - **Delivery.** Fruit is sampled on arrival, and the reading becomes part of the record.
 

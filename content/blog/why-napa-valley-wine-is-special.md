@@ -63,7 +63,7 @@ No, and that matters for buyers. Napa Valley Vintners says only about 4 percent 
 - **Ask for documentation.** If you plan to name an appellation on a label, the lot has to support the claim.
 - **Consider confidential lots.** Established producers sometimes sell surplus or declassified lots without attaching their name. Read [how NDA listings work](/blog/selling-wine-anonymously-nda-listings).
 
-On HarvestLink, regions are listed by county, so you can filter grape and bulk wine listings by Napa County and compare them. Browse [wine grapes from Napa County](/grapes?region_ava=Napa+County) or [bulk wine](/bulk-wine), and set a [saved search](/alerts) to hear about new lots.
+On BWG, regions are listed by county, so you can filter grape and bulk wine listings by Napa County and compare them. Browse [wine grapes from Napa County](/grapes?region_ava=Napa+County) or [bulk wine](/bulk-wine), and set a [saved search](/alerts) to hear about new lots.
 
 ## What are the sub-appellations of Napa Valley?
 
@@ -85,7 +85,7 @@ Each has its own combination of elevation, soil, and exposure. Mountain sub-appe
 
 ## How does Napa compare with other California regions?
 
-California has many wine regions, and each has its own strengths. Sonoma County, just west of Napa, is larger and grows a wide mix of grapes, including Pinot Noir, Chardonnay, and Zinfandel. The Central Coast, Paso Robles, Lodi, and the Central Valley all grow large volumes of wine grapes at a range of price points. If you are comparing, look at the same variety, the same vintage, and the same basis for price. HarvestLink lists regions by county so you can filter and compare.
+California has many wine regions, and each has its own strengths. Sonoma County, just west of Napa, is larger and grows a wide mix of grapes, including Pinot Noir, Chardonnay, and Zinfandel. The Central Coast, Paso Robles, Lodi, and the Central Valley all grow large volumes of wine grapes at a range of price points. If you are comparing, look at the same variety, the same vintage, and the same basis for price. BWG lists regions by county so you can filter and compare.
 
 ## Is Napa Valley worth it?
 

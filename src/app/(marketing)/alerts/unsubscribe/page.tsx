@@ -34,7 +34,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
       ) : (
         <>
           <h1 className="mt-4 text-2xl font-semibold text-stone-900">Stop this email alert?</h1>
-          <p className="mt-2 text-stone-600">HarvestLink will stop emailing you about this saved search. Your other alerts are not affected.</p>
+          <p className="mt-2 text-stone-600">BWG will stop emailing you about this saved search. Your other alerts are not affected.</p>
           <form action={confirmUnsubscribe} className="mt-6">
             <input type="hidden" name="token" value={token} />
             <Button type="submit" size="lg">

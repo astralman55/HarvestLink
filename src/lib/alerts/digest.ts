@@ -46,7 +46,7 @@ export function buildDigest(sections: DigestSection[], appUrl: string): Digest {
       ? `New match: ${first.listings[0].title}`
       : `${total} new listings match your saved searches`;
 
-  const textParts: string[] = ["New listings match your saved searches on HarvestLink.", ""];
+  const textParts: string[] = ["New listings match your saved searches on bulkwinegrapes.com.", ""];
   const htmlParts: string[] = [];
 
   for (const section of sections) {
@@ -80,12 +80,12 @@ export function buildDigest(sections: DigestSection[], appUrl: string): Digest {
   }
 
   const manageUrl = url("/alerts");
-  textParts.push(`Manage all of your alerts: ${manageUrl}`, "", "You are receiving this because you saved a search on HarvestLink. Sellers on confidential listings stay anonymous in alerts.");
+  textParts.push(`Manage all of your alerts: ${manageUrl}`, "", "You are receiving this because you saved a search on bulkwinegrapes.com. Sellers on confidential listings stay anonymous in alerts.");
 
   const html = `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:28px 20px;color:#1c1917">
 <h1 style="font-size:20px;margin:0 0 6px">New listings match your saved searches</h1>
 ${htmlParts.join("")}
-<p style="margin:28px 0 0;font-size:12px;color:#78716c">You are receiving this because you saved a search on HarvestLink. <a href="${escapeHtml(manageUrl)}" style="color:#78716c">Manage all of your alerts</a>. Sellers on confidential listings stay anonymous in alerts.</p>
+<p style="margin:28px 0 0;font-size:12px;color:#78716c">You are receiving this because you saved a search on bulkwinegrapes.com. <a href="${escapeHtml(manageUrl)}" style="color:#78716c">Manage all of your alerts</a>. Sellers on confidential listings stay anonymous in alerts.</p>
 </div>`;
 
   return {

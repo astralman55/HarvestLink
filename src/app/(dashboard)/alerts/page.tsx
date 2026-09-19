@@ -45,7 +45,7 @@ export default async function AlertsPage() {
     <div className="max-w-3xl">
       <h1 className="text-2xl font-semibold text-stone-900">Email Alerts</h1>
       <p className="mt-1 text-sm text-stone-500">
-        Save a search and HarvestLink emails you a daily digest when new listings match. Alerts never reveal the identity of a
+        Save a search and BWG emails you a daily digest when new listings match. Alerts never reveal the identity of a
         confidential seller.
       </p>
 

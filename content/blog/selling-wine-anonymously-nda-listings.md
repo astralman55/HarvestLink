@@ -2,7 +2,7 @@
 title: "Selling Wine Anonymously: How Confidential NDA Listings Work"
 metaTitle: "Selling Wine Anonymously: How NDA Listings Work"
 slug: "selling-wine-anonymously-nda-listings"
-description: "Why wineries sell bulk wine and grapes without their name, and how HarvestLink NDA listings hide the seller while buyers still see the specs that matter."
+description: "Why wineries sell bulk wine and grapes without their name, and how BWG NDA listings hide the seller while buyers still see the specs that matter."
 primaryKeyword: "sell wine anonymously"
 secondaryKeywords: ["confidential bulk wine", "NDA wine listing", "sell surplus wine confidentially", "why wineries sell bulk wine", "declassified wine"]
 category: "Selling"
@@ -10,12 +10,12 @@ datePublished: "2026-09-19"
 dateModified: "2026-09-19"
 author: "Andrew L."
 status: "published"
-quickAnswer: "Wineries often sell surplus or declassified wine without their name to protect brand positioning and pricing. On HarvestLink, selling under NDA hides the seller's name, winery, vineyard, and contact details, shows location only at the level the seller chooses, and routes buyer contact through the site."
+quickAnswer: "Wineries often sell surplus or declassified wine without their name to protect brand positioning and pricing. On BWG, selling under NDA hides the seller's name, winery, vineyard, and contact details, shows location only at the level the seller chooses, and routes buyer contact through the site."
 faq:
   - q: "Can buyers see who the seller is on an NDA listing?"
-    a: "No. The name, winery, vineyard, and contact details are hidden from buyers and from search engines. A buyer contacts the seller through HarvestLink, and the seller decides whether and when to reveal who they are."
+    a: "No. The name, winery, vineyard, and contact details are hidden from buyers and from search engines. A buyer contacts the seller through BWG, and the seller decides whether and when to reveal who they are."
   - q: "Is an NDA listing a legal contract?"
-    a: "No. NDA on HarvestLink is a confidentiality setting on the listing. It is not by itself a legal agreement between a buyer and a seller. Parties who want a signed confidentiality agreement should arrange one directly, with legal advice."
+    a: "No. NDA on BWG is a confidentiality setting on the listing. It is not by itself a legal agreement between a buyer and a seller. Parties who want a signed confidentiality agreement should arrange one directly, with legal advice."
   - q: "What can a seller still show on an NDA listing?"
     a: "Everything that helps a buyer decide: variety or varietal, vintage, quantity, price, ABV, sulfites, farming practices, and a region shown at the precision the seller chose."
   - q: "Can I switch a listing between NDA and public?"
@@ -39,9 +39,9 @@ Common reasons include:
 
 Buyers benefit too. Some of the most interesting lots, from established producers, are only available because the seller can stay anonymous.
 
-## What does "selling under NDA" mean on HarvestLink?
+## What does "selling under NDA" mean on BWG?
 
-When a seller lists under NDA, HarvestLink hides identifying details from buyers and from search engines.
+When a seller lists under NDA, BWG hides identifying details from buyers and from search engines.
 
 | Hidden on an NDA listing | Still shown |
 |---|---|
@@ -52,15 +52,15 @@ When a seller lists under NDA, HarvestLink hides identifying details from buyers
 | Exact location details | ABV and sulfites (bulk wine) |
 | The listing title's sub-area detail | Farming practices |
 
-Location is shown at the precision the seller chooses: either the county and region, or the state only. The listing page, the page title, the sitemap, and the alerts HarvestLink sends all use the same redacted version.
+Location is shown at the precision the seller chooses: either the county and region, or the state only. The listing page, the page title, the sitemap, and the alerts BWG sends all use the same redacted version.
 
 ## How does a buyer contact an anonymous seller?
 
-The buyer sends an inquiry through the site. The seller gets it in their inbox and by email, and replies come back through HarvestLink. The buyer sees a "Confidential Seller" label, not a name. The seller decides what to share and when.
+The buyer sends an inquiry through the site. The seller gets it in their inbox and by email, and replies come back through BWG. The buyer sees a "Confidential Seller" label, not a name. The seller decides what to share and when.
 
 ## What does NDA not mean?
 
-NDA on HarvestLink is a **confidentiality setting on the listing**. It is not itself a legal agreement between two parties. If a seller wants a signed confidentiality agreement before revealing who they are, they can arrange one directly with the buyer, ideally with legal advice.
+NDA on BWG is a **confidentiality setting on the listing**. It is not itself a legal agreement between two parties. If a seller wants a signed confidentiality agreement before revealing who they are, they can arrange one directly with the buyer, ideally with legal advice.
 
 ## Tips for sellers
 
@@ -90,10 +90,10 @@ Here is an example of the kind of information a buyer sees on a confidential bul
 | ABV and total sulfites | Listed |
 | Farming practices | Listed |
 | Winemaker and vineyard | Hidden |
-| Contact | Through the HarvestLink inquiry form |
+| Contact | Through the BWG inquiry form |
 
 The buyer gets what they need to decide whether to ask for a sample. Everything that could identify the seller stays hidden until the seller decides to share it.
 
 ## Where to see confidential lots
 
-Browse [bulk wine](/bulk-wine) and [wine grapes](/grapes) and look for the NDA badge. To sell confidentially, [create a listing](/sell) and turn on the NDA option. Buyers and sellers arrange payment, delivery, and paperwork directly. HarvestLink does not process payments or take a commission.
+Browse [bulk wine](/bulk-wine) and [wine grapes](/grapes) and look for the NDA badge. To sell confidentially, [create a listing](/sell) and turn on the NDA option. Buyers and sellers arrange payment, delivery, and paperwork directly. BWG does not process payments or take a commission.

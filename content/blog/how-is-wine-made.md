@@ -96,6 +96,6 @@ The finished wine is filtered if needed and put into bottles, sealed with a cork
 | Many reds | One to two years or more |
 | Sparkling and long-aged wines | Several years |
 
-## Where does HarvestLink fit?
+## Where does BWG fit?
 
-Wineries buy grapes and bulk wine at different stages of this process. HarvestLink lists [wine grapes by the ton](/grapes) and [bulk wine by the gallon](/bulk-wine), so a winemaker can source what they need, or a grower or winery can sell what they do not.
+Wineries buy grapes and bulk wine at different stages of this process. BWG lists [wine grapes by the ton](/grapes) and [bulk wine by the gallon](/bulk-wine), so a winemaker can source what they need, or a grower or winery can sell what they do not.
