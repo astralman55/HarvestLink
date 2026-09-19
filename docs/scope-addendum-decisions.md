@@ -376,3 +376,14 @@ In its place, the backend records **where sign-ins happen**, the usual way:
 - **Visibility:** a new Security page (`/security`, in the dashboard nav) lists a member's recent sign-ins, flags the first sign-in from each place, and links to password reset. The Privacy Policy was updated to describe this and no longer mentions address suggestions.
 - **Limits, stated to members:** IP geolocation can be off by a city or reflect an internet provider's location; VPNs and some mobile networks blank or mislead it.
 - **Not built (easy follow-ups):** an email alert on sign-in from a new location, and an admin view of a member's history.
+
+### Decision 60 -- Region and variety landing pages
+
+Owner request, September 19, 2026 ("Do number 5 ... with relevant photos"). Twenty hub pages: `/regions/{slug}` for the ten homepage regions and `/varieties/{slug}` for ten common varieties, plus the `/regions` and `/varieties` indexes. Each has original copy (quick answer, intro, key facts, what to check, FAQ, sources), a photo, the live grape and bulk wine lots for that region or variety, a **Save this search** button per market (the same saved-search and daily-email flow as the browse pages), links to three guides and to related pages, and FAQPage, BreadcrumbList and CollectionPage structured data.
+
+- **One page per region or variety, not per region x variety.** The spec's matrix would produce hundreds of near-identical pages; thin pages hurt more than they help. Combinations are still reachable through the browse filters and saved searches.
+- **Copy is hand-written per page** in `src/content/landing/{regions,varieties}.ts`, not templated. A test (`landing.test.ts`) enforces unique text across pages, metadata lengths, at least 380 written words per page, no em or en dashes, real images under 150 KB, guides that exist, and that each page filters on a value the browse filters actually store.
+- **Listings are live and NDA-safe:** they use the same server query and serializer as `/grapes` and `/bulk-wine`, so a state-only confidential lot never matches a region page (Decision 50). The pages are rendered per request (never prerendered), since the lots and login state change.
+- **Facts:** region figures are from appellation and grower bodies, listed as sources on each page. Variety pages state well-established characteristics, with acreage figures only where a grower body publishes them (Sonoma County Winegrowers, Napa Valley Vintners); their sources are general references, not primary research. See `docs/seo/blog-fact-check-log.md`.
+- Photos: ten regional and ten variety Pexels photos, logged in `docs/image-credits.md`. Region photos show vineyards that look like the region but are not guaranteed to have been taken in it, and the alt text describes only what is visible.
+- The homepage "Browse by Region" chips now link to these pages, the footer links to both indexes, and the sitemap, `llms.txt` and `llms-full.txt` include them.

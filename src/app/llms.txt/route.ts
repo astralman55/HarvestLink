@@ -1,4 +1,5 @@
 import { getAllPosts } from "@/lib/blog";
+import { REGION_PAGES, VARIETY_PAGES, landingPath } from "@/content/landing";
 import { CANONICAL_DESCRIPTION, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 /**
@@ -20,6 +21,16 @@ export function GET() {
     `- [Wine grapes for sale](${absoluteUrl("/grapes")}): grape lots by variety, region, harvest year, farming practice, tonnage and price per ton`,
     `- [Bulk wine for sale](${absoluteUrl("/bulk-wine")}): bulk wine lots by varietal, vintage, ABV, sulfites, region and price per gallon`,
     `- [Sell grapes or bulk wine](${absoluteUrl("/sell")}): how sellers list, openly or under NDA`,
+    "",
+    "## Regions",
+    "",
+    `- [All regions](${absoluteUrl("/regions")}): facts and current lots for each`,
+    ...REGION_PAGES.map((page) => `- [${page.name}](${absoluteUrl(landingPath(page))}): ${page.description}`),
+    "",
+    "## Varieties",
+    "",
+    `- [All varieties](${absoluteUrl("/varieties")}): what makes each different and what to check on a lot`,
+    ...VARIETY_PAGES.map((page) => `- [${page.name}](${absoluteUrl(landingPath(page))}): ${page.description}`),
     "",
     "## Answers",
     "",

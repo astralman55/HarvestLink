@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getListings } from "@/lib/data/listings";
 import { getAllPosts } from "@/lib/blog";
+import { ALL_LANDING_PAGES, landingPath } from "@/content/landing";
 import { absoluteUrl } from "@/lib/seo";
 import { buildListingSlugPath } from "@/lib/utils";
 
@@ -22,6 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl("/"), changeFrequency: "daily", priority: 1 },
     { url: absoluteUrl("/grapes"), changeFrequency: "hourly", priority: 0.9 },
     { url: absoluteUrl("/bulk-wine"), changeFrequency: "hourly", priority: 0.9 },
+    { url: absoluteUrl("/regions"), changeFrequency: "weekly", priority: 0.7 },
+    { url: absoluteUrl("/varieties"), changeFrequency: "weekly", priority: 0.7 },
     { url: absoluteUrl("/faq"), changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/blog"), lastModified: newestPost || undefined, changeFrequency: "weekly", priority: 0.7 },
     { url: absoluteUrl("/sell"), changeFrequency: "monthly", priority: 0.5 },
@@ -34,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.dateModified,
     changeFrequency: "monthly",
     priority: 0.6,
+  }));
+
+  const landingRoutes: MetadataRoute.Sitemap = ALL_LANDING_PAGES.map((page) => ({
+    url: absoluteUrl(landingPath(page)),
+    changeFrequency: "daily",
+    priority: 0.8,
   }));
 
   let listings: Awaited<ReturnType<typeof getListings>> = [];
@@ -50,5 +59,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...postRoutes, ...listingRoutes];
+  return [...staticRoutes, ...landingRoutes, ...postRoutes, ...listingRoutes];
 }

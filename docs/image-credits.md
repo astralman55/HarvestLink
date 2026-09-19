@@ -42,3 +42,32 @@ Each photo was vetted by eye for: no identifiable faces, no readable brand names
 - Not verified: the free stock sites do not verify model or property releases, and none offer legal protection if an uploader lacked rights. If you want indemnification, replace the hero (and any image you feel strongly about) with a paid-stock equivalent (Adobe Stock, Shutterstock, iStock).
 - The generated social cards (`/og/...`) contain no photographs.
 - Unsplash could not be used from the build environment (it blocks automated access). Its photos can be added the same way by hand.
+
+## Region and variety landing pages
+
+Same license and processing as above: Pexels free license, cropped to 2:1, 1200 px wide (thumbnail 640 px), WebP, EXIF stripped, files in `public/images/landing/`. Region photos show vineyards that look like the region and are **not** claimed to have been taken in it; alt text describes only what is visible.
+
+| File | Pexels photo |
+|---|---|
+| `landing/napa-county.webp` (+ `-thumb`) | [11566339](https://www.pexels.com/photo/11566339/) |
+| `landing/sonoma-county.webp` | [12811544](https://www.pexels.com/photo/12811544/) |
+| `landing/mendocino-county.webp` | [11109505](https://www.pexels.com/photo/11109505/) |
+| `landing/san-luis-obispo-county.webp` | [19181914](https://www.pexels.com/photo/19181914/) |
+| `landing/santa-barbara-county.webp` | [28687638](https://www.pexels.com/photo/28687638/) |
+| `landing/san-joaquin-county.webp` | [35963409](https://www.pexels.com/photo/35963409/) |
+| `landing/yamhill-county.webp` | [8821416](https://www.pexels.com/photo/8821416/) |
+| `landing/yakima-county.webp` | [27797398](https://www.pexels.com/photo/27797398/) |
+| `landing/walla-walla-county.webp` | [2339181](https://www.pexels.com/photo/2339181/) |
+| `landing/suffolk-county.webp` | [39182651](https://www.pexels.com/photo/39182651/) |
+| `landing/cabernet-sauvignon.webp` | [4323631](https://www.pexels.com/photo/4323631/) |
+| `landing/chardonnay.webp` | [39367396](https://www.pexels.com/photo/39367396/) |
+| `landing/pinot-noir.webp` | [6093721](https://www.pexels.com/photo/6093721/) |
+| `landing/merlot.webp` | [21383903](https://www.pexels.com/photo/21383903/) |
+| `landing/zinfandel.webp` | [25724454](https://www.pexels.com/photo/25724454/) |
+| `landing/sauvignon-blanc.webp` | [39182652](https://www.pexels.com/photo/39182652/) |
+| `landing/syrah.webp` | [13324184](https://www.pexels.com/photo/13324184/) |
+| `landing/riesling.webp` | [4828956](https://www.pexels.com/photo/4828956/) |
+| `landing/cabernet-franc.webp` | [35517719](https://www.pexels.com/photo/35517719/) |
+| `landing/pinot-gris.webp` | [35737287](https://www.pexels.com/photo/35737287/) |
+
+Not verified: whether each variety photo actually shows the variety it is captioned with (stock captions are unreliable and grape identification from a photo is not possible). The alt text says "Cabernet Sauvignon grapes" and so on; swap any photo you doubt for a generic "wine grapes" image.

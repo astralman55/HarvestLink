@@ -2,6 +2,7 @@
 
 ## Unreleased — SEO, AI-search, blog, FAQ, wordmark and email alerts
 
+- **Region and variety pages (Decision 60):** ten `/regions/...` and ten `/varieties/...` pages with original copy, a photo, live grape and bulk wine lots, a Save this search button for each market, guides, FAQ and structured data, plus `/regions` and `/varieties` indexes. Linked from the homepage, footer, sitemap and llms files.
 - **Fix: the member dashboard had no navigation on phones** (the sidebar is desktop-only), no way back to the home page, and no footer. Landing there from the signup email's confirm button left people stranded. It now has a sticky top bar with the logo and a Menu (every account page, the public site, sign out), site links in the desktop sidebar, and the site footer.
 - **Signup no longer asks buyers for an address** (the address autocomplete and its Maps dependency are gone). **Sign-in locations are recorded** (country, region, city from Vercel's IP headers, a shortened IP network, a device label) and shown to members on a new Security page; kept 180 days. Requires migration `0010` (Decision 59).
 - **Signup says so when the email already has an account** (Decision 58), and a quick second signup goes to the code screen instead of showing Supabase's rate-limit wording.

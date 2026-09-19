@@ -29,7 +29,10 @@ function getColumns() {
       links: [
         { href: "/grapes?farming_practice=organic", label: "Organic Fruit" },
         { href: "/grapes?farming_practice=biodynamic", label: "Biodynamic Fruit" },
-        { href: "/grapes?region_ava=Napa+County", label: "Napa County Listings" },
+        { href: "/regions", label: "Wine Grape Regions" },
+        { href: "/varieties", label: "Wine Grape Varieties" },
+        { href: "/regions/napa-county", label: "Napa County" },
+        { href: "/varieties/cabernet-sauvignon", label: "Cabernet Sauvignon" },
         { href: "/login", label: "Log In" },
         { href: "/register", label: "Create an Account" },
       ],

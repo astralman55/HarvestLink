@@ -143,6 +143,7 @@ and Site URL settings it needs). `/terms` and
 
 - **Blog:** Markdown files in `content/blog` (front matter is validated at build; `status: draft` hides a post everywhere). `npm run test` enforces title/description lengths, working internal links, related posts, no em dashes and no placeholders.
 - **SEO/AI search:** see Decision 54. `/llms.txt`, `/llms-full.txt`, `/robots.txt`, `/sitemap.xml`, `/blog/rss.xml` and `/blog/{slug}.md` are generated from the same content.
+- **Region and variety pages:** copy in `src/content/landing/`, photos in `public/images/landing/`, routes `/regions` and `/varieties` (Decision 60). `landing.test.ts` enforces unique copy, sizes, images and filter values.
 - **Email alerts:** migration `0009`, the `CRON_SECRET` env var (a long random string shared with Vercel Cron), and Resend. Trigger the job by hand with `curl -H "Authorization: Bearer $CRON_SECRET" https://bulkwinegrapes.com/api/cron/saved-searches`.
 
 ## Not included yet

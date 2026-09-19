@@ -45,6 +45,8 @@ Every number, regulation and named claim in the 15 published posts, with where i
 | Saved searches with a daily email digest, pause, delete, one-click unsubscribe | Migration 0009 and `src/lib/alerts` |
 | Regions are listed by county | `src/lib/constants/viticulture.ts` |
 | Crop planner records future harvest blocks by year | Dashboard, Planning |
+| Region pages: Napa (17 sub-appellations, about 4 percent of California's harvest, 54 percent Cabernet), Sonoma (49,000+ acres, 19 appellations, acreage by variety), Mendocino (about 17,470 acres, 12 appellations, about 25 percent organic), Paso Robles (1983, 40,000 acres), Santa Barbara (seven AVAs), Lodi (1986, 100,000+ acres, about 750 growers), Willamette and Yamhill-Carlton, Yakima (1983, 18,924 acres), Walla Walla (1984, 2,933 acres), Long Island | Appellation and grower bodies and reference pages listed under "Sources" on each page; see `src/content/landing/regions.ts` |
+| Variety pages: parentage (Cabernet Sauvignon, Merlot, Chardonnay), Zinfandel = Primitivo, Syrah = Shiraz, Pinot Gris = Pinot Grigio, ripening and style descriptions | General wine references (Wikipedia and the Sonoma and Napa bodies for acreage). **Not checked against primary sources**; these are well-established, but a wine professional should skim them |
 
 ## Known gaps to close
 
@@ -52,3 +54,4 @@ Every number, regulation and named claim in the 15 published posts, with where i
 2. Read the Demeter, Regenerative Organic Alliance, SIP, Lodi Rules and Napa Green primary pages and tighten that section.
 3. Have a licensed professional review the regulatory statements (TTB permits, COLA, sulfite and ABV rules) before the site leans on them for advertising. They are general descriptions, worded as such.
 4. Posts were not reviewed by the named author before publication.
+5. Landing pages (`/regions`, `/varieties`): acreage and appellation counts change yearly, so re-check the figures each year. Variety pages have not had a professional read.

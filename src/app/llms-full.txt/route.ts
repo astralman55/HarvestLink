@@ -1,5 +1,6 @@
 import { getAllPosts } from "@/lib/blog";
 import { FAQ_ITEMS } from "@/content/faq";
+import { ALL_LANDING_PAGES, landingPath } from "@/content/landing";
 import { CANONICAL_DESCRIPTION, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 /** /llms-full.txt: the FAQ and every published guide in one Markdown document. */
@@ -15,6 +16,30 @@ export function GET() {
     "# Frequently asked questions",
     "",
     ...FAQ_ITEMS.flatMap((item) => [`## ${item.q}`, "", item.a, ""]),
+    ...ALL_LANDING_PAGES.flatMap((page) => [
+      "---",
+      "",
+      `# ${page.h1}`,
+      "",
+      `URL: ${absoluteUrl(landingPath(page))}`,
+      "",
+      `> Quick answer: ${page.quickAnswer}`,
+      "",
+      ...page.intro.flatMap((paragraph) => [paragraph, ""]),
+      "## Key facts",
+      "",
+      ...page.facts.map((fact) => `- ${fact.label}: ${fact.value}`),
+      "",
+      "## What to check",
+      "",
+      ...page.buyerNotes.map((note) => `- ${note}`),
+      "",
+      ...page.faq.flatMap((item) => [`## ${item.q}`, "", item.a, ""]),
+      "## Sources",
+      "",
+      ...page.sources.map((source) => `- ${source.title}: ${source.url}`),
+      "",
+    ]),
     ...posts.flatMap((post) => [
       "---",
       "",
