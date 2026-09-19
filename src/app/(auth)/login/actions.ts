@@ -43,7 +43,17 @@ export async function handleSignIn(formData: LoginInput) {
       email,
       password: formData.password,
     });
-    if (error) return { error: GENERIC_ERROR };
+    if (error) {
+      // Supabase only reports "not confirmed" once the password was correct
+      // (a wrong password gets invalid_credentials), so this doesn't reveal
+      // anything to someone guessing. Send a fresh code -- the one from
+      // signup may have expired -- and hand off to the verify screen.
+      if (error.code === "email_not_confirmed") {
+        await supabase.auth.resend({ type: "signup", email });
+        return { needsVerification: true as const, email };
+      }
+      return { error: GENERIC_ERROR };
+    }
 
     if (!flags.usernames) return { success: true, needsUsername: false };
 

@@ -39,7 +39,7 @@ export async function handleSignUp(formData: RegisterInput) {
 
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: {
@@ -70,7 +70,11 @@ export async function handleSignUp(formData: RegisterInput) {
       }
       return { error: error.message };
     }
-    return { success: true };
+    // With "Confirm email" on (production), signUp returns no session: the user
+    // must enter the code Supabase just emailed before they can sign in. If
+    // confirmation is switched off in the dashboard a session comes back
+    // and they can go straight to the app.
+    return { success: true, needsVerification: !data.session, email: formData.email };
   } catch {
     return {
       error:

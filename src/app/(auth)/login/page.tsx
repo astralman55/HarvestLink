@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { flags } from "@/lib/flags";
+import { safeRedirectPath } from "@/lib/auth/verification";
 
 function LoginForm() {
   const router = useRouter();
@@ -30,7 +31,11 @@ function LoginForm() {
       setServerError(result.error);
       return;
     }
-    const redirectTo = searchParams.get("redirect_to") || "/dashboard";
+    const redirectTo = safeRedirectPath(searchParams.get("redirect_to"));
+    if (result.needsVerification) {
+      router.push(`/verify-email?email=${encodeURIComponent(result.email)}&sent=1&redirect_to=${encodeURIComponent(redirectTo)}`);
+      return;
+    }
     if (result.needsUsername) {
       router.push(`/choose-username?redirect_to=${encodeURIComponent(redirectTo)}`);
       return;
@@ -42,6 +47,12 @@ function LoginForm() {
     <div>
       <h1 className="text-xl font-semibold text-stone-900">Welcome back</h1>
       <p className="mt-1 text-sm text-stone-500">Log in to manage your listings and crop plans.</p>
+
+      {searchParams.get("error") === "link_expired" && (
+        <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+          That confirmation link has expired or was already used. Log in with your password and we&apos;ll send you a fresh code.
+        </p>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
         <div className="space-y-1.5">

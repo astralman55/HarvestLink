@@ -133,7 +133,9 @@ Status:
 The site is deployed on Vercel at https://bulkwinegrapes.com (`www.` redirects to it) with the
 production env vars listed in `.env.example`; email goes through Resend
 (sending domain `bulkwinegrapes.com`), including Supabase's signup
-confirmation emails via Supabase's custom SMTP setting. `/terms` and
+confirmation emails via Supabase's custom SMTP setting. Signup confirms
+the email with a one-time code (see Decision 51 for the Supabase email-template
+and Site URL settings it needs). `/terms` and
 `/privacy` are drafts (see Decision 48 in
 [`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md)).
 

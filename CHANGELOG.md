@@ -2,6 +2,7 @@
 
 ## Unreleased — NDA hardening and primary domain
 
+- **Account confirmation by emailed code (Decision 51):** signup now goes to `/verify-email` ("Enter the code we sent to your email") and signs the user in on success; the email also has a click-through button (`/auth/confirm`). Logging in with an unconfirmed account sends a fresh code instead of failing. `redirect_to` values are now restricted to same-site paths. Requires the Supabase email-template and Site URL steps in Decision 51. Social sign-in is planned, not built (Decision 52).
 - **Security (Decision 46, resolved):** migration `0008_lock_identifying_columns.sql` stops the public API from reading `listings.vineyard_name`, `user_id`, `sub_ava`, raw `region_ava`, `title`, `bulk_wine_details.wine_location_county`, `listing_inquiries.seller_id` and `listing_inquiry_messages.sender_id`. All listing reads now go through the server and the NDA serializer. Rollback: `supabase/rollback/0008_rollback.sql`. Prove it on the live project with `node --env-file=.env.local scripts/audit-public-api.mjs`.
 - **Security (Decision 50):** a buyer can no longer resolve a confidential seller through an inquiry thread; the inquiry inbox and notification emails use the serialized title; the realtime new-listing alert no longer broadcasts a confidential listing's region.
 - `bulkwinegrapes.com` is now the primary domain (`www.` and the Vercel URL are secondary); `NEXT_PUBLIC_APP_URL` and `metadataBase` point at it. Site description no longer says "B2B".
