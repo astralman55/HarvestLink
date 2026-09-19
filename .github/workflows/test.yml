@@ -15,6 +15,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --ignore-scripts
+      # LayoutProps/PageProps are global types Next generates; a clean checkout
+      # has none until this runs (it passed locally only because .next existed).
+      - name: Generate Next.js route types
+        run: npx next typegen
       - name: Type check
         run: npx tsc --noEmit
       - name: Lint
