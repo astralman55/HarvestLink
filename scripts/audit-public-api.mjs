@@ -24,6 +24,7 @@ const FORBIDDEN = [
   ["listing_inquiries", ["*", "seller_id"], true],
   ["listing_inquiry_messages", ["*", "sender_id"], true],
   ["saved_searches", ["*", "user_id", "unsubscribe_token", "query"], true],
+  ["login_events", ["*", "city", "ip_network", "user_id"], true],
   ["listing_winemakers", ["*", "winemaker_name"]],
   ["profiles", ["*", "phone", "address", "full_name"]],
   ["nda_audit_log", ["*"]],
