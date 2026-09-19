@@ -55,6 +55,13 @@ export async function handleSignUp(formData: RegisterInput) {
     });
 
     if (error) {
+      // Supabase allows one confirmation email per address per minute. Signing up
+      // again inside that minute (a double-click, a refresh, an impatient retry)
+      // means the first code is still valid, so go to the code screen instead of
+      // showing its raw "you can only request this after N seconds" wording.
+      if (/only request this after/i.test(error.message)) {
+        return { success: true, needsVerification: true, email: formData.email };
+      }
       // Bug caught in Phase 7 live testing (Decision 40): this used to
       // treat *any* signUp failure as a username race whenever the flag was
       // on, which mislabeled real errors (invalid email, Supabase's own
@@ -70,6 +77,15 @@ export async function handleSignUp(formData: RegisterInput) {
       }
       return { error: error.message };
     }
+    // For an address that already belongs to a CONFIRMED account, Supabase creates
+    // nothing, sends nothing, and reports success with an empty identities list
+    // (its default anti-enumeration behavior). Owner decision, Sept 19, 2026: say so
+    // plainly instead of leaving the person waiting for an email that never comes.
+    // (An account that signed up but never confirmed still gets a fresh code, below.)
+    if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      return { existingAccount: true as const, error: "An account with this email already exists." };
+    }
+
     // With "Confirm email" on (production), signUp returns no session: the user
     // must enter the code Supabase just emailed before they can sign in. If
     // confirmation is switched off in the dashboard a session comes back

@@ -20,6 +20,7 @@ import { flags } from "@/lib/flags";
 export default function RegisterPage() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [existingAccount, setExistingAccount] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const {
     register,
@@ -40,9 +41,11 @@ export default function RegisterPage() {
       return;
     }
     setServerError(null);
+    setExistingAccount(false);
     const result = await handleSignUp(data);
     if (result?.error) {
       setServerError(result.error);
+      setExistingAccount("existingAccount" in result && result.existingAccount === true);
       return;
     }
     if (result?.needsVerification) {
@@ -159,7 +162,24 @@ export default function RegisterPage() {
           {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
         </div>
 
-        {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+        {serverError && (
+          <p className="text-sm text-red-600" role="alert">
+            {serverError}
+            {existingAccount && (
+              <>
+                {" "}
+                <Link href="/login" className="font-medium underline">
+                  Log in
+                </Link>{" "}
+                or{" "}
+                <Link href="/forgot-password" className="font-medium underline">
+                  reset your password
+                </Link>
+                .
+              </>
+            )}
+          </p>
+        )}
 
         <p className="text-xs text-stone-500">
           By creating an account you agree to our{" "}

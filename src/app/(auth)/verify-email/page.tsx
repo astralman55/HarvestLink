@@ -152,9 +152,8 @@ function VerifyEmailForm() {
         </Link>
         .
       </p>
-      <p className="mt-3 rounded-lg bg-stone-50 p-3 text-xs text-stone-600">
-        No email after a few minutes? You may already have an account with this address, and for privacy we don&apos;t send a new
-        code in that case.{" "}
+      <p className="mt-3 text-xs text-stone-500">
+        Already have an account?{" "}
         <Link href="/login" className="font-medium text-[var(--color-brand)]">
           Log in
         </Link>{" "}

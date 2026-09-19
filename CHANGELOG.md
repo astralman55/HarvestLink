@@ -2,6 +2,7 @@
 
 ## Unreleased — SEO, AI-search, blog, FAQ, wordmark and email alerts
 
+- **Signup says so when the email already has an account** (Decision 58), and a quick second signup goes to the code screen instead of showing Supabase's rate-limit wording.
 - **Blog:** 15 posts by Andrew L. in `content/blog` (how wine is made, terroir, Napa Valley, bulk wine, buying and selling, sulfites, ABV, brix, farming labels, contracts, and a tons-to-gallons calculator), with a quick answer, table of contents, FAQ, sources, RSS, Markdown copies and generated social cards. Fact-check log: `docs/seo/blog-fact-check-log.md`.
 - **FAQ page** (`/faq`) with FAQPage structured data; FAQ and blog teasers on the homepage; editorial guides on /grapes and /bulk-wine.
 - **Search and AI readiness (Decision 54):** unique metadata, canonicals, noindex rules, extended robots.txt (welcomes ShapBot, GPTBot, ClaudeBot, PerplexityBot and other search and AI crawlers), preview and duplicate-host noindex, JSON-LD, `/llms.txt`, `/llms-full.txt`, real sitemap dates.
