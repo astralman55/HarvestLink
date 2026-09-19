@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { notifyNewInquiryMessage } from "@/lib/inquiry-notifications";
 
 const MESSAGE_MAX_LENGTH = 4000;
 
@@ -15,9 +16,9 @@ function validateMessage(message: string): string | null {
 
 /**
  * NDA-7 minimum viable relay: opens (or reuses) the buyer's single thread
- * for a listing and posts the first message. No email notification yet --
- * flagged in docs/scope-addendum-decisions.md as needing a provider
- * decision before that's built.
+ * for a listing and posts the first message, then emails the seller that
+ * they have a new message (Decision 18's flagged gap, closed once Resend
+ * was connected -- see notifyNewInquiryMessage for the NDA-aware label).
  */
 export async function startInquiry(listingId: string, message: string) {
   const validationError = validateMessage(message);
@@ -67,6 +68,8 @@ export async function startInquiry(listingId: string, message: string) {
       .insert({ inquiry_id: inquiryId, sender_id: user.id, body: message.trim() });
     if (messageError) return { error: messageError.message };
 
+    await notifyNewInquiryMessage(inquiryId, user.id);
+
     revalidatePath("/inquiries");
     revalidatePath(`/inquiries/${inquiryId}`);
     return { success: true, inquiryId };
@@ -93,6 +96,8 @@ export async function replyToInquiry(inquiryId: string, message: string) {
       .from("listing_inquiry_messages")
       .insert({ inquiry_id: inquiryId, sender_id: user.id, body: message.trim() });
     if (error) return { error: "Couldn't send that -- you may not be a participant in this thread." };
+
+    await notifyNewInquiryMessage(inquiryId, user.id);
 
     revalidatePath(`/inquiries/${inquiryId}`);
     revalidatePath("/inquiries");
