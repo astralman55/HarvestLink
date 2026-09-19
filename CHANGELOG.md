@@ -2,6 +2,8 @@
 
 ## Unreleased — NDA hardening and primary domain
 
+- **Forgot password (Decision 53):** "Forgot password?" on the login page -> emailed code (or button) -> choose a new password. Same password rules as signup, breach check, other sessions signed out on success. Requires pasting `supabase/email-templates/reset-password.html` into Supabase's "Reset password" template.
+- Migration `0008` applied and verified on the live project (`scripts/audit-public-api.mjs`: no identifying column readable).
 - **Account confirmation by emailed code (Decision 51):** signup now goes to `/verify-email` ("Enter the code we sent to your email") and signs the user in on success; the email also has a click-through button (`/auth/confirm`). Logging in with an unconfirmed account sends a fresh code instead of failing. `redirect_to` values are now restricted to same-site paths. Requires the Supabase email-template and Site URL steps in Decision 51. Social sign-in is planned, not built (Decision 52).
 - **Security (Decision 46, resolved):** migration `0008_lock_identifying_columns.sql` stops the public API from reading `listings.vineyard_name`, `user_id`, `sub_ava`, raw `region_ava`, `title`, `bulk_wine_details.wine_location_county`, `listing_inquiries.seller_id` and `listing_inquiry_messages.sender_id`. All listing reads now go through the server and the NDA serializer. Rollback: `supabase/rollback/0008_rollback.sql`. Prove it on the live project with `node --env-file=.env.local scripts/audit-public-api.mjs`.
 - **Security (Decision 50):** a buyer can no longer resolve a confidential seller through an inquiry thread; the inquiry inbox and notification emails use the serialized title; the realtime new-listing alert no longer broadcasts a confidential listing's region.

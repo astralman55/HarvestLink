@@ -302,10 +302,22 @@ Signup used to end on "Account created -- redirecting to your dashboard", which 
 - **Safety:** `redirect_to` / `next` values now go through `safeRedirectPath` (same-site relative paths only) in the login page, verify page and confirm route; the login page previously pushed the raw query value.
 - **Code length:** this project's Supabase setting produces 8-digit codes (6 is the more familiar length). The server accepts 6-10 digits; `NEXT_PUBLIC_OTP_LENGTH` only controls auto-submit and must match the dashboard's "Email OTP Length" (currently 8 in Vercel).
 - **Dashboard steps (cannot be done from code):** paste `supabase/email-templates/confirm-signup.html` into Authentication -> Emails -> Confirm signup; set Authentication -> URL Configuration -> Site URL to `https://bulkwinegrapes.com` and add `https://bulkwinegrapes.com/**` (and `http://localhost:3000/**`) to Redirect URLs.
-- **Known limits:** the in-memory rate limiter is per server instance (Decision 42's caveat), so it is a deterrent on top of Supabase's own verify limits, not a guarantee. There is still no "forgot password" flow; it would reuse this same code mechanism (`type: "recovery"`).
+- **Known limits:** the in-memory rate limiter is per server instance (Decision 42's caveat), so it is a deterrent on top of Supabase's own verify limits, not a guarantee. Forgot password was added right after (Decision 53).
 
 ### Decision 52 -- Social sign-in (Google first) is deferred, with a plan
 
 Not built yet; it needs credentials only the site owner can create, and a small onboarding step. Recommended scope: **Google only** at launch (growers and buyers overwhelmingly have one; it's free and skips email confirmation entirely). Apple is only required by Apple's rules if an iOS app offering other social logins is shipped, costs $99/year and has fiddly key rotation, so it can wait for a native app. Microsoft/LinkedIn add little for this audience.
 
 What building it involves: (1) a Google Cloud OAuth client and the Supabase Google provider settings (owner action); (2) a "Continue with Google" button plus `/auth/callback` (`exchangeCodeForSession`); (3) an onboarding screen for first-time social users, because the profile trigger reads role / company / region / address from signup metadata that an OAuth sign-in doesn't have, and usernames are collected at signup (USR-1); (4) linking: Supabase links a Google login to an existing password account with the same verified email, which is the behavior we want but should be tested. Keep it behind its own feature flag until tested end to end.
+
+### Decision 53 -- Forgot password reuses the emailed-code mechanism
+
+`/login` links to `/forgot-password` (enter email) -> `/reset-password?email=...` (enter the emailed code, then choose a new password). The reset email carries both the code and a button to `/auth/confirm?type=recovery&next=/reset-password?step=new`, which signs the user in on a short recovery session and lands on the new-password step directly.
+
+- **No account enumeration:** the request screen and the code screen look identical whether or not the address has an account (Supabase itself sends nothing for unknown addresses); wrong, expired and reused codes share one message.
+- **Same password rules as signup:** at least 10 characters, plus the Have I Been Pwned breach check, enforced server-side in `setNewPassword`. Reusing the current password is rejected.
+- **Authorization is the recovery session:** `verifyResetCode` (or the link) creates it; `setNewPassword` refuses without one and tells the user to request a new code.
+- **Other sessions are revoked:** after a successful reset, `signOut({ scope: "others" })` ends every other session, verified end to end (a session opened before the reset is redirected to login).
+- **Dashboard step:** paste `supabase/email-templates/reset-password.html` into Authentication -> Emails -> Reset password (subject `Your HarvestLink password reset code: {{ .Token }}`).
+- Verified in Chromium against the live project: request -> wrong code -> right code -> validation (short, mismatch, breached) -> success; old password rejected, new accepted; link path; no-session state; 375px width. The same run also re-verified the logged-in NDA flows after migration 0008 (seller edit and save, buyer inquiry and thread, and raw API as a buyer denied every identifying column).
+- Known limits: same as Decision 51 (per-instance rate limiter). Reset is by email only, not username.
