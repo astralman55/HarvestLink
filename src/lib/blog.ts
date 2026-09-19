@@ -35,9 +35,18 @@ const FrontMatterSchema = z.object({
   sources: z.array(z.object({ title: z.string(), url: z.string().url(), accessed: z.string() })).default([]),
   related: z.array(z.string()).default([]),
   cta: z.enum(["bulk-wine", "grapes", "sell"]).default("bulk-wine"),
+  /** Self-hosted photo in /public/images/blog (a "-thumb" twin sits next to it for cards). See docs/image-credits.md. */
+  heroImage: z.string().regex(/^\/images\/blog\/[a-z0-9-]+\.webp$/),
+  /** What is visible in the photo, in plain words (screen readers and image search). */
+  heroAlt: z.string().min(20).max(160),
 });
 
 export type BlogFrontMatter = z.infer<typeof FrontMatterSchema>;
+
+/** The small card version of a post's photo. */
+export function thumbFor(post: { heroImage: string }): string {
+  return post.heroImage.replace(/\.webp$/, "-thumb.webp");
+}
 
 export interface BlogPost extends BlogFrontMatter {
   /** Rendered body HTML, split at any `<!--widget:name-->` markers (usually one part). */

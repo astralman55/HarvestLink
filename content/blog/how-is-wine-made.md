@@ -22,6 +22,8 @@ faq:
     a: "It is a second fermentation in which bacteria convert sharp malic acid into softer lactic acid. It is common in reds and in some whites such as many Chardonnays."
 related: ["red-wine-vs-white-wine-how-they-are-made", "what-is-brix-in-winemaking", "what-is-bulk-wine"]
 cta: "grapes"
+heroImage: "/images/blog/how-is-wine-made.webp"
+heroAlt: "Dark grapes moving through winery equipment during crushing"
 ---
 
 ## What are the basic steps of making wine?

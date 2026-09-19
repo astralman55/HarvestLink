@@ -32,6 +32,8 @@ sources:
     accessed: "2026-09-19"
 related: ["organic-biodynamic-sustainable-wine-labels", "how-to-buy-bulk-wine", "how-is-wine-made"]
 cta: "bulk-wine"
+heroImage: "/images/blog/sulfites-in-wine.webp"
+heroAlt: "Wine bottles lying on their sides in rows, seen up close"
 ---
 
 ## What are sulfites in wine?

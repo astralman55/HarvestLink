@@ -26,6 +26,8 @@ sources:
     accessed: "2026-09-19"
 related: ["how-to-buy-wine-grapes", "what-is-bulk-wine", "what-is-brix-in-winemaking"]
 cta: "grapes"
+heroImage: "/images/blog/gallons-of-wine-per-ton-of-grapes.webp"
+heroAlt: "Close-up of a pile of crushed dark grapes with skins and seeds"
 ---
 
 ## How many gallons of wine are in a ton of grapes?

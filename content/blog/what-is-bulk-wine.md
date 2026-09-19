@@ -29,6 +29,8 @@ sources:
     accessed: "2026-09-19"
 related: ["how-to-buy-bulk-wine", "how-to-start-a-wine-brand-without-a-vineyard", "selling-wine-anonymously-nda-listings"]
 cta: "bulk-wine"
+heroImage: "/images/blog/what-is-bulk-wine.webp"
+heroAlt: "Rows of tall stainless steel storage tanks inside a large production hall"
 ---
 
 ## What is bulk wine, and how is it different from bottled wine?

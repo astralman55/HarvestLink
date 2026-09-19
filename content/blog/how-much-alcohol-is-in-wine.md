@@ -32,6 +32,8 @@ sources:
     accessed: "2026-09-19"
 related: ["what-is-brix-in-winemaking", "how-to-start-a-wine-brand-without-a-vineyard", "how-to-buy-bulk-wine"]
 cta: "bulk-wine"
+heroImage: "/images/blog/how-much-alcohol-is-in-wine.webp"
+heroAlt: "A glass of red wine in front of pale wooden crate slats"
 ---
 
 ## What is ABV?

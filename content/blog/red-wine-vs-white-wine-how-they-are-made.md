@@ -22,6 +22,8 @@ faq:
     a: "Usually cooler than reds, because cooler fermentation preserves fresh fruit aromas. Some white wines, such as barrel-fermented Chardonnay, are made differently."
 related: ["how-is-wine-made", "what-is-terroir", "gallons-of-wine-per-ton-of-grapes"]
 cta: "bulk-wine"
+heroImage: "/images/blog/red-wine-vs-white-wine-how-they-are-made.webp"
+heroAlt: "A bunch of red grapes beside a bunch of green grapes on a table"
 ---
 
 ## What is the real difference between red and white wine?

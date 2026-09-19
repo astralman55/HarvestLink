@@ -26,6 +26,8 @@ sources:
     accessed: "2026-09-19"
 related: ["what-is-bulk-wine", "how-to-start-a-wine-brand-without-a-vineyard", "sulfites-in-wine"]
 cta: "bulk-wine"
+heroImage: "/images/blog/how-to-buy-bulk-wine.webp"
+heroAlt: "Row of oak barrels lying on their sides in a cellar under warm lights"
 ---
 
 ## Step 1: What exactly do you need?

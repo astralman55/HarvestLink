@@ -32,6 +32,8 @@ sources:
     accessed: "2026-09-19"
 related: ["what-is-terroir", "how-to-buy-wine-grapes", "organic-biodynamic-sustainable-wine-labels"]
 cta: "grapes"
+heroImage: "/images/blog/why-napa-valley-wine-is-special.webp"
+heroAlt: "Vineyard rows covering rolling hills in Napa Valley under a hazy sky"
 ---
 
 ## Why is Napa Valley famous?

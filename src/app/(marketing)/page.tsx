@@ -12,7 +12,7 @@ import { FEATURED_REGIONS } from "@/lib/constants/viticulture";
 import { flags } from "@/lib/flags";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { FAQ_ITEMS } from "@/content/faq";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, thumbFor } from "@/lib/blog";
 import { CANONICAL_DESCRIPTION, faqJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 const VALUE_PROPS = [
@@ -346,10 +346,13 @@ export default async function HomePage({
             </div>
             <div className="mt-6 grid gap-5 md:grid-cols-3">
               {latestPosts.map((post) => (
-                <Link key={post.slug} href={`/blog/${post.slug}`} className="rounded-2xl border border-stone-200 bg-stone-50 p-5 transition-shadow hover:shadow-md">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand)]">{post.category}</p>
-                  <h3 className="mt-2 font-semibold leading-snug text-stone-900">{post.title}</h3>
-                  <p className="mt-2 text-sm text-stone-600">{post.description}</p>
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="overflow-hidden rounded-2xl border border-stone-200 bg-stone-50 transition-shadow hover:shadow-md">
+                  <Image src={thumbFor(post)} alt={post.heroAlt} width={640} height={320} unoptimized sizes="(min-width: 768px) 33vw, 100vw" className="h-auto w-full" />
+                  <div className="p-5">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand)]">{post.category}</p>
+                    <h3 className="mt-2 font-semibold leading-snug text-stone-900">{post.title}</h3>
+                    <p className="mt-2 text-sm text-stone-600">{post.description}</p>
+                  </div>
                 </Link>
               ))}
             </div>

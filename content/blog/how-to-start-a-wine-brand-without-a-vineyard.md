@@ -32,6 +32,8 @@ sources:
     accessed: "2026-09-19"
 related: ["what-is-bulk-wine", "how-to-buy-bulk-wine", "how-much-alcohol-is-in-wine"]
 cta: "bulk-wine"
+heroImage: "/images/blog/how-to-start-a-wine-brand-without-a-vineyard.webp"
+heroAlt: "Dark glass wine bottles lined up on an industrial bottling line"
 ---
 
 ## What are private label and white label wine?

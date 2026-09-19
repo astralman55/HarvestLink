@@ -1,7 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getAllPosts, formatPostDate } from "@/lib/blog";
+import { getAllPosts, formatPostDate, thumbFor } from "@/lib/blog";
 import { CANONICAL_DESCRIPTION, absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -59,16 +60,21 @@ export default function BlogIndexPage() {
             {posts
               .filter((post) => post.category === category)
               .map((post) => (
-                <article key={post.slug} className="flex flex-col rounded-2xl border border-stone-200 bg-white p-5 transition-shadow hover:shadow-md">
-                  <h3 className="text-lg font-semibold leading-snug text-stone-900">
-                    <Link href={`/blog/${post.slug}`} className="hover:text-[var(--color-brand)]">
-                      {post.title}
-                    </Link>
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm text-stone-600">{post.description}</p>
-                  <p className="mt-4 text-xs text-stone-500">
-                    {post.author} · {formatPostDate(post.datePublished)} · {post.readingMinutes} min read
-                  </p>
+                <article key={post.slug} className="flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white transition-shadow hover:shadow-md">
+                  <Link href={`/blog/${post.slug}`} tabIndex={-1} aria-hidden="true" className="block">
+                    <Image src={thumbFor(post)} alt="" width={640} height={320} unoptimized sizes="(min-width: 640px) 50vw, 100vw" className="h-auto w-full" />
+                  </Link>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="text-lg font-semibold leading-snug text-stone-900">
+                      <Link href={`/blog/${post.slug}`} className="hover:text-[var(--color-brand)]">
+                        {post.title}
+                      </Link>
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm text-stone-600">{post.description}</p>
+                    <p className="mt-4 text-xs text-stone-500">
+                      {post.author} · {formatPostDate(post.datePublished)} · {post.readingMinutes} min read
+                    </p>
+                  </div>
                 </article>
               ))}
           </div>

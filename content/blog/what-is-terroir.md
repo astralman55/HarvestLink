@@ -26,6 +26,8 @@ sources:
     accessed: "2026-09-19"
 related: ["why-napa-valley-wine-is-special", "how-is-wine-made", "how-to-buy-wine-grapes"]
 cta: "grapes"
+heroImage: "/images/blog/what-is-terroir.webp"
+heroAlt: "Green grapevines in rows with a dry dirt path and blue sky above"
 ---
 
 ## What does terroir mean?

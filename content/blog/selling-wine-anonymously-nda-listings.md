@@ -22,6 +22,8 @@ faq:
     a: "Yes. Sellers can edit a listing at any time and change its visibility. The site asks you to confirm the change and shows a preview of what buyers will see."
 related: ["what-is-bulk-wine", "how-to-buy-bulk-wine", "how-to-buy-wine-grapes"]
 cta: "sell"
+heroImage: "/images/blog/selling-wine-anonymously-nda-listings.webp"
+heroAlt: "Long brick tunnel lined with stacked oak barrels and dim lighting"
 ---
 
 ## Why would a winery sell wine without its name on it?

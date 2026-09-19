@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, thumbFor } from "@/lib/blog";
 import { DESCRIPTION_MAX, TITLE_MAX } from "@/lib/seo";
 import { FAQ_ITEMS } from "@/content/faq";
 
@@ -39,6 +39,16 @@ describe("blog posts", () => {
     expect(post.related.length).toBeGreaterThanOrEqual(3);
     for (const related of post.related) expect(slugs.has(related), `related post ${related} exists`).toBe(true);
     expect(post.related).not.toContain(post.slug);
+
+    // Photos: both sizes exist on disk, stay inside the size budget, and have real alt text.
+    for (const file of [post.heroImage, thumbFor(post)]) {
+      const full = path.join(process.cwd(), "public", file);
+      expect(fs.existsSync(full), `missing image ${file}`).toBe(true);
+    }
+    expect(fs.statSync(path.join(process.cwd(), "public", post.heroImage)).size, "hero image size").toBeLessThanOrEqual(150 * 1024);
+    expect(words(post.heroAlt), "alt text length").toBeGreaterThanOrEqual(6);
+    expect(words(post.heroAlt), "alt text length").toBeLessThanOrEqual(20);
+    expect(post.heroAlt.includes("\u2014"), "em dash in alt").toBe(false);
 
     // House style: no em dashes anywhere the reader sees, and no unresolved placeholders.
     const everything = [post.title, post.description, post.quickAnswer, post.markdown, ...post.faq.flatMap((f) => [f.q, f.a])].join("\n");

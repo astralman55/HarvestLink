@@ -26,6 +26,8 @@ sources:
     accessed: "2026-09-19"
 related: ["gallons-of-wine-per-ton-of-grapes", "what-is-brix-in-winemaking", "spot-vs-forward-wine-grape-contracts"]
 cta: "grapes"
+heroImage: "/images/blog/how-to-buy-wine-grapes.webp"
+heroAlt: "Gray harvest crates filled with grapes on a trailer beside green vines"
 ---
 
 ## What do wineries look for when they buy wine grapes?

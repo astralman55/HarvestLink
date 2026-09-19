@@ -32,6 +32,8 @@ sources:
     accessed: "2026-09-19"
 related: ["sulfites-in-wine", "what-is-terroir", "what-is-bulk-wine"]
 cta: "grapes"
+heroImage: "/images/blog/organic-biodynamic-sustainable-wine-labels.webp"
+heroAlt: "Vineyard rows with cover crop growing between the vines and mountains behind"
 ---
 
 ## Why do these labels confuse people?

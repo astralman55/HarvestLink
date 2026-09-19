@@ -32,6 +32,8 @@ sources:
     accessed: "2026-09-19"
 related: ["how-to-buy-wine-grapes", "how-much-alcohol-is-in-wine", "spot-vs-forward-wine-grape-contracts"]
 cta: "grapes"
+heroImage: "/images/blog/what-is-brix-in-winemaking.webp"
+heroAlt: "A red crate of ripe red and green grapes on a truck at harvest"
 ---
 
 ## What does brix mean?

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Bell } from "lucide-react";
@@ -77,7 +78,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             articleSection: post.category,
             keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(", "),
             inLanguage: "en-US",
-            image: absoluteUrl(`/og/blog/${post.slug}`),
+            image: [absoluteUrl(post.heroImage), absoluteUrl(`/og/blog/${post.slug}`)],
             author: { "@type": "Person", name: post.author },
             publisher: { "@type": "Organization", name: SITE_NAME, url: absoluteUrl("/"), logo: { "@type": "ImageObject", url: absoluteUrl("/brand/harvestlink-logo-512.png") } },
           },
@@ -116,6 +117,19 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           · {post.readingMinutes} min read
         </p>
       </header>
+
+      <figure className="mt-6 overflow-hidden rounded-2xl bg-stone-100">
+        <Image
+          src={post.heroImage}
+          alt={post.heroAlt}
+          width={1200}
+          height={600}
+          priority
+          unoptimized
+          sizes="(min-width: 768px) 768px, 100vw"
+          className="h-auto w-full"
+        />
+      </figure>
 
       <aside className="mt-6 rounded-2xl border border-[var(--color-brand-100)] bg-[var(--color-brand-50)] p-5" aria-label="Quick answer">
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-dark)]">Quick answer</p>

@@ -22,6 +22,8 @@ faq:
     a: "It depends on your risk. A fixed price protects against increases but can leave you paying above market if prices fall. Some agreements use ranges or indexed pricing to share the risk. Ask an experienced advisor."
 related: ["how-to-buy-wine-grapes", "what-is-brix-in-winemaking", "gallons-of-wine-per-ton-of-grapes"]
 cta: "grapes"
+heroImage: "/images/blog/spot-vs-forward-wine-grape-contracts.webp"
+heroAlt: "Curving rows of green grapevines on a hillside vineyard"
 ---
 
 > **Educational information, not legal or financial advice.** Contracts have legal consequences. Have a qualified professional review any agreement before you sign it.
