@@ -23,7 +23,16 @@ async function getOwnedListing(id: string): Promise<Listing | null> {
   // Don't reveal that a listing exists to anyone but its owner.
   if (data.user_id !== user.id) return null;
 
-  return data as Listing;
+  const listing = data as Listing;
+
+  // Owner-only winemaker table (migration 0007). Not having run it yet, or
+  // no winemaker being set, both just leave the field blank.
+  if (listing.listing_type === "bulk_wine" && listing.bulk_wine_details) {
+    const { data: winemaker } = await supabase.from("listing_winemakers").select("winemaker_name").eq("listing_id", id).maybeSingle();
+    listing.bulk_wine_details.winemaker_name = winemaker?.winemaker_name ?? null;
+  }
+
+  return listing;
 }
 
 export default async function EditListingPage({ params }: { params: Promise<{ id: string }> }) {

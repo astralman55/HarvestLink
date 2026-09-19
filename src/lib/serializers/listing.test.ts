@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { serializeListing } from "./listing";
+import { serializeListing, winemakerFetchIds } from "./listing";
 import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
 import {
   CANARY_COMPANY,
   CANARY_VINEYARD,
   CANARY_COUNTY,
+  CANARY_AREA,
+  CANARY_WINEMAKER,
   CANARY_USER_ID,
   OTHER_USER_ID,
   ADMIN_USER_ID,
@@ -86,7 +88,7 @@ describe("serializeListing -- NDA canary", () => {
   it("never redacts a non-NDA listing", () => {
     const result = serializeListing(ndaListing({ is_nda: false }), CANARY_SELLER, { userId: null, isAdmin: false });
     expect(result.seller?.company_name).toBe(CANARY_COMPANY);
-    expect(result.sub_ava).toBe("Atlas Peak");
+    expect(result.sub_ava).toBe(CANARY_AREA);
     expect(result.is_confidential).toBe(false);
   });
 
@@ -215,5 +217,98 @@ describe("checkFreeTextForNdaLeak -- NDA-6 free-text guard", () => {
   it("allows free text on a listing with no identity fields set", () => {
     const result = checkFreeTextForNdaLeak({ text: "Estate fruit, excellent color and structure." });
     expect(result.blocked).toBe(false);
+  });
+});
+
+describe("serializeListing -- titles (a stored title carries the free-text specific area)", () => {
+  const anon = { userId: null, isAdmin: false };
+
+  it("rebuilds a confidential grapes title from the redacted region, not the stored one", () => {
+    const county = serializeListing(ndaListing({ nda_location_precision: "county" }), CANARY_SELLER, anon);
+    expect(county.title).toBe("Cabernet Sauvignon (Clone 337) — Napa County");
+    expect(county.title).not.toContain(CANARY_AREA);
+
+    // "state" precision must not leave the raw county in the title either.
+    const state = serializeListing(ndaListing({ nda_location_precision: "state" }), CANARY_SELLER, anon);
+    expect(state.title).toBe("Cabernet Sauvignon (Clone 337) — California");
+  });
+
+  it("rebuilds a confidential bulk wine title too", () => {
+    const result = serializeListing(
+      bulkWineListing({ title: `2024 Cabernet Sauvignon Bulk Wine — ${CANARY_AREA}` }),
+      CANARY_SELLER,
+      anon
+    );
+    expect(result.title).toBe("2024 Cabernet Sauvignon Bulk Wine — Napa County");
+    expect(JSON.stringify(result)).not.toContain(CANARY_AREA);
+  });
+
+  it("keeps the stored title for the owner and for non-NDA listings", () => {
+    const owner = serializeListing(ndaListing(), CANARY_SELLER, { userId: CANARY_USER_ID, isAdmin: false });
+    expect(owner.title).toContain(CANARY_AREA);
+    const publicListing = serializeListing(ndaListing({ is_nda: false }), CANARY_SELLER, anon);
+    expect(publicListing.title).toContain(CANARY_AREA);
+  });
+});
+
+describe("serializeListing -- winemaker", () => {
+  const anon = { userId: null, isAdmin: false };
+
+  it("never shows the winemaker on a confidential listing, at either location precision", () => {
+    for (const precision of ["county", "state"] as const) {
+      const result = serializeListing(bulkWineListing({ nda_location_precision: precision }), CANARY_SELLER, anon);
+      // (Not assertNoCanaryLeak: under "county" precision the wine-location
+      // county is meant to be visible, which that all-strings check flags.)
+      expect(JSON.stringify(result)).not.toContain(CANARY_WINEMAKER);
+      expect(result.bulk_wine?.winemaker_name).toBeNull();
+      expect(result.bulk_wine?.winemaker_withheld).toBe(true);
+    }
+  });
+
+  it("hides it from another logged-in member too", () => {
+    const result = serializeListing(bulkWineListing(), CANARY_SELLER, { userId: OTHER_USER_ID, isAdmin: false });
+    expect(result.bulk_wine?.winemaker_name).toBeNull();
+  });
+
+  it("shows it to the owner and to an admin", () => {
+    const owner = serializeListing(bulkWineListing(), CANARY_SELLER, { userId: CANARY_USER_ID, isAdmin: false });
+    const admin = serializeListing(bulkWineListing(), CANARY_SELLER, { userId: ADMIN_USER_ID, isAdmin: true });
+    expect(owner.bulk_wine?.winemaker_name).toBe(CANARY_WINEMAKER);
+    expect(admin.bulk_wine?.winemaker_name).toBe(CANARY_WINEMAKER);
+  });
+
+  it("shows it publicly on a listing that isn't confidential", () => {
+    const result = serializeListing(bulkWineListing({ is_nda: false }), CANARY_SELLER, anon);
+    expect(result.bulk_wine?.winemaker_name).toBe(CANARY_WINEMAKER);
+    expect(result.bulk_wine?.winemaker_withheld).toBe(false);
+  });
+
+  it("is null, with nothing withheld, when no winemaker was listed", () => {
+    const base = bulkWineListing();
+    const result = serializeListing(
+      { ...base, bulk_wine_details: { ...base.bulk_wine_details!, winemaker_name: null } },
+      CANARY_SELLER,
+      anon
+    );
+    expect(result.bulk_wine?.winemaker_name).toBeNull();
+    expect(result.bulk_wine?.winemaker_withheld).toBe(false);
+  });
+});
+
+describe("winemakerFetchIds -- the data layer never even loads a confidential winemaker", () => {
+  const rows = [
+    ndaListing({ id: "nda-wine", listing_type: "bulk_wine" }),
+    ndaListing({ id: "public-wine", listing_type: "bulk_wine", is_nda: false }),
+    ndaListing({ id: "public-grapes", listing_type: "grapes", is_nda: false }),
+  ];
+
+  it("excludes confidential rows for an anonymous viewer and another member", () => {
+    expect(winemakerFetchIds(rows, { userId: null, isAdmin: false })).toEqual(["public-wine"]);
+    expect(winemakerFetchIds(rows, { userId: OTHER_USER_ID, isAdmin: false })).toEqual(["public-wine"]);
+  });
+
+  it("includes the owner's own confidential row, and every row for an admin", () => {
+    expect(winemakerFetchIds(rows, { userId: CANARY_USER_ID, isAdmin: false })).toEqual(["nda-wine", "public-wine"]);
+    expect(winemakerFetchIds(rows, { userId: ADMIN_USER_ID, isAdmin: true })).toEqual(["nda-wine", "public-wine"]);
   });
 });

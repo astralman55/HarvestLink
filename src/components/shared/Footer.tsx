@@ -69,8 +69,16 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-stone-200 pt-6 text-xs text-stone-500">
-          © {new Date().getFullYear()} HarvestLink. Built for growers and buyers who plan ahead.
+        <div className="mt-12 flex flex-col gap-3 border-t border-stone-200 pt-6 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} HarvestLink. Built for growers and buyers who plan ahead.</p>
+          <div className="flex gap-5">
+            <Link href="/terms" className="hover:text-stone-900">
+              Terms of Service
+            </Link>
+            <Link href="/privacy" className="hover:text-stone-900">
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

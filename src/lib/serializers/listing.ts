@@ -1,4 +1,5 @@
 import { getStateForRegion } from "@/lib/constants/viticulture";
+import { generateBulkWineTitle, generateListingTitle } from "@/lib/utils";
 import type { BulkWineFarmingPractice, Listing, PublicProfile } from "@/types";
 
 /**
@@ -30,6 +31,10 @@ export interface PublicBulkWineDetails {
   wine_location_state: string | null;
   /** Hidden under NDA unless nda_location_precision is "county". */
   wine_location_county: string | null;
+  /** Who made the wine. Never shown on a confidential listing -- see winemakerFetchIds(). */
+  winemaker_name: string | null;
+  /** true when a winemaker was listed but is withheld -- UI shows "Winemaker (name withheld)". */
+  winemaker_withheld: boolean;
   farming_practices: BulkWineFarmingPractice[];
 }
 
@@ -69,6 +74,21 @@ export interface PublicListing {
   viewer_is_owner: boolean;
   /** Only present when listing_type is "bulk_wine". */
   bulk_wine: PublicBulkWineDetails | null;
+}
+
+/**
+ * Which listings' winemaker names the data layer is allowed to load for this
+ * viewer at all. The winemaker lives in its own owner/admin-only table
+ * (listing_winemakers, migration 0007) that the public API can't read, and
+ * is fetched server-side only for rows that are safe to show -- so a
+ * confidential listing's winemaker is never even loaded into memory for an
+ * anonymous or other-member request, not just redacted afterward.
+ */
+export function winemakerFetchIds(rows: Listing[], viewer: ViewerContext): string[] {
+  return rows
+    .filter((row) => row.listing_type === "bulk_wine")
+    .filter((row) => !row.is_nda || viewer.isAdmin || (viewer.userId != null && viewer.userId === row.user_id))
+    .map((row) => row.id);
 }
 
 function computeReferenceNumber(id: string, listingType: Listing["listing_type"]): string {
@@ -117,14 +137,29 @@ export function serializeListing(row: Listing, seller: RawSellerProfile | null, 
         // seller chose the more-restrictive "state" precision, not for
         // "county" precision (the default).
         wine_location_county: isConfidential && row.nda_location_precision === "state" ? null : rawBulkWine.wine_location_county,
+        // The winemaker is as identifying as the seller's own name, so unlike
+        // wine_location_county it's hidden on every confidential listing
+        // regardless of location precision.
+        winemaker_name: isConfidential ? null : rawBulkWine.winemaker_name ?? null,
+        winemaker_withheld: isConfidential && !!rawBulkWine.winemaker_name,
         farming_practices: (row.listing_farming_practices ?? []).map((p) => p.practice_code),
       }
     : null;
 
+  // Stored titles are built from sub_ava || region_ava when a listing is
+  // saved, and sub_ava is seller-typed text -- so on a confidential listing
+  // the stored title can carry exactly the detail redacted above. Rebuild
+  // it from the redacted region instead of trusting the stored one.
+  const title = isConfidential
+    ? (row.listing_type === "bulk_wine"
+        ? generateBulkWineTitle(row.variety, row.bulk_wine_details?.vintage_year ?? undefined, row.bulk_wine_details?.is_multi_vintage, region_ava)
+        : generateListingTitle(row.variety, row.clone ?? undefined, region_ava)) || "Confidential listing"
+    : row.title;
+
   return {
     id: row.id,
     reference_number: computeReferenceNumber(row.id, row.listing_type),
-    title: row.title,
+    title,
     listing_type: row.listing_type,
     variety: row.variety,
     clone: row.clone,

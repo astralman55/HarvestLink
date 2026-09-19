@@ -88,13 +88,20 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+          <Button asChild variant="ghost" size="sm">
             <Link href="/login">Log in</Link>
           </Button>
           <Button asChild size="sm">
             <Link href="/sell">Sell</Link>
           </Button>
         </div>
+      </div>
+
+      {/* On phones the logo, Log in, and Sell already fill the top row, so the
+          Grapes / Bulk Wine switch gets its own row underneath instead of
+          disappearing (it used to be hidden below the md breakpoint). */}
+      <div className="flex justify-center border-t border-stone-100 px-4 py-2 md:hidden">
+        <MarketplaceSwitch />
       </div>
     </header>
   );

@@ -1,8 +1,38 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { DEMO_LISTINGS, filterDemoListings } from "@/lib/demo-data";
 import { resolveViewerContext } from "@/lib/supabase/viewer";
-import { serializeListing, type PublicListing, type RawSellerProfile } from "@/lib/serializers/listing";
+import {
+  serializeListing,
+  winemakerFetchIds,
+  type PublicListing,
+  type RawSellerProfile,
+  type ViewerContext,
+} from "@/lib/serializers/listing";
 import type { Listing, ListingSearchFilters } from "@/types";
+
+/**
+ * Loads winemaker names (migration 0007's owner/admin-only table) with the
+ * service role and attaches them to their rows -- only for listings that are
+ * safe to show this viewer, so a confidential listing's winemaker is never
+ * even fetched for an anonymous or other-member request. A missing table
+ * (migration not run yet), a missing service key, or any other failure just
+ * means no winemaker shows; it must never fail the listing read itself.
+ */
+async function attachWinemakers(rows: Listing[], viewer: ViewerContext): Promise<void> {
+  const ids = winemakerFetchIds(rows, viewer);
+  if (ids.length === 0) return;
+  try {
+    const admin = createAdminClient();
+    const { data } = await admin.from("listing_winemakers").select("listing_id, winemaker_name").in("listing_id", ids);
+    const nameById = new Map((data ?? []).map((r) => [r.listing_id as string, r.winemaker_name as string]));
+    for (const row of rows) {
+      if (row.bulk_wine_details && nameById.has(row.id)) row.bulk_wine_details.winemaker_name = nameById.get(row.id) ?? null;
+    }
+  } catch {
+    // See doc comment above.
+  }
+}
 
 /**
  * Reads listings from the live Supabase project and returns them through
@@ -122,6 +152,7 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     const rows = data as Listing[];
 
     const [sellersByUserId, viewer] = await Promise.all([fetchPublicSellers(supabase, rows), resolveViewerContext()]);
+    await attachWinemakers(rows, viewer);
     return rows.map((row) => serializeListing(row, sellersByUserId.get(row.user_id) ?? null, viewer));
   } catch {
     return filterDemoListings(filters).map((row) => serializeListing(row, demoSeller(row), { userId: null, isAdmin: false }));
@@ -140,6 +171,7 @@ export async function getListingById(id: string): Promise<PublicListing | null> 
     const row = data as Listing;
 
     const [sellersByUserId, viewer] = await Promise.all([fetchPublicSellers(supabase, [row]), resolveViewerContext()]);
+    await attachWinemakers([row], viewer);
     return serializeListing(row, sellersByUserId.get(row.user_id) ?? null, viewer);
   } catch {
     const row = DEMO_LISTINGS.find((listing) => listing.id === id);

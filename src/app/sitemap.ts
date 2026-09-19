@@ -14,6 +14,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${appUrl}/grapes`, changeFrequency: "hourly", priority: 0.9 },
     { url: `${appUrl}/bulk-wine`, changeFrequency: "hourly", priority: 0.9 },
     { url: `${appUrl}/sell`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${appUrl}/terms`, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${appUrl}/privacy`, changeFrequency: "yearly", priority: 0.2 },
   ];
 
   let listings: Awaited<ReturnType<typeof getListings>> = [];

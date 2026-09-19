@@ -41,9 +41,9 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
-   through `0006_scope_addendum_phase5_bulk_wine.sql` — Phase 4 needed no
+   through `0007_bulk_wine_winemaker.sql` — Phase 4 needed no
    new migration) in the Supabase SQL Editor. Rollback scripts for
-   `0003`–`0006` are in `supabase/rollback/` if you ever need to back the
+   `0003`–`0007` are in `supabase/rollback/` if you ever need to back the
    addendum out (see the README there — written, not yet rehearsed against
    live data).
 4. Restart `npm run dev`. Register an account — the `profiles` row is
@@ -128,14 +128,23 @@ Status:
   `.env.local` so Phases 2, 3, 5, and 6 are testable once you've run the
   migrations through `0006`.
 
-## Not included (needs your accounts/decisions)
+## Deployment
 
-- **Vercel deployment** (blueprint Phase 9) — linking a GitHub repo to
-  Vercel and setting production env vars needs your Vercel/GitHub accounts.
-- **Live E2E audit against production** (blueprint Phase 10) — needs a
-  deployed instance to measure.
+The site is deployed on Vercel (https://harvestlink-one.vercel.app) with the
+production env vars listed in `.env.example`; email goes through Resend
+(sending domain `bulkwinegrapes.com`), including Supabase's signup
+confirmation emails via Supabase's custom SMTP setting. `/terms` and
+`/privacy` are drafts (see Decision 48 in
+[`docs/scope-addendum-decisions.md`](./docs/scope-addendum-decisions.md)).
+
+## Not included yet
+
 - **Stripe** — env vars are scaffolded (`.env.example`) but no billing flow
   is wired up; the blueprint marks this "future scope."
+- **Real-device browser testing and load testing** — cross-browser checks
+  used Playwright's Chromium/Firefox/WebKit engines (Decision 49).
+- **NDA hardening of existing columns** — see Decision 46 before promoting
+  confidential listings.
 
 ## Development
 

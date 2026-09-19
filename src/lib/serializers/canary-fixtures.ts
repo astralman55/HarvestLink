@@ -12,11 +12,21 @@ export const CANARY_COMPANY = "Zzcanary Ridge Vineyards";
 export const CANARY_USERNAME = "zzcanary_seller";
 export const CANARY_VINEYARD = "Zzcanary Block 7";
 export const CANARY_COUNTY = "Zzcanary County";
+export const CANARY_AREA = "Zzcanary Hillside";
+export const CANARY_WINEMAKER = "Zzcanary Winemaker";
 export const CANARY_USER_ID = "11111111-1111-1111-1111-111111111111";
 export const OTHER_USER_ID = "22222222-2222-2222-2222-222222222222";
 export const ADMIN_USER_ID = "33333333-3333-3333-3333-333333333333";
 
-export const CANARY_STRINGS = [CANARY_COMPANY, CANARY_USERNAME, CANARY_VINEYARD, CANARY_COUNTY, CANARY_USER_ID];
+export const CANARY_STRINGS = [
+  CANARY_COMPANY,
+  CANARY_USERNAME,
+  CANARY_VINEYARD,
+  CANARY_COUNTY,
+  CANARY_AREA,
+  CANARY_WINEMAKER,
+  CANARY_USER_ID,
+];
 
 export const CANARY_SELLER: RawSellerProfile = {
   company_name: CANARY_COMPANY,
@@ -29,12 +39,14 @@ export function ndaListing(overrides: Partial<Listing> = {}): Listing {
   return {
     id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
     user_id: CANARY_USER_ID,
-    title: "Cabernet Sauvignon (Clone 337) — Napa County",
+    // Real stored titles are built from sub_ava || region_ava, so this
+    // carries the canary area exactly like a saved listing's would.
+    title: `Cabernet Sauvignon (Clone 337) — ${CANARY_AREA}`,
     variety: "Cabernet Sauvignon",
     clone: "Clone 337",
     rootstock: "110R",
     region_ava: "Napa County",
-    sub_ava: "Atlas Peak",
+    sub_ava: CANARY_AREA,
     estimated_tons: 20,
     minimum_tons: 2,
     price_per_ton: 4000,
@@ -74,6 +86,7 @@ export function bulkWineListing(overrides: Partial<Listing> = {}): Listing {
       is_multi_vintage: false,
       wine_location_state: "California",
       wine_location_county: CANARY_COUNTY,
+      winemaker_name: CANARY_WINEMAKER,
       created_at: new Date().toISOString(),
     },
     listing_farming_practices: [{ practice_code: "organic" }, { practice_code: "biodynamic" }],

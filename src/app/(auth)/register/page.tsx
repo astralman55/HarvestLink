@@ -164,6 +164,18 @@ export default function RegisterPage() {
 
           {serverError && <p className="text-sm text-red-600">{serverError}</p>}
 
+          <p className="text-xs text-stone-500">
+            By creating an account you agree to our{" "}
+            <Link href="/terms" className="font-medium text-[var(--color-brand)] underline">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="font-medium text-[var(--color-brand)] underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
+
           <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
             {isSubmitting ? "Creating account…" : "Create Account"}
           </Button>

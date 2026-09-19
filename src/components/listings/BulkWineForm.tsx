@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateBulkWineListingSchema, type CreateBulkWineListingInput } from "@/lib/validation/bulk-wine";
+import { WINEMAKER_NAME_HELPER, normalizeWinemakerName } from "@/lib/validation/winemaker";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -157,6 +158,7 @@ export function BulkWineForm({
           is_multi_vintage: pendingData.is_multi_vintage ?? false,
           wine_location_state: pendingData.wine_location_state ?? null,
           wine_location_county: pendingData.wine_location_county ?? null,
+          winemaker_name: normalizeWinemakerName(pendingData.winemaker_name),
           created_at: new Date().toISOString(),
         },
         listing_farming_practices: (pendingData.farming_practices ?? []).map((code) => ({ practice_code: code })),
@@ -242,6 +244,15 @@ export function BulkWineForm({
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <h2 className="col-span-full text-sm font-semibold text-stone-900">Wine Specs</h2>
+        <div className="space-y-1.5 sm:col-span-2">
+          <Label htmlFor="winemaker_name">Winemaker (optional)</Label>
+          <Input id="winemaker_name" placeholder="e.g. the winemaker who made this wine" autoComplete="off" {...register("winemaker_name")} />
+          {errors.winemaker_name ? (
+            <p className="text-xs text-red-600">{errors.winemaker_name.message}</p>
+          ) : (
+            <p className="text-xs text-stone-500">{WINEMAKER_NAME_HELPER}</p>
+          )}
+        </div>
         <div className="space-y-1.5">
           <Label htmlFor="vintage_year">Vintage</Label>
           <Select

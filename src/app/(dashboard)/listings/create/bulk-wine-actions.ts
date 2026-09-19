@@ -6,6 +6,7 @@ import { generateBulkWineTitle } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { flags } from "@/lib/flags";
 import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
+import { normalizeWinemakerName } from "@/lib/validation/winemaker";
 
 export async function createNewBulkWineListing(data: CreateBulkWineListingInput) {
   const validation = CreateBulkWineListingSchema.safeParse(data);
@@ -30,15 +31,28 @@ export async function createNewBulkWineListing(data: CreateBulkWineListingInput)
     }
 
     const vineyardName = validation.data.single_vineyard ? validation.data.vineyard_name?.trim() || null : null;
+    const winemakerName = normalizeWinemakerName(validation.data.winemaker_name);
 
     if (validation.data.is_nda) {
-      const { data: otherListings } = await supabase.from("listings").select("vineyard_name").eq("user_id", user.id);
+      const [{ data: otherListings }, { data: otherWinemakers }] = await Promise.all([
+        supabase.from("listings").select("vineyard_name").eq("user_id", user.id),
+        // Owner-only table, so this is just the seller's own past winemakers.
+        supabase.from("listing_winemakers").select("winemaker_name").limit(200),
+      ]);
       const guard = checkFreeTextForNdaLeak({
         text: validation.data.description,
         companyName: profile?.company_name,
         fullName: profile?.full_name,
         username: profile?.username,
-        vineyardNames: [vineyardName, ...(otherListings ?? []).map((l) => l.vineyard_name)],
+        // A winemaker is as identifying as a vineyard name, so the
+        // description can't name one either (the guard only cares that it's
+        // a name to look for).
+        vineyardNames: [
+          vineyardName,
+          winemakerName,
+          ...(otherListings ?? []).map((l) => l.vineyard_name),
+          ...(otherWinemakers ?? []).map((w) => w.winemaker_name),
+        ],
       });
       if (guard.blocked) return { error: guard.reason };
     }
@@ -100,6 +114,18 @@ export async function createNewBulkWineListing(data: CreateBulkWineListingInput)
     if (detailsError) {
       await supabase.from("listings").delete().eq("id", listing.id);
       return { error: detailsError.message };
+    }
+
+    // Own owner/admin-only table (migration 0007), only touched when a
+    // winemaker was actually entered.
+    if (winemakerName) {
+      const { error: winemakerError } = await supabase
+        .from("listing_winemakers")
+        .insert({ listing_id: listing.id, winemaker_name: winemakerName });
+      if (winemakerError) {
+        await supabase.from("listings").delete().eq("id", listing.id);
+        return { error: winemakerError.message };
+      }
     }
 
     if (validation.data.farming_practices.length > 0) {

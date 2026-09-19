@@ -24,7 +24,8 @@ describe("sitemap -- NDA canary", () => {
       expect(json).not.toContain(canary);
     }
 
-    const listingEntries = entries.filter((entry) => !entry.url.endsWith("/grapes") && !entry.url.endsWith("/bulk-wine") && !entry.url.endsWith("/") && !entry.url.endsWith("/sell"));
+    // A listing URL ends in the listing's UUID; static pages don't.
+    const listingEntries = entries.filter((entry) => /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(entry.url));
     expect(listingEntries).toHaveLength(2);
     expect(listingEntries.some((entry) => entry.url.includes("/grapes/"))).toBe(true);
     expect(listingEntries.some((entry) => entry.url.includes("/bulk-wine/"))).toBe(true);

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — Launch prep (legal pages, winemaker, homepage/mobile fixes)
+
+- Added `/terms` (Terms of Service) and `/privacy` (Privacy Policy), linked from the footer and the signup form, and added to the sitemap. Drafts written around what the site actually does -- not legal advice (Decision 48). Set `NEXT_PUBLIC_CONTACT_EMAIL` to show a contact address on both.
+- Bulk wine listings can now name the **winemaker**. Stored in a new owner/admin-only table (`listing_winemakers`, migration `0007`, rollback in `supabase/rollback/`) and hidden on every confidential listing (Decision 45). **Run `0007` in the Supabase SQL Editor before using it.**
+- Security: confidential listings' public titles are now rebuilt from the redacted region, closing a leak of the free-text "Specific Area" through titles, URLs and the sitemap (Decision 47). Also documented an open gap where existing identifying columns are readable through the raw database API (Decision 46).
+- Mobile: the Grapes/Bulk Wine switch and the Log in button no longer disappear on small screens (the switch moves to its own row under the header).
+- Homepage: added an "Advanced Search" title above the search form, dropped "B2B" from the badge, made the Sell button a matching outlined pill, added a section about confidential lots from top wineries and winemakers (shown when NDA listings are enabled), and removed a stale "wine location" mention from the bulk wine subtext.
+- Cross-browser tested in Chromium, Firefox and WebKit at desktop and 375px widths (Decision 49). Removed 13 unused Supabase/Postgres integration env vars from the Vercel project.
+
 ## Unreleased — UI refinements (post-addendum)
 
 Product-owner-requested polish on top of the finished scope addendum, not part of `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md` itself.

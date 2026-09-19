@@ -50,7 +50,8 @@ const WINE_SPEC_ROWS = (listing: PublicListing) => {
       "Wine Location",
       bw.wine_location_state ? `${bw.wine_location_county ? `${bw.wine_location_county}, ` : ""}${bw.wine_location_state}` : null,
     ],
-    ["Grape Origin", listing.sub_ava ? `${listing.sub_ava}, ${listing.region_ava}` : listing.region_ava],
+    ["Winemaker", bw.winemaker_withheld ? "Withheld (confidential seller)" : bw.winemaker_name],
+    ["Region", listing.sub_ava ? `${listing.sub_ava}, ${listing.region_ava}` : listing.region_ava],
     [
       "Vineyard",
       listing.single_vineyard ? (listing.vineyard_withheld ? "Single vineyard (name withheld)" : listing.vineyard_name) : null,

@@ -5,6 +5,7 @@ import { CreateBulkWineListingSchema, type CreateBulkWineListingInput } from "@/
 import { generateBulkWineTitle } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
+import { normalizeWinemakerName } from "@/lib/validation/winemaker";
 
 export async function updateBulkWineListing(listingId: string, data: CreateBulkWineListingInput) {
   const validation = CreateBulkWineListingSchema.safeParse(data);
@@ -21,18 +22,28 @@ export async function updateBulkWineListing(listingId: string, data: CreateBulkW
 
     const vineyardName = validation.data.single_vineyard ? validation.data.vineyard_name?.trim() || null : null;
     const vintageYear = validation.data.is_multi_vintage ? null : validation.data.vintage_year ?? null;
+    const winemakerName = normalizeWinemakerName(validation.data.winemaker_name);
 
     if (validation.data.is_nda) {
-      const [{ data: profile }, { data: otherListings }] = await Promise.all([
+      const [{ data: profile }, { data: otherListings }, { data: otherWinemakers }] = await Promise.all([
         supabase.from("profiles").select("username, company_name, full_name").eq("id", user.id).single(),
         supabase.from("listings").select("vineyard_name").eq("user_id", user.id),
+        // Owner-only table, so this is just the seller's own winemakers.
+        supabase.from("listing_winemakers").select("winemaker_name").limit(200),
       ]);
       const guard = checkFreeTextForNdaLeak({
         text: validation.data.description,
         companyName: profile?.company_name,
         fullName: profile?.full_name,
         username: profile?.username,
-        vineyardNames: [vineyardName, ...(otherListings ?? []).map((l) => l.vineyard_name)],
+        // Same reasoning as the create action: a winemaker is as identifying
+        // as a vineyard name, so the description can't name one either.
+        vineyardNames: [
+          vineyardName,
+          winemakerName,
+          ...(otherListings ?? []).map((l) => l.vineyard_name),
+          ...(otherWinemakers ?? []).map((w) => w.winemaker_name),
+        ],
       });
       if (guard.blocked) return { error: guard.reason };
     }
@@ -83,6 +94,18 @@ export async function updateBulkWineListing(listingId: string, data: CreateBulkW
       })
       .eq("listing_id", listingId);
     if (detailsError) return { error: detailsError.message };
+
+    // Winemaker lives in its own owner/admin-only table (migration 0007).
+    if (winemakerName) {
+      const { error: winemakerError } = await supabase
+        .from("listing_winemakers")
+        .upsert({ listing_id: listingId, winemaker_name: winemakerName }, { onConflict: "listing_id" });
+      if (winemakerError) return { error: winemakerError.message };
+    } else {
+      // Cleared (or never set): remove any row. The result is deliberately
+      // ignored -- if migration 0007 hasn't been run there's nothing to remove.
+      await supabase.from("listing_winemakers").delete().eq("listing_id", listingId);
+    }
 
     // Simplest correct way to reconcile a multi-select: replace the whole set.
     const { error: deletePracticesError } = await supabase

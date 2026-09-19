@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag } from "lucide-react";
+import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag, Lock } from "lucide-react";
 import { GrapeSearchHero } from "@/components/marketplace/GrapeSearchHero";
 import { BulkWineSearchHero } from "@/components/marketplace/BulkWineSearchHero";
 import { ListingCard } from "@/components/marketplace/ListingCard";
@@ -55,7 +55,7 @@ export default async function HomePage({
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <span className="inline-flex items-center rounded-full bg-[var(--color-brand-50)] px-3 py-1 text-xs font-semibold text-[var(--color-brand-dark)]">
-              {isBulkWineHome ? "B2B Bulk Wine Marketplace" : "B2B Wine Grape Marketplace"}
+              {isBulkWineHome ? "Bulk Wine Marketplace" : "Wine Grape Marketplace"}
             </span>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
               {isBulkWineHome
@@ -64,7 +64,7 @@ export default async function HomePage({
             </h1>
             <p className="mt-4 text-lg text-stone-600">
               {isBulkWineHome
-                ? "Search by varietal, vintage, wine location, and the specs that actually matter: ABV, sulfites, quantity, and farming practice."
+                ? "Search by varietal, vintage, region, and the specs that actually matter: ABV, sulfites, quantity, and farming practice."
                 : "Search by region, variety, farming practice, and the vineyard-level detail that actually determines quality: trellis, soil, exposure, and slope."}
             </p>
           </div>
@@ -81,7 +81,7 @@ export default async function HomePage({
                   <Wine className="size-4" /> Browse Bulk Wine
                 </Link>
               </Button>
-              <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
                 <Link href="/sell">
                   <Tag className="size-4" /> Sell
                 </Link>
@@ -90,10 +90,35 @@ export default async function HomePage({
           )}
 
           <div className="mx-auto mt-10 max-w-4xl">
+            <h2 className="mb-4 text-center text-2xl font-semibold tracking-tight text-stone-900">Advanced Search</h2>
             {isBulkWineHome ? <BulkWineSearchHero /> : <GrapeSearchHero />}
           </div>
         </div>
       </section>
+
+      {flags.ndaListings && (
+        <section className="border-b border-stone-200 bg-white py-12">
+          <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
+            <span className="flex size-11 items-center justify-center rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200">
+              <Lock className="size-5" />
+            </span>
+            <h2 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+              Confidential lots from the world&apos;s best wineries and winemakers
+            </h2>
+            <p className="max-w-2xl text-stone-600">
+              Top producers don&apos;t advertise when they have fruit or wine to move. Sellers here can list under NDA, so
+              their name, winery, and vineyard stay private while you still see everything that matters: varietal,
+              vintage, region, quantity, price, and farming practice. Reach out through HarvestLink, and the seller decides
+              what to share and when.
+            </p>
+            <Button asChild variant="outline" size="lg" className="mt-2">
+              <Link href={isBulkWineHome ? "/bulk-wine" : "/grapes"}>
+                Browse {isBulkWineHome ? "bulk wine" : "grape"} lots <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">

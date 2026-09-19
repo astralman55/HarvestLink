@@ -41,6 +41,12 @@ export interface BulkWineDetails {
   is_multi_vintage: boolean;
   wine_location_state: string | null;
   wine_location_county: string | null;
+  /**
+   * Not a column on bulk_wine_details -- attached server-side from the
+   * owner/admin-only listing_winemakers table (migration 0007) by
+   * src/lib/data/listings.ts, and only for listings safe to show.
+   */
+  winemaker_name?: string | null;
   created_at: string;
 }
 

@@ -29,6 +29,7 @@ export function BulkWineEditForm({ listing }: { listing: Listing }) {
     is_multi_vintage: details?.is_multi_vintage ?? false,
     wine_location_state: (details?.wine_location_state ?? undefined) as (typeof US_STATES)[number] | undefined,
     wine_location_county: details?.wine_location_county ?? undefined,
+    winemaker_name: details?.winemaker_name ?? undefined,
     farming_practices: (listing.listing_farming_practices ?? []).map((p) => p.practice_code),
   };
 

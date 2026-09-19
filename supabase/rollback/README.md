@@ -1,6 +1,6 @@
 # Rollback scripts for the scope addendum migrations
 
-`supabase/migrations/0003` through `0006` are the four migrations added by
+`supabase/migrations/0003` through `0007` are the five migrations added by
 `SCOPE_ADDENDUM_NDA_USERNAME_VINEYARD_BULK_WINE.md`. These are the matching
 rollback scripts, written to satisfy Section 10 of the Definition of Done
 ("all migrations tested up and down").
@@ -15,7 +15,7 @@ schema first, not this one.
 
 ## Order
 
-Run in **descending** order -- `0006_rollback.sql`, then `0005`, `0004`,
+Run in **descending** order -- `0007_rollback.sql`, then `0006`, `0005`, `0004`,
 `0003` -- since each migration builds on the one before it. Running them out
 of order will fail (e.g. 0005's rollback drops `is_admin()`, which 0004's
 objects don't depend on, but 0003's tables reference things 0004/0005 add

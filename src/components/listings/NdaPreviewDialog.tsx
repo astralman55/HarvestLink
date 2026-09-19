@@ -50,11 +50,14 @@ export function NdaPreviewDialog({ open, onOpenChange, previewRow, onConfirm, su
             <h3 className="font-semibold text-stone-900">{preview.title}</h3>
           </div>
           <p className="text-sm text-stone-500">{preview.sub_ava ? `${preview.sub_ava}, ` : ""}{preview.region_ava}</p>
-          {isBulkWine && preview.bulk_wine && (
+          {isBulkWine && preview.bulk_wine?.wine_location_state && (
             <p className="text-sm text-stone-500">
               Wine location: {preview.bulk_wine.wine_location_county ? `${preview.bulk_wine.wine_location_county}, ` : ""}
               {preview.bulk_wine.wine_location_state}
             </p>
+          )}
+          {isBulkWine && preview.bulk_wine?.winemaker_withheld && (
+            <p className="text-sm text-stone-500">Winemaker: hidden from buyers</p>
           )}
           {preview.single_vineyard && (
             <p className="text-sm text-stone-500">

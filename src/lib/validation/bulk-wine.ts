@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { VineyardNameSchema } from "@/lib/validation/vineyard";
+import { WinemakerNameSchema } from "@/lib/validation/winemaker";
 import { US_STATES } from "@/lib/constants/bulk-wine";
 
 const BULK_WINE_FARMING_PRACTICE_VALUES = [
@@ -30,6 +31,8 @@ export const CreateBulkWineListingSchema = z
     nda_location_precision: z.enum(["county", "state"]).default("county"),
     single_vineyard: z.boolean().default(false),
     vineyard_name: z.string().optional(),
+    // Optional; validated below only when something was actually typed.
+    winemaker_name: z.string().optional(),
 
     // WINE-4 bulk-wine-specific fields.
     quantity_gallons: z.coerce
@@ -62,6 +65,16 @@ export const CreateBulkWineListingSchema = z
           code: z.ZodIssueCode.custom,
           path: ["vineyard_name"],
           message: check.error.issues[0]?.message ?? "Enter a vineyard name.",
+        });
+      }
+    }
+    if (data.winemaker_name?.trim()) {
+      const check = WinemakerNameSchema.safeParse(data.winemaker_name);
+      if (!check.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["winemaker_name"],
+          message: check.error.issues[0]?.message ?? "Enter a valid winemaker name.",
         });
       }
     }
