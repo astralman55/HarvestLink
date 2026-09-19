@@ -19,10 +19,11 @@ if (!url || !anon || url.includes("your-project-id")) {
 // at. Non-strict tables are only RLS-gated, so an empty 2xx is fine and only
 // returned rows count as a leak.
 const FORBIDDEN = [
-  ["listings", ["*", "user_id", "vineyard_name", "vineyard_name_normalized", "sub_ava", "region_ava", "title", "is_nda", "single_vineyard", "nda_location_precision"], true],
+  ["listings", ["*", "user_id", "vineyard_name", "vineyard_name_normalized", "sub_ava", "region_ava", "title", "is_nda", "single_vineyard", "nda_location_precision", "updated_at"], true],
   ["bulk_wine_details", ["*", "wine_location_county", "wine_location_state", "price_per_gallon"], true],
   ["listing_inquiries", ["*", "seller_id"], true],
   ["listing_inquiry_messages", ["*", "sender_id"], true],
+  ["saved_searches", ["*", "user_id", "unsubscribe_token", "query"], true],
   ["listing_winemakers", ["*", "winemaker_name"]],
   ["profiles", ["*", "phone", "address", "full_name"]],
   ["nda_audit_log", ["*"]],
