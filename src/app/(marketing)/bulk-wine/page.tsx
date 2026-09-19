@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { BrowseTopics } from "@/components/landing/BrowseTopics";
 import { MarketplaceGuide } from "@/components/marketplace/MarketplaceGuide";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -70,6 +71,8 @@ export default async function BulkWinePage({
           returnTo={returnTo}
         />
       </div>
+
+      <BrowseTopics />
 
       <div className="flex flex-col gap-8 lg:flex-row">
         <BulkWineFilterPanel />

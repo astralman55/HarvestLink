@@ -8,7 +8,7 @@ import { ListingCard } from "@/components/marketplace/ListingCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { getListings } from "@/lib/data/listings";
-import { REGION_PAGES, landingPath } from "@/content/landing";
+import { REGION_PAGES, VARIETY_PAGES, landingPath } from "@/content/landing";
 import { flags } from "@/lib/flags";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { FAQ_ITEMS } from "@/content/faq";
@@ -283,6 +283,33 @@ export default async function HomePage({
                 {region.name}
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-stone-200 py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between">
+            <h2 className="text-2xl font-semibold text-stone-900">Browse by Variety</h2>
+            <Link href="/varieties" className="hidden text-sm font-medium text-[var(--color-brand)] sm:block">
+              See all varieties →
+            </Link>
+          </div>
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {VARIETY_PAGES.map((variety) => (
+              <Link
+                key={variety.slug}
+                href={landingPath(variety)}
+                className="rounded-xl border border-stone-200 bg-white px-4 py-3.5 text-sm font-medium text-stone-700 transition-colors hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+              >
+                {variety.name}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-6 sm:hidden">
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/varieties">See all varieties</Link>
+            </Button>
           </div>
         </div>
       </section>

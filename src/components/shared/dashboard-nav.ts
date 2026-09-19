@@ -25,6 +25,8 @@ export function siteLinks(): NavItem[] {
     { href: "/", label: "Home" },
     { href: "/grapes", label: "Browse Grapes" },
     ...(flags.bulkWine ? [{ href: "/bulk-wine", label: "Browse Bulk Wine" }] : []),
+    { href: "/regions", label: "Regions" },
+    { href: "/varieties", label: "Varieties" },
     { href: "/blog", label: "Blog" },
     { href: "/faq", label: "FAQ" },
   ];

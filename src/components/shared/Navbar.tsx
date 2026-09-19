@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { flags } from "@/lib/flags";
 import { Wordmark } from "@/components/shared/Wordmark";
+import { ExploreMenu } from "@/components/landing/ExploreMenu";
 
 // WINE-3: persistent header switch between the two sections, so neither
 // ever gets confused with the other. Skips the segmented control entirely
@@ -82,6 +83,7 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-6 md:flex" aria-label="Main">
           <MarketplaceSwitch />
+          <ExploreMenu />
           <Link href="/blog" className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900">
             Blog
           </Link>
@@ -103,8 +105,9 @@ export function Navbar() {
       {/* On phones the logo, Log in, and Sell already fill the top row, so the
           Grapes / Bulk Wine switch gets its own row underneath instead of
           disappearing (it used to be hidden below the md breakpoint). */}
-      <div className="flex justify-center border-t border-stone-100 px-4 py-2 md:hidden">
+      <div className="flex items-center justify-between gap-2 border-t border-stone-100 px-4 py-2 md:hidden">
         <MarketplaceSwitch />
+        <ExploreMenu />
       </div>
     </header>
   );

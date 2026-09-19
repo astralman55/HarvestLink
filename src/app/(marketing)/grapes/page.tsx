@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Grape } from "lucide-react";
+import { BrowseTopics } from "@/components/landing/BrowseTopics";
 import { MarketplaceGuide } from "@/components/marketplace/MarketplaceGuide";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -66,6 +67,8 @@ export default async function GrapesPage({
           returnTo={returnTo}
         />
       </div>
+
+      <BrowseTopics />
 
       <div className="flex flex-col gap-8 lg:flex-row">
         <FilterPanel />

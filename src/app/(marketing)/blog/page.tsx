@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { REGION_PAGES, VARIETY_PAGES, landingPath } from "@/content/landing";
 import { getAllPosts, formatPostDate, thumbFor } from "@/lib/blog";
 import { CANONICAL_DESCRIPTION, absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
@@ -100,6 +101,38 @@ export default function BlogIndexPage() {
           </div>
         </section>
       ))}
+
+      <section className="mt-16 rounded-2xl border border-stone-200 bg-stone-50 p-6" aria-labelledby="explore-heading">
+        <h2 id="explore-heading" className="text-xl font-semibold text-stone-900">
+          Explore regions and varieties
+        </h2>
+        <p className="mt-1 text-sm text-stone-600">Facts, what to check before you buy or sell, and live lots for each.</p>
+        {[
+          { title: "Regions", all: "/regions", pages: REGION_PAGES },
+          { title: "Varieties", all: "/varieties", pages: VARIETY_PAGES },
+        ].map((group) => (
+          <div key={group.title} className="mt-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+              {group.title} ·{" "}
+              <Link href={group.all} className="normal-case text-[var(--color-brand)] hover:underline">
+                see all
+              </Link>
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {group.pages.map((page) => (
+                <li key={page.slug}>
+                  <Link
+                    href={landingPath(page)}
+                    className="rounded-full border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-700 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+                  >
+                    {page.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }
