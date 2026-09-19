@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { safeRedirectPath } from "@/lib/auth/verification";
+import { recordLoginEvent } from "@/lib/security/login-events";
 
 const ALLOWED_TYPES: EmailOtpType[] = ["signup", "email", "recovery", "email_change", "magiclink", "invite"];
 
@@ -21,8 +22,11 @@ export async function GET(request: NextRequest) {
   if (tokenHash && type && ALLOWED_TYPES.includes(type)) {
     try {
       const supabase = await createClient();
-      const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
-      if (!error) return NextResponse.redirect(new URL(next, origin));
+      const { data, error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
+      if (!error) {
+        if (data.user) await recordLoginEvent(data.user.id, "email_link");
+        return NextResponse.redirect(new URL(next, origin));
+      }
     } catch {
       // Fall through to the friendly failure below.
     }

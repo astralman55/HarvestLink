@@ -48,7 +48,6 @@ export async function handleSignUp(formData: RegisterInput) {
           full_name: formData.fullName || null,
           role: formData.role,
           region_ava: formData.regionAva || null,
-          address: formData.address || null,
           username: flags.usernames ? formData.username : null,
         },
       },

@@ -5,6 +5,7 @@ import { PasswordSchema } from "@/lib/validation/auth";
 import { VerifyCodeSchema } from "@/lib/auth/verification";
 import { isPasswordBreached } from "@/lib/password-breach";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { recordLoginEvent } from "@/lib/security/login-events";
 
 // One message for wrong, expired and already-used codes.
 const BAD_CODE = "That code is incorrect or has expired. Check the latest email, or request a new code.";
@@ -68,6 +69,8 @@ export async function setNewPassword(password: string) {
     }
 
     await supabase.auth.signOut({ scope: "others" });
+    // A reset ends with the member signed in, so it counts as a sign-in.
+    await recordLoginEvent(user.id, "password_reset");
     return { success: true as const };
   } catch {
     return { error: "Couldn't reach Supabase. Please try again in a moment." };

@@ -57,6 +57,13 @@ export async function GET(request: NextRequest) {
         if (notifiedIds.length > 0) await admin.from("saved_searches").update({ last_notified_at: new Date().toISOString() }).in("id", notifiedIds);
       },
     });
+    // Housekeeping on the same daily run: keep sign-in activity for 180 days.
+    // Best-effort; if the table does not exist yet this is simply a no-op.
+    try {
+      await admin.from("login_events").delete().lt("created_at", new Date(Date.now() - 180 * 24 * 3600_000).toISOString());
+    } catch {
+      // ignore
+    }
     return NextResponse.json(result);
   } catch (error) {
     console.error("Saved search job failed:", error);

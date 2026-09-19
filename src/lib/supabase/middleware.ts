@@ -8,6 +8,7 @@ const PROTECTED_PREFIXES = [
   "/planning",
   "/choose-username",
   "/inquiries",
+  "/security",
   // /alerts itself is private; /alerts/unsubscribe (linked from emails) must stay public,
   // so it is matched exactly below instead of by prefix.
   // Trailing slash so bare /sell (the public chooser) stays unprotected --

@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { RegionOptionGroups } from "@/components/shared/SelectOptionGroups";
-import { AddressAutocomplete } from "@/components/shared/AddressAutocomplete";
 import { UsernameField } from "@/components/shared/UsernameField";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { flags } from "@/lib/flags";
@@ -111,22 +110,6 @@ export default function RegisterPage() {
               <Input id="companyName" placeholder="Rivera Wine Imports" {...register("companyName")} />
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="address">Address</Label>
-              <Controller
-                control={control}
-                name="address"
-                render={({ field }) => (
-                  <AddressAutocomplete
-                    id="address"
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    placeholder="Start typing your address…"
-                  />
-                )}
-              />
-              {errors.address && <p className="text-xs text-red-600">{errors.address.message}</p>}
-            </div>
           </>
         )}
 

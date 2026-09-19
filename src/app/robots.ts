@@ -19,6 +19,7 @@ const DISALLOW = [
   "/choose-username",
   "/planning",
   "/alerts",
+  "/security",
   "/sell/grapes",
   "/sell/bulk-wine",
   "/login",

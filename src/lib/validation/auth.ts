@@ -19,13 +19,12 @@ export const RegisterSchema = z
     username: z.string().optional(),
     password: PasswordSchema,
     role: z.enum(["grower", "buyer"], { message: "Must define a primary marketplace intent." }),
-    // Growers: company + operational AVA region. Buyers: name + address,
-    // company optional. Cross-field requirements enforced below since
+    // Growers: company + operational AVA region. Buyers: name, company
+    // optional. (No street address is collected at signup.) Cross-field requirements enforced below since
     // which fields are required depends on `role`.
     fullName: z.string().optional(),
     companyName: z.string().optional(),
     regionAva: z.string().optional(),
-    address: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (flags.usernames) {
@@ -59,13 +58,6 @@ export const RegisterSchema = z
           code: z.ZodIssueCode.custom,
           path: ["fullName"],
           message: "Enter your name.",
-        });
-      }
-      if (!data.address || data.address.trim().length < 5) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["address"],
-          message: "Enter your address.",
         });
       }
     }

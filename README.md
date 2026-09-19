@@ -41,9 +41,9 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
-   through `0009_saved_searches.sql` — Phase 4 needed no
+   through `0010_login_events.sql` — Phase 4 needed no
    new migration) in the Supabase SQL Editor. Rollback scripts for
-   `0003`–`0009` are in `supabase/rollback/` if you ever need to back the
+   `0003`–`0010` are in `supabase/rollback/` if you ever need to back the
    addendum out (see the README there — written, not yet rehearsed against
    live data).
 4. Restart `npm run dev`. Register an account — the `profiles` row is

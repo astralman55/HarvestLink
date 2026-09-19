@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { href: "/planning", label: "Crop Planning", icon: CalendarRange },
   { href: "/inquiries", label: "Inquiries", icon: MessageCircle },
   { href: "/alerts", label: "Email Alerts", icon: Bell },
+  { href: "/security", label: "Security", icon: ShieldCheck },
 ];
 
 async function getCurrentProfile(): Promise<Profile | null> {

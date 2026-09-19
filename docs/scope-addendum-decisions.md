@@ -363,3 +363,16 @@ Owner decision, September 19, 2026, after signing up with an address that alread
 - **Tradeoff accepted:** this lets anyone test whether a given email is a member (the site already does the same for usernames). It never reveals what that member lists or whether they sell confidentially. The privacy-preserving alternative (a generic screen) was tried first and was too confusing for real users.
 - **Unconfirmed accounts** (signed up, never entered the code) still go to the code screen and get a fresh code. Supabase allows one confirmation email per address per minute; a second signup inside that minute goes to the code screen too (the first code is still valid) instead of showing Supabase's raw "you can only request this after N seconds" text.
 - Detection uses Supabase's empty `identities` list on the signUp response. The login, forgot-password and resend flows are unchanged and still do not reveal whether an address has an account.
+
+### Decision 59 -- No street address at signup; sign-in locations are recorded instead
+
+Owner decision, September 19, 2026. The buyer signup form no longer asks for an address (growers never had one), so the address autocomplete component and its Google Maps / OpenStreetMap dependency were deleted. Existing `profiles.address` values are left in the database untouched (dropping the column would destroy data for no gain); new accounts simply have none.
+
+In its place, the backend records **where sign-ins happen**, the usual way:
+
+- **Source of location:** Vercel already resolves each request's IP to country, region and city and passes them as `x-vercel-ip-*` headers, so no paid IP-geolocation service or extra dependency is needed. Where those headers are absent (local development) the location is simply empty.
+- **What is stored (`login_events`, migration 0010):** time, method (password, signup code, email link, password reset), country, region, city, a **shortened** IP network (IPv4 /24, IPv6 /48; never the full address), and a device label such as "Chrome on Windows" (never the raw user-agent). Written by the server with the service role after a successful sign-in, best-effort, so a logging failure can never break a login. Members can read only their own rows; nobody can write, edit or delete through the public API (verified in a test database).
+- **Retention:** 180 days, enforced by the existing daily cron job.
+- **Visibility:** a new Security page (`/security`, in the dashboard nav) lists a member's recent sign-ins, flags the first sign-in from each place, and links to password reset. The Privacy Policy was updated to describe this and no longer mentions address suggestions.
+- **Limits, stated to members:** IP geolocation can be off by a city or reflect an internet provider's location; VPNs and some mobile networks blank or mislead it.
+- **Not built (easy follow-ups):** an email alert on sign-in from a new location, and an admin view of a member's history.

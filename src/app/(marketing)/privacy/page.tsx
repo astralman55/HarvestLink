@@ -19,7 +19,7 @@ export default function PrivacyPage() {
       <ul>
         <li>
           <strong>Account details:</strong> your email, password, username, name and/or company name, whether you&apos;re
-          a grower or a buyer, and your region. Buyers also give an address. You can add a phone number.
+          a grower or a buyer, and your region. You can add a phone number. We don&apos;t ask for a street address when you sign up.
         </li>
         <li>
           <strong>Listings:</strong> everything you enter on a listing, including its description and, if you choose to,
@@ -30,6 +30,12 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Saved searches:</strong> the filters you choose to save for email alerts, and whether each alert is on or off.
+        </li>
+        <li>
+          <strong>Sign-in activity:</strong> each time you sign in we record the date, an approximate location (country, region
+          and city, estimated from your IP address by our hosting provider), a shortened network address (for example the first
+          three parts of an IPv4 address, never the full address), and your browser and device type, such as &quot;Chrome on
+          Windows&quot;. It is shown to you on your Security page, is used to protect your account, and is deleted after 180 days.
         </li>
         <li>
           <strong>Technical data:</strong> your IP address, which we use briefly to limit abuse such as repeated login or
@@ -83,10 +89,6 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Resend</strong> sends our emails (account confirmation, password resets, new-message notifications, and saved-search alerts).
-        </li>
-        <li>
-          <strong>Google Maps Platform or OpenStreetMap</strong> suggest addresses as you type in the address field, so
-          what you type there is sent to one of them.
         </li>
         <li>
           <strong>Have I Been Pwned</strong> checks whether a new password has appeared in a known breach. Only the first

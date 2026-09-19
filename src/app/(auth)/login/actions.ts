@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { LoginSchema, type LoginInput } from "@/lib/validation/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { flags } from "@/lib/flags";
+import { recordLoginEvent } from "@/lib/security/login-events";
 
 const GENERIC_ERROR = "Incorrect email/username or password.";
 // Used only to keep the sign-in call's timing similar whether or not the
@@ -39,7 +40,7 @@ export async function handleSignIn(formData: LoginInput) {
     const supabase = await createClient();
     const email = await resolveEmail(formData.identifier.trim());
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: signedIn, error } = await supabase.auth.signInWithPassword({
       email,
       password: formData.password,
     });
@@ -54,6 +55,8 @@ export async function handleSignIn(formData: LoginInput) {
       }
       return { error: GENERIC_ERROR };
     }
+
+    if (signedIn.user) await recordLoginEvent(signedIn.user.id, "password");
 
     if (!flags.usernames) return { success: true, needsUsername: false };
 

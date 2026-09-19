@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { VerifyCodeSchema } from "@/lib/auth/verification";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { flags } from "@/lib/flags";
+import { recordLoginEvent } from "@/lib/security/login-events";
 
 // One message for every failure mode (wrong, expired, already used) so the
 // response can't be used to probe which addresses have accounts.
@@ -30,6 +31,7 @@ export async function verifySignupCode(email: string, code: string) {
       type: "signup",
     });
     if (error || !data.user) return { error: BAD_CODE };
+    await recordLoginEvent(data.user.id, "signup_code");
 
     // Same USR-7 check the login action does, for accounts created before
     // usernames were collected at signup.
