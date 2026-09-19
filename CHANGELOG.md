@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — NDA hardening and primary domain
+
+- **Security (Decision 46, resolved):** migration `0008_lock_identifying_columns.sql` stops the public API from reading `listings.vineyard_name`, `user_id`, `sub_ava`, raw `region_ava`, `title`, `bulk_wine_details.wine_location_county`, `listing_inquiries.seller_id` and `listing_inquiry_messages.sender_id`. All listing reads now go through the server and the NDA serializer. Rollback: `supabase/rollback/0008_rollback.sql`. Prove it on the live project with `node --env-file=.env.local scripts/audit-public-api.mjs`.
+- **Security (Decision 50):** a buyer can no longer resolve a confidential seller through an inquiry thread; the inquiry inbox and notification emails use the serialized title; the realtime new-listing alert no longer broadcasts a confidential listing's region.
+- `bulkwinegrapes.com` is now the primary domain (`www.` and the Vercel URL are secondary); `NEXT_PUBLIC_APP_URL` and `metadataBase` point at it. Site description no longer says "B2B".
+
 ## Unreleased — Launch prep (legal pages, winemaker, homepage/mobile fixes)
 
 - Added `/terms` (Terms of Service) and `/privacy` (Privacy Policy), linked from the footer and the signup form, and added to the sitemap. Drafts written around what the site actually does -- not legal advice (Decision 48). Set `NEXT_PUBLIC_CONTACT_EMAIL` to show a contact address on both.

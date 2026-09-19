@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getListingTitlesForViewer } from "@/lib/data/owner-listings";
 import { ReplyForm } from "./ReplyForm";
 
 interface MessageRow {
@@ -18,23 +20,22 @@ async function getThread(id: string) {
   } = await supabase.auth.getUser();
   if (!user) return { redirectToLogin: true as const };
 
-  const { data: inquiry } = await supabase
-    .from("listing_inquiries")
-    .select("id, listing_id, buyer_id, seller_id, listings(title, is_nda)")
-    .eq("id", id)
-    .single();
-  // RLS already scopes this to participants; a non-participant or bad id
-  // both come back as "not found" here, so we don't reveal which.
+  // Service role plus the explicit participant check below: the API roles
+  // can no longer read seller_id / sender_id / listings.title (migration
+  // 0008 / Decision 46). A non-participant or bad id both come back as "not
+  // found", so we don't reveal which.
+  const admin = createAdminClient();
+  const { data: inquiry } = await admin.from("listing_inquiries").select("id, listing_id, buyer_id, seller_id").eq("id", id).maybeSingle();
   if (!inquiry || (inquiry.buyer_id !== user.id && inquiry.seller_id !== user.id)) {
     return { notFound: true as const };
   }
 
   const isBuyer = inquiry.buyer_id === user.id;
-  const listing = inquiry.listings as unknown as { title: string; is_nda: boolean } | null;
+  const listing = (await getListingTitlesForViewer([inquiry.listing_id], { userId: user.id, isAdmin: false })).get(inquiry.listing_id);
   const counterpartId = isBuyer ? inquiry.seller_id : inquiry.buyer_id;
 
   const [{ data: messages }, { data: counterpart }] = await Promise.all([
-    supabase
+    admin
       .from("listing_inquiry_messages")
       .select("id, sender_id, body, created_at")
       .eq("inquiry_id", id)
@@ -43,7 +44,7 @@ async function getThread(id: string) {
   ]);
 
   const counterpartLabel =
-    isBuyer && listing?.is_nda
+    isBuyer && listing?.isNda
       ? "Confidential Seller"
       : counterpart?.company_name || counterpart?.full_name || (isBuyer ? "Seller" : "Buyer");
 

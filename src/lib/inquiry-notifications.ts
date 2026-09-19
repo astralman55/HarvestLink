@@ -1,6 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendNotificationEmail } from "@/lib/email";
+import { getListingTitlesForViewer } from "@/lib/data/owner-listings";
 
 /**
  * Fires a "you have a new message" email to whichever inquiry participant
@@ -25,19 +26,22 @@ export async function notifyNewInquiryMessage(inquiryId: string, senderId: strin
 
     const { data: inquiry } = await admin
       .from("listing_inquiries")
-      .select("buyer_id, seller_id, listing_id, listings(title, is_nda)")
+      .select("buyer_id, seller_id, listing_id")
       .eq("id", inquiryId)
       .single();
     if (!inquiry) return;
 
     const senderIsSeller = senderId === inquiry.seller_id;
     const recipientId = senderIsSeller ? inquiry.buyer_id : inquiry.seller_id;
-    const listing = Array.isArray(inquiry.listings) ? inquiry.listings[0] : inquiry.listings;
+    // The title is serialized for the RECIPIENT: the stored title of a
+    // confidential lot can carry the sub-appellation the seller hid, and the
+    // recipient may be the buyer.
+    const listing = (await getListingTitlesForViewer([inquiry.listing_id], { userId: recipientId, isAdmin: false })).get(inquiry.listing_id);
     const listingTitle = listing?.title ?? "your listing";
 
     let senderLabel = "You have a new message";
     if (senderIsSeller) {
-      if (listing?.is_nda) {
+      if (listing?.isNda) {
         senderLabel = "The confidential seller";
       } else {
         const { data: sellerProfile } = await admin.from("profiles").select("company_name, full_name").eq("id", senderId).single();

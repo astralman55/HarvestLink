@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ShieldAlert } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { Listing, Profile } from "@/types";
@@ -16,10 +17,13 @@ async function loadAdminView(id: string) {
   const { data: viewerProfile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (viewerProfile?.role !== "admin") return { forbidden: true as const };
 
-  const { data: listing } = await supabase.from("listings").select("*").eq("id", id).single();
+  // Only reached after the role check above; the service role is needed
+  // because the API roles can't read the identifying columns (migration 0008).
+  const admin = createAdminClient();
+  const { data: listing } = await admin.from("listings").select("*").eq("id", id).single();
   if (!listing) return { notFound: true as const };
 
-  const { data: seller } = await supabase.from("profiles").select("*").eq("id", (listing as Listing).user_id).single();
+  const { data: seller } = await admin.from("profiles").select("*").eq("id", (listing as Listing).user_id).single();
 
   // NDA-11: every admin view of an NDA listing's real identity is logged.
   if ((listing as Listing).is_nda) {

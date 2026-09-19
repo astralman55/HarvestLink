@@ -1,4 +1,3 @@
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DEMO_LISTINGS, filterDemoListings } from "@/lib/demo-data";
 import { resolveViewerContext } from "@/lib/supabase/viewer";
@@ -37,7 +36,10 @@ async function attachWinemakers(rows: Listing[], viewer: ViewerContext): Promise
 /**
  * Reads listings from the live Supabase project and returns them through
  * the central NDA-aware serializer (NDA-4) -- this is the only place the
- * public marketplace should read listings from. If no project has been
+ * public marketplace should read listings from. It reads with the service
+ * role on purpose: migration 0008 revokes the API roles' SELECT on the
+ * identifying columns (Decision 46), so the serializer really is the only
+ * door to them. If no project has been
  * connected yet (placeholder credentials in .env.local), the query throws
  * and we transparently fall back to the bundled demo catalog so the
  * marketplace UI is always browsable. Real errors from a connected project
@@ -46,7 +48,7 @@ async function attachWinemakers(rows: Listing[], viewer: ViewerContext): Promise
  */
 export async function getListings(filters: ListingSearchFilters = {}): Promise<PublicListing[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     // Bulk-wine-only filters (ABV/quantity/SO2/wine location/farming
     // practices/vintage) live on the embedded bulk_wine_details /
     // listing_farming_practices tables, not on `listings` itself. An
@@ -161,7 +163,7 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
 
 export async function getListingById(id: string): Promise<PublicListing | null> {
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("listings")
       .select("*, bulk_wine_details(*), listing_farming_practices(practice_code)")
@@ -188,7 +190,7 @@ export async function getListingById(id: string): Promise<PublicListing | null> 
  * this through to a given viewer.
  */
 async function fetchPublicSellers(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: ReturnType<typeof createAdminClient>,
   rows: Listing[]
 ): Promise<Map<string, RawSellerProfile>> {
   const userIds = [...new Set(rows.map((row) => row.user_id))];

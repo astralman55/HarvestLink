@@ -6,6 +6,7 @@ import { generateBulkWineTitle } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
 import { normalizeWinemakerName } from "@/lib/validation/winemaker";
+import { getOwnVineyardNames, userOwnsListing } from "@/lib/data/owner-listings";
 
 export async function updateBulkWineListing(listingId: string, data: CreateBulkWineListingInput) {
   const validation = CreateBulkWineListingSchema.safeParse(data);
@@ -20,14 +21,22 @@ export async function updateBulkWineListing(listingId: string, data: CreateBulkW
     } = await supabase.auth.getUser();
     if (!user) return { error: "Unauthorized access token context." };
 
+    // Ownership is checked up front with the service role (the API roles can no
+    // longer read listings.user_id / listing_type -- migration 0008); the
+    // updates below are scoped to the id alone and the RLS policies stay as
+    // the second lock.
+    if (!(await userOwnsListing(user.id, listingId, "bulk_wine"))) {
+      return { error: "Listing not found, or you don't have permission to edit it." };
+    }
+
     const vineyardName = validation.data.single_vineyard ? validation.data.vineyard_name?.trim() || null : null;
     const vintageYear = validation.data.is_multi_vintage ? null : validation.data.vintage_year ?? null;
     const winemakerName = normalizeWinemakerName(validation.data.winemaker_name);
 
     if (validation.data.is_nda) {
-      const [{ data: profile }, { data: otherListings }, { data: otherWinemakers }] = await Promise.all([
+      const [{ data: profile }, otherVineyards, { data: otherWinemakers }] = await Promise.all([
         supabase.from("profiles").select("username, company_name, full_name").eq("id", user.id).single(),
-        supabase.from("listings").select("vineyard_name").eq("user_id", user.id),
+        getOwnVineyardNames(user.id),
         // Owner-only table, so this is just the seller's own winemakers.
         supabase.from("listing_winemakers").select("winemaker_name").limit(200),
       ]);
@@ -41,15 +50,13 @@ export async function updateBulkWineListing(listingId: string, data: CreateBulkW
         vineyardNames: [
           vineyardName,
           winemakerName,
-          ...(otherListings ?? []).map((l) => l.vineyard_name),
+          ...otherVineyards,
           ...(otherWinemakers ?? []).map((w) => w.winemaker_name),
         ],
       });
       if (guard.blocked) return { error: guard.reason };
     }
 
-    // Defense in depth on top of the "Growers can update their own
-    // listings" RLS policy, same pattern as the grapes edit action.
     const { data: updated, error: listingError } = await supabase
       .from("listings")
       .update({
@@ -71,8 +78,6 @@ export async function updateBulkWineListing(listingId: string, data: CreateBulkW
         ),
       })
       .eq("id", listingId)
-      .eq("user_id", user.id)
-      .eq("listing_type", "bulk_wine")
       .select("id");
 
     if (listingError) return { error: listingError.message };

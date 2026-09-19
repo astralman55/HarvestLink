@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { flags } from "@/lib/flags";
 import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
 import { normalizeWinemakerName } from "@/lib/validation/winemaker";
+import { getOwnVineyardNames } from "@/lib/data/owner-listings";
 
 export async function createNewBulkWineListing(data: CreateBulkWineListingInput) {
   const validation = CreateBulkWineListingSchema.safeParse(data);
@@ -34,8 +35,8 @@ export async function createNewBulkWineListing(data: CreateBulkWineListingInput)
     const winemakerName = normalizeWinemakerName(validation.data.winemaker_name);
 
     if (validation.data.is_nda) {
-      const [{ data: otherListings }, { data: otherWinemakers }] = await Promise.all([
-        supabase.from("listings").select("vineyard_name").eq("user_id", user.id),
+      const [otherVineyards, { data: otherWinemakers }] = await Promise.all([
+        getOwnVineyardNames(user.id),
         // Owner-only table, so this is just the seller's own past winemakers.
         supabase.from("listing_winemakers").select("winemaker_name").limit(200),
       ]);
@@ -50,7 +51,7 @@ export async function createNewBulkWineListing(data: CreateBulkWineListingInput)
         vineyardNames: [
           vineyardName,
           winemakerName,
-          ...(otherListings ?? []).map((l) => l.vineyard_name),
+          ...otherVineyards,
           ...(otherWinemakers ?? []).map((w) => w.winemaker_name),
         ],
       });

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getOwnedListingRow } from "@/lib/data/owner-listings";
 import { EditListingForm } from "./edit-form";
 import { BulkWineEditForm } from "./bulk-wine-edit-form";
 import type { Listing } from "@/types";
@@ -13,17 +14,10 @@ async function getOwnedListing(id: string): Promise<Listing | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase
-    .from("listings")
-    .select("*, bulk_wine_details(*), listing_farming_practices(practice_code)")
-    .eq("id", id)
-    .single();
-  if (error || !data) return null;
-
-  // Don't reveal that a listing exists to anyone but its owner.
-  if (data.user_id !== user.id) return null;
-
-  const listing = data as Listing;
+  // Scoped to the owner in the query itself, so a listing that isn't yours is
+  // indistinguishable from one that doesn't exist.
+  const listing = await getOwnedListingRow(user.id, id);
+  if (!listing) return null;
 
   // Owner-only winemaker table (migration 0007). Not having run it yet, or
   // no winemaker being set, both just leave the field blank.

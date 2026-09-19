@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ConnectSupabaseNotice } from "@/components/shared/ConnectSupabaseNotice";
 import { createClient } from "@/lib/supabase/server";
+import { countOwnListings } from "@/lib/data/owner-listings";
 
 async function getCounts() {
   try {
@@ -13,12 +14,12 @@ async function getCounts() {
     } = await supabase.auth.getUser();
     if (!user) return { connected: true, listings: 0, cropPlans: 0 };
 
-    const [{ count: listings }, { count: cropPlans }] = await Promise.all([
-      supabase.from("listings").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+    const [listings, { count: cropPlans }] = await Promise.all([
+      countOwnListings(user.id),
       supabase.from("crop_plans").select("id", { count: "exact", head: true }).eq("user_id", user.id),
     ]);
 
-    return { connected: true, listings: listings ?? 0, cropPlans: cropPlans ?? 0 };
+    return { connected: true, listings, cropPlans: cropPlans ?? 0 };
   } catch {
     return { connected: false, listings: 0, cropPlans: 0 };
   }

@@ -5,7 +5,8 @@ import { createClient } from "./client";
 
 interface NewListingBroadcast {
   variety: string;
-  region_ava: string;
+  /** null for a confidential listing (migration 0008) -- the alert then just omits the region. */
+  region_ava: string | null;
   listing_type?: "grapes" | "bulk_wine";
   estimated_tons?: number;
   quantity_gallons?: number;
@@ -38,10 +39,11 @@ export function useRealtimeListings() {
       .channel("public-listings")
       .on("broadcast", { event: "new_listing" }, ({ payload }) => {
         const newRow = payload as NewListingBroadcast;
+        const where = newRow.region_ava ? ` in ${newRow.region_ava}` : "";
         const message =
           newRow.listing_type === "bulk_wine"
-            ? `New Yield Alert: ${newRow.quantity_gallons ?? 0} gal of ${newRow.variety} just listed in ${newRow.region_ava}!`
-            : `New Yield Alert: ${newRow.estimated_tons ?? 0} tons of ${newRow.variety} just listed in ${newRow.region_ava}!`;
+            ? `New Yield Alert: ${newRow.quantity_gallons ?? 0} gal of ${newRow.variety} just listed${where}!`
+            : `New Yield Alert: ${newRow.estimated_tons ?? 0} tons of ${newRow.variety} just listed${where}!`;
         setAlertMessage(message);
       })
       .subscribe();

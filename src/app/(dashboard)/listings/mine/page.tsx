@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConnectSupabaseNotice } from "@/components/shared/ConnectSupabaseNotice";
 import { createClient } from "@/lib/supabase/server";
+import { getOwnListings } from "@/lib/data/owner-listings";
 import { formatCurrency, formatCurrencyPrecise, formatTons, formatGallons } from "@/lib/utils";
 import type { Listing, ListingStatus } from "@/types";
 
@@ -22,13 +23,7 @@ async function getMyListings(): Promise<{ connected: boolean; listings: Listing[
     } = await supabase.auth.getUser();
     if (!user) return { connected: true, listings: [] };
 
-    const { data, error } = await supabase
-      .from("listings")
-      .select("*, bulk_wine_details(*)")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return { connected: true, listings: (data as Listing[]) ?? [] };
+    return { connected: true, listings: await getOwnListings(user.id) };
   } catch {
     return { connected: false, listings: [] };
   }

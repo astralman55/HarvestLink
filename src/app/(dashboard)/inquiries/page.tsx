@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getListingTitlesForViewer } from "@/lib/data/owner-listings";
 import { ConnectSupabaseNotice } from "@/components/shared/ConnectSupabaseNotice";
 
 interface InquiryRow {
@@ -9,7 +11,6 @@ interface InquiryRow {
   buyer_id: string;
   seller_id: string;
   created_at: string;
-  listings: { title: string; is_nda: boolean } | null;
 }
 
 interface InquiryListItem {
@@ -27,14 +28,23 @@ async function getMyInquiries(): Promise<{ connected: boolean; userId: string | 
     } = await supabase.auth.getUser();
     if (!user) return { connected: true, userId: null, inquiries: [] };
 
-    const { data, error } = await supabase
+    // Service role, scoped to this user's own threads: the API roles can't
+    // read seller_id or listings.title any more (migration 0008 / Decision 46).
+    // The title comes from the serializer so a buyer never sees the
+    // sub-appellation of a confidential lot.
+    const admin = createAdminClient();
+    const { data, error } = await admin
       .from("listing_inquiries")
-      .select("id, listing_id, buyer_id, seller_id, created_at, listings(title, is_nda)")
+      .select("id, listing_id, buyer_id, seller_id, created_at")
       .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
       .order("created_at", { ascending: false });
     if (error) throw error;
 
-    const rows = (data ?? []) as unknown as InquiryRow[];
+    const rows = (data ?? []) as InquiryRow[];
+    const listingInfo = await getListingTitlesForViewer(
+      rows.map((r) => r.listing_id),
+      { userId: user.id, isAdmin: false }
+    );
     const counterpartIds = [...new Set(rows.map((r) => (r.buyer_id === user.id ? r.seller_id : r.buyer_id)))];
     const { data: counterparts } = counterpartIds.length
       ? await supabase.from("profiles_inquiry_counterpart").select("id, company_name, full_name").in("id", counterpartIds)
@@ -44,14 +54,15 @@ async function getMyInquiries(): Promise<{ connected: boolean; userId: string | 
     const inquiries: InquiryListItem[] = rows.map((row) => {
       const isBuyer = row.buyer_id === user.id;
       const counterpart = counterpartById.get(isBuyer ? row.seller_id : row.buyer_id);
+      const listing = listingInfo.get(row.listing_id);
       const counterpartLabel =
-        isBuyer && row.listings?.is_nda
+        isBuyer && listing?.isNda
           ? "Confidential Seller"
           : counterpart?.company_name || counterpart?.full_name || (isBuyer ? "Seller" : "Buyer");
 
       return {
         id: row.id,
-        listingTitle: row.listings?.title ?? "Listing",
+        listingTitle: listing?.title ?? "Listing",
         counterpartLabel,
         role: isBuyer ? "buyer" : "seller",
       };

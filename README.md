@@ -41,9 +41,9 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
-   through `0007_bulk_wine_winemaker.sql` — Phase 4 needed no
+   through `0008_lock_identifying_columns.sql` — Phase 4 needed no
    new migration) in the Supabase SQL Editor. Rollback scripts for
-   `0003`–`0007` are in `supabase/rollback/` if you ever need to back the
+   `0003`–`0008` are in `supabase/rollback/` if you ever need to back the
    addendum out (see the README there — written, not yet rehearsed against
    live data).
 4. Restart `npm run dev`. Register an account — the `profiles` row is
@@ -130,7 +130,7 @@ Status:
 
 ## Deployment
 
-The site is deployed on Vercel (https://harvestlink-one.vercel.app) with the
+The site is deployed on Vercel at https://bulkwinegrapes.com (`www.` redirects to it) with the
 production env vars listed in `.env.example`; email goes through Resend
 (sending domain `bulkwinegrapes.com`), including Supabase's signup
 confirmation emails via Supabase's custom SMTP setting. `/terms` and
@@ -143,8 +143,10 @@ confirmation emails via Supabase's custom SMTP setting. `/terms` and
   is wired up; the blueprint marks this "future scope."
 - **Real-device browser testing and load testing** — cross-browser checks
   used Playwright's Chromium/Firefox/WebKit engines (Decision 49).
-- **NDA hardening of existing columns** — see Decision 46 before promoting
-  confidential listings.
+- **Verifying the NDA lock on your own project** — after running migration
+  `0008`, `node --env-file=.env.local scripts/audit-public-api.mjs` probes the
+  live public API and fails if any identifying column is readable
+  (Decisions 46 and 50).
 
 ## Development
 

@@ -13,9 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // Makes relative canonical / Open Graph URLs resolve against the real domain.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: "HarvestLink — Wine Grape Marketplace",
   description:
-    "The B2B marketplace connecting growers and buyers for grape lots and multi-year forward contracts.",
+    "The marketplace for wine grapes and bulk wine: connect growers, winemakers and buyers for grape lots, bulk wine and multi-year forward contracts.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

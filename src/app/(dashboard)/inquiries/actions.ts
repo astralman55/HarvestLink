@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { notifyNewInquiryMessage } from "@/lib/inquiry-notifications";
@@ -38,7 +39,8 @@ export async function startInquiry(listingId: string, message: string) {
     } = await supabase.auth.getUser();
     if (!user) return { error: "You need to be signed in to send an inquiry." };
 
-    const { data: listing } = await supabase.from("listings").select("user_id").eq("id", listingId).single();
+    // Service role: the API roles can't read listings.user_id (migration 0008).
+    const { data: listing } = await createAdminClient().from("listings").select("user_id").eq("id", listingId).maybeSingle();
     if (!listing) return { error: "Listing not found." };
     if (listing.user_id === user.id) return { error: "You can't send an inquiry on your own listing." };
 

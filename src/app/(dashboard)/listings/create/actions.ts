@@ -6,6 +6,7 @@ import { generateListingTitle } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { flags } from "@/lib/flags";
 import { checkFreeTextForNdaLeak } from "@/lib/validation/nda-guard";
+import { getOwnVineyardNames } from "@/lib/data/owner-listings";
 
 export async function createNewListing(data: CreateListingInput) {
   const validation = CreateListingSchema.safeParse(data);
@@ -41,13 +42,13 @@ export async function createNewListing(data: CreateListingInput) {
     // "any vineyard name the seller has entered on any of their listings"
     // includes the one being created right now.
     if (validation.data.is_nda) {
-      const { data: otherListings } = await supabase.from("listings").select("vineyard_name").eq("user_id", user.id);
+      const otherVineyards = await getOwnVineyardNames(user.id);
       const guard = checkFreeTextForNdaLeak({
         text: validation.data.description,
         companyName: profile?.company_name,
         fullName: profile?.full_name,
         username: profile?.username,
-        vineyardNames: [vineyardName, ...(otherListings ?? []).map((l) => l.vineyard_name)],
+        vineyardNames: [vineyardName, ...otherVineyards],
       });
       if (guard.blocked) return { error: guard.reason };
     }

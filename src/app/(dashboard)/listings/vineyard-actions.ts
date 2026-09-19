@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { filterVineyardSuggestions } from "@/lib/serializers/vineyard-suggestions";
 
@@ -22,7 +23,9 @@ export async function getVineyardNameSuggestions(query: string): Promise<string[
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { data, error } = await supabase
+    // Service role: the API roles can't read vineyard_name any more (migration
+    // 0008). filterVineyardSuggestions() below still decides what may be shown.
+    const { data, error } = await createAdminClient()
       .from("listings")
       .select("vineyard_name, user_id, is_nda")
       .not("vineyard_name", "is", null)
