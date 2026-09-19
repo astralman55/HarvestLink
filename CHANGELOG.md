@@ -2,6 +2,7 @@
 
 ## Unreleased — SEO, AI-search, blog, FAQ, wordmark and email alerts
 
+- **Fix: the member dashboard had no navigation on phones** (the sidebar is desktop-only), no way back to the home page, and no footer. Landing there from the signup email's confirm button left people stranded. It now has a sticky top bar with the logo and a Menu (every account page, the public site, sign out), site links in the desktop sidebar, and the site footer.
 - **Signup no longer asks buyers for an address** (the address autocomplete and its Maps dependency are gone). **Sign-in locations are recorded** (country, region, city from Vercel's IP headers, a shortened IP network, a device label) and shown to members on a new Security page; kept 180 days. Requires migration `0010` (Decision 59).
 - **Signup says so when the email already has an account** (Decision 58), and a quick second signup goes to the code screen instead of showing Supabase's rate-limit wording.
 - **Blog:** 15 posts by Andrew L. in `content/blog` (how wine is made, terroir, Napa Valley, bulk wine, buying and selling, sulfites, ABV, brix, farming labels, contracts, and a tons-to-gallons calculator), with a quick answer, table of contents, FAQ, sources, RSS, Markdown copies and generated social cards. Fact-check log: `docs/seo/blog-fact-check-log.md`.
