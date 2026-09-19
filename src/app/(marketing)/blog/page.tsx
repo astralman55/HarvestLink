@@ -15,6 +15,7 @@ export const metadata: Metadata = pageMetadata({
 export default function BlogIndexPage() {
   const posts = getAllPosts();
   const categories = [...new Set(posts.map((post) => post.category))];
+  const anchorFor = (category: string) => `category-${category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
@@ -51,9 +52,28 @@ export default function BlogIndexPage() {
         <p className="mt-2 text-sm text-stone-500">{CANONICAL_DESCRIPTION}</p>
       </header>
 
+      <nav aria-label="Blog categories" className="mt-8">
+        <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Jump to a topic</p>
+        <ul className="mt-2 flex flex-wrap gap-2">
+          {categories.map((category) => (
+            <li key={category}>
+              <a
+                href={`#${anchorFor(category)}`}
+                className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+              >
+                {category}
+                <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-500">
+                  {posts.filter((post) => post.category === category).length}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
       {categories.map((category) => (
-        <section key={category} className="mt-12" aria-labelledby={`cat-${category}`}>
-          <h2 id={`cat-${category}`} className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+        <section key={category} id={anchorFor(category)} className="mt-12 scroll-mt-24" aria-labelledby={`${anchorFor(category)}-heading`}>
+          <h2 id={`${anchorFor(category)}-heading`} className="text-sm font-semibold uppercase tracking-wide text-stone-500">
             {category}
           </h2>
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
