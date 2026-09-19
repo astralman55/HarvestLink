@@ -72,6 +72,8 @@ export interface Listing {
   slope_percent: number | null;
   harvest_year: number;
   created_at: string;
+  /** Added by migration 0009; older rows fall back to created_at. */
+  updated_at?: string;
   listing_type: ListingType;
   is_nda: boolean;
   nda_location_precision: NdaLocationPrecision;
@@ -139,4 +141,8 @@ export interface ListingSearchFilters {
 
   /** "newest" (default) | "price_asc" | "price_desc" | "quantity" | "abv" */
   sort?: string;
+
+  /** Saved-search alerts only (never read from a URL): ISO timestamps bounding created_at. */
+  created_after?: string;
+  created_before?: string;
 }

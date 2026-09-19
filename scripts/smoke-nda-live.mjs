@@ -48,7 +48,7 @@ try {
       listing_type: "bulk_wine",
       title: "Cabernet Sauvignon 2024 — Zzcanary Hillside",
       variety: "Cabernet Sauvignon",
-      region_ava: "Napa Valley",
+      region_ava: "Napa County",
       sub_ava: "Zzcanary Hillside",
       estimated_tons: 0,
       minimum_tons: 0,
@@ -79,7 +79,7 @@ try {
   // Present only once migration 0007 has been run; the smoke test still works without it.
   await admin.from("listing_winemakers").insert({ listing_id: listingId, winemaker_name: "Zzcanary Winemaker" });
 
-  const pages = ["/", "/bulk-wine", `/bulk-wine/${listingId}`, `/listings/${listingId}`, "/grapes", "/sitemap.xml"];
+  const pages = ["/", "/bulk-wine", `/bulk-wine/${listingId}`, `/listings/${listingId}`, "/grapes", "/sitemap.xml", "/faq", "/blog", "/llms.txt", "/llms-full.txt", "/robots.txt"];
   for (const path of pages) {
     const res = await fetch(base + path, { redirect: "follow" });
     const text = await res.text();
@@ -90,6 +90,26 @@ try {
       console.log(`LEAK  ${path} (HTTP ${res.status}) contains: ${hits.join(", ")}`);
     } else {
       console.log(`clean ${path} (HTTP ${res.status})${path.startsWith("/bulk-wine") && showsLot ? " — lot is listed" : ""}`);
+    }
+  }
+
+  // A confidential lot that chose "state only" hides its county. A county filter must
+  // not match it, or anyone could learn the hidden county by trial and error.
+  const listed = await (await fetch(base + "/bulk-wine")).text();
+  const filtered = await (await fetch(base + "/bulk-wine?region_ava=Napa+County")).text();
+  const filteredWine = await (await fetch(base + "/bulk-wine?wine_location_county=Zzcanary")).text();
+  if (!listed.includes(listingId)) {
+    failures++;
+    console.log("PROBLEM the confidential lot is not listed on /bulk-wine at all");
+  } else {
+    console.log("clean lot is listed on /bulk-wine");
+  }
+  for (const [label, html] of [["region_ava=Napa County", filtered], ["wine_location_county=Zzcanary", filteredWine]]) {
+    if (html.includes(listingId)) {
+      failures++;
+      console.log(`LEAK  state-only confidential lot matched the filter ${label}`);
+    } else {
+      console.log(`clean state-only lot does not match filter ${label}`);
     }
   }
 } catch (err) {

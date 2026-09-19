@@ -321,3 +321,31 @@ What building it involves: (1) a Google Cloud OAuth client and the Supabase Goog
 - **Dashboard step:** paste `supabase/email-templates/reset-password.html` into Authentication -> Emails -> Reset password (subject `Your HarvestLink password reset code: {{ .Token }}`).
 - Verified in Chromium against the live project: request -> wrong code -> right code -> validation (short, mismatch, breached) -> success; old password rejected, new accepted; link path; no-session state; 375px width. The same run also re-verified the logged-in NDA flows after migration 0008 (seller edit and save, buyer inquiry and thread, and raw API as a buyer denied every identifying column).
 - Known limits: same as Decision 51 (per-instance rate limiter). Reset is by email only, not username.
+
+### Decision 54 -- Search and AI-search readiness: what was built, and what was deliberately left alone
+
+Owner decisions of September 19, 2026 (recorded so they aren't re-litigated): keep the HarvestLink name; keep the existing strong marketing wording ("world's best wineries and winemakers", "Verified"); no Google Analytics; don't worry about low inventory; no contact page; no fees and no payment through the site (buyers and sellers arrange everything privately); the repository stays public for now; Andrew L. is the blog author; avoid em dashes in copy.
+
+Built: per-route unique titles and descriptions with canonical URLs; `noindex` on auth, dashboard, alerts and filtered browse pages (filtered views canonicalize to the clean URL); an extended `robots.txt` that explicitly welcomes search and AI crawlers (including Parallel Web Systems' `ShapBot`) while keeping private routes out; a duplicate-host guard that sends `X-Robots-Tag: noindex` on preview deployments and any host other than the canonical one; Organization, WebSite, FAQPage, BlogPosting, BreadcrumbList and NDA-safe Product/Offer JSON-LD, all server-rendered; `/llms.txt` and `/llms-full.txt`; a Markdown copy of every post at `/blog/{slug}.md`; an RSS feed; generated text-only social cards; a real sitemap with blog posts and per-listing modification times; a /faq page; editorial content on /grapes and /bulk-wine so those pages carry real text even when a search returns nothing; and 15 blog posts written to be quotable (a 40 to 60 word quick answer, question-style headings, tables, dated sources, visible authorship). No page depends on client-side rendering for its text.
+
+Why this helps AI search specifically: retrieval systems such as Parallel's Search and Extract APIs favor pages that are crawlable, server-rendered, clearly structured and consistent about what the entity is. The site now describes itself with one canonical sentence everywhere, and exposes clean Markdown on request. No one can guarantee placement in a particular index; these are the inputs that are in our control.
+
+Not built (by decision or dependency): a /contact page; the spec's "landing pages by region and variety" (need inventory and copy); image sourcing from stock sites (the site uses a generated brand card instead, avoiding licensing and identifiability risk); analytics. The spec's "Verified" and "world's best" cautions were not adopted, per the owner.
+
+New dependencies, justified: `marked` (Markdown to HTML) and `gray-matter` (front matter). Posts live as reviewable files in `content/blog`; the alternative was hand-writing every post as JSX.
+
+### Decision 55 -- Saved searches and email alerts
+
+Members save the filters on /grapes or /bulk-wine and get one email a day only when something new matches. Stored as an allowlisted query string (`sanitizeSearchParams`), never raw client input. A Vercel Cron job (`vercel.json`, 15:00 UTC) calls `/api/cron/saved-searches`, which requires `Authorization: Bearer $CRON_SECRET`.
+
+- **NDA-safe by construction:** the digest is built only from `PublicListing` objects serialized for the anonymous viewer, so no hidden detail can reach an email whoever the recipient is. A canary test proves this for both listing types.
+- **Region-filter inference fixed:** a confidential lot that chose "state only" precision no longer matches a county or region filter (in browse or alerts). Before, a filter for "Napa County" would match it, letting anyone learn the hidden county by trial and error. Verified against production data with the live smoke test.
+- **Reliability:** a listing is only considered once it is 10 minutes old (its bulk wine details row is created a moment after the parent row); the job only advances a search's "last checked" time after the email is accepted, so a failed send is retried the next day; one failing search never blocks the others; a member's own listings are excluded.
+- **Controls:** at most 10 saved searches (20 at the database level); members can pause or delete on /alerts; every email has a per-search confirm-to-stop link (a confirm button, so email scanners can't cancel alerts) and a one-click List-Unsubscribe header that stops all of that member's alerts.
+- **Security:** RLS limits rows to their owner; members can only change `name` and `is_active` (column grants), not the bookkeeping columns or the unsubscribe token; verified in a test database.
+- Migration 0009 also adds `listings.updated_at` (private by default under 0008's column allowlist) so the sitemap reports real modification times.
+- Frequency is daily only. "Instant" alerts were left out to keep the first version robust; the runner is a pure function with injected dependencies, so adding a second schedule is small.
+
+### Decision 56 -- Brand assets
+
+A grape-cluster mark plus a Playfair Display wordmark (outlined to paths, so it renders identically everywhere) in the existing burgundy. Files: `public/brand/` (light and dark wordmarks, mark, 512 px logo), `src/app/icon.svg`, `apple-icon.png`, `favicon.ico`. Playfair Display is licensed under the SIL Open Font License. It is a first proposal for the owner to approve or change.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag, Lock } from "lucide-react";
 import { GrapeSearchHero } from "@/components/marketplace/GrapeSearchHero";
 import { BulkWineSearchHero } from "@/components/marketplace/BulkWineSearchHero";
@@ -8,6 +9,10 @@ import { Button } from "@/components/ui/button";
 import { getListings } from "@/lib/data/listings";
 import { FEATURED_REGIONS } from "@/lib/constants/viticulture";
 import { flags } from "@/lib/flags";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { FAQ_ITEMS } from "@/content/faq";
+import { getAllPosts } from "@/lib/blog";
+import { CANONICAL_DESCRIPTION, faqJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 const VALUE_PROPS = [
   {
@@ -18,7 +23,7 @@ const VALUE_PROPS = [
   {
     icon: Handshake,
     title: "Direct Grower Pricing",
-    description: "No forum middlemen — negotiate tonnage and price straight with the source.",
+    description: "No forum middlemen. Negotiate tonnage and price straight with the source.",
   },
   {
     icon: LineChart,
@@ -31,6 +36,15 @@ const VALUE_PROPS = [
     description: "Get notified the moment fruit matching your spec hits the marketplace.",
   },
 ];
+
+// ?market=bulk-wine is a view of this same page, so every variant declares the
+// homepage itself as canonical and never competes with /bulk-wine.
+export const metadata: Metadata = {
+  title: { absolute: "Wine Grapes & Bulk Wine Marketplace | HarvestLink" },
+  description:
+    "Buy and sell wine grapes and bulk wine direct. Search by variety, region, vintage and price per ton or gallon. Confidential NDA listings available.",
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage({
   searchParams,
@@ -47,9 +61,12 @@ export default async function HomePage({
   const isBulkWineHome = flags.bulkWine && marketParam === "bulk-wine";
 
   const featured = (await getListings({})).slice(0, 6);
+  const latestPosts = getAllPosts().slice(0, 3);
+  const faqTeaser = FAQ_ITEMS.filter((item) => item.featured);
 
   return (
     <>
+      <JsonLd data={[organizationJsonLd(), websiteJsonLd(), faqJsonLd(faqTeaser)]} />
       <section className="relative overflow-hidden border-b border-stone-200 bg-stone-50">
         <div className="pointer-events-none absolute inset-0 bg-grain opacity-40" />
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:px-8">
@@ -119,6 +136,22 @@ export default async function HomePage({
           </div>
         </section>
       )}
+
+      <section className="border-b border-stone-200 bg-white py-10" aria-labelledby="what-is-heading">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 id="what-is-heading" className="text-xl font-semibold text-stone-900">
+            What is HarvestLink?
+          </h2>
+          <p className="mt-3 leading-relaxed text-stone-700">{CANONICAL_DESCRIPTION}</p>
+          <p className="mt-3 leading-relaxed text-stone-600">
+            Wine grapes are listed by the ton and bulk wine by the gallon. Buyers and sellers arrange price, payment, and
+            delivery directly, and there are no fees to browse or list.{" "}
+            <Link href="/blog/what-is-bulk-wine" className="font-medium text-[var(--color-brand)] underline">
+              New to bulk wine? Start here.
+            </Link>
+          </p>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -222,13 +255,58 @@ export default async function HomePage({
         </div>
       </section>
 
+      {latestPosts.length > 0 && (
+        <section className="border-t border-stone-200 bg-white py-14" aria-labelledby="blog-heading">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-end justify-between">
+              <h2 id="blog-heading" className="text-2xl font-semibold text-stone-900">
+                From the blog
+              </h2>
+              <Link href="/blog" className="text-sm font-medium text-[var(--color-brand)]">
+                All guides →
+              </Link>
+            </div>
+            <div className="mt-6 grid gap-5 md:grid-cols-3">
+              {latestPosts.map((post) => (
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="rounded-2xl border border-stone-200 bg-stone-50 p-5 transition-shadow hover:shadow-md">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand)]">{post.category}</p>
+                  <h3 className="mt-2 font-semibold leading-snug text-stone-900">{post.title}</h3>
+                  <p className="mt-2 text-sm text-stone-600">{post.description}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="border-t border-stone-200 bg-stone-50 py-14" aria-labelledby="faq-heading">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 id="faq-heading" className="text-2xl font-semibold text-stone-900">
+            Frequently asked questions
+          </h2>
+          <div className="mt-6 divide-y divide-stone-200 rounded-2xl border border-stone-200 bg-white">
+            {faqTeaser.map((item) => (
+              <details key={item.q} className="p-5">
+                <summary className="cursor-pointer list-none font-medium text-stone-900 marker:hidden">{item.q}</summary>
+                <p className="mt-2 leading-relaxed text-stone-700">{item.a}</p>
+              </details>
+            ))}
+          </div>
+          <p className="mt-4 text-sm">
+            <Link href="/faq" className="font-medium text-[var(--color-brand)] underline">
+              See all questions
+            </Link>
+          </p>
+        </div>
+      </section>
+
       <section className="border-t border-stone-200 bg-[var(--color-brand)] py-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-2xl font-semibold text-white sm:text-3xl">
             Are you a grower? List your harvest.
           </h2>
           <p className="max-w-xl text-sm text-white/80">
-            Reach verified buyers searching for your exact region, variety, and farming practice —
+            Reach verified buyers searching for your exact region, variety, and farming practice,
             and align future blocks with forward-contract planning.
           </p>
           <Button asChild variant="secondary" size="lg" className="mt-2 bg-white text-[var(--color-brand)] hover:bg-white/90">

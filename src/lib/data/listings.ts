@@ -46,7 +46,16 @@ async function attachWinemakers(rows: Listing[], viewer: ViewerContext): Promise
  * still surface as an empty result rather than silently swapping in demo
  * data.
  */
-export async function getListings(filters: ListingSearchFilters = {}): Promise<PublicListing[]> {
+export interface GetListingsOptions {
+  /** Serialize for this viewer instead of the signed-in one (alert emails use the recipient, not a session). */
+  viewer?: ViewerContext;
+  /** Leave out this member's own listings (a seller doesn't need an alert about their own lot). */
+  excludeUserId?: string;
+  /** Rethrow query errors instead of falling back to the demo catalog (alerts must never email demo data). */
+  throwOnError?: boolean;
+}
+
+export async function getListings(filters: ListingSearchFilters = {}, options: GetListingsOptions = {}): Promise<PublicListing[]> {
   try {
     const supabase = createAdminClient();
     // Bulk-wine-only filters (ABV/quantity/SO2/wine location/farming
@@ -79,6 +88,16 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
 
     if (filters.listing_type) query = query.eq("listing_type", filters.listing_type);
     if (filters.region_ava) query = query.eq("region_ava", filters.region_ava);
+    // A confidential listing that chose "state only" location precision hides its
+    // county/region from buyers. Matching it against a county or region filter
+    // would let anyone learn the hidden detail by trial and error, so those
+    // filters only match listings whose region is actually shown (Decision 50).
+    if (filters.region_ava || filters.wine_location_county) {
+      query = query.or("is_nda.eq.false,nda_location_precision.eq.county");
+    }
+    if (filters.created_after) query = query.gt("created_at", filters.created_after);
+    if (filters.created_before) query = query.lte("created_at", filters.created_before);
+    if (options.excludeUserId) query = query.neq("user_id", options.excludeUserId);
     if (filters.variety) query = query.eq("variety", filters.variety);
     if (filters.farming_practice) query = query.eq("farming_practice", filters.farming_practice);
     if (filters.trellis_system) query = query.eq("trellis_system", filters.trellis_system);
@@ -153,10 +172,11 @@ export async function getListings(filters: ListingSearchFilters = {}): Promise<P
     if (error) throw error;
     const rows = data as Listing[];
 
-    const [sellersByUserId, viewer] = await Promise.all([fetchPublicSellers(supabase, rows), resolveViewerContext()]);
+    const [sellersByUserId, viewer] = await Promise.all([fetchPublicSellers(supabase, rows), options.viewer ?? resolveViewerContext()]);
     await attachWinemakers(rows, viewer);
     return rows.map((row) => serializeListing(row, sellersByUserId.get(row.user_id) ?? null, viewer));
-  } catch {
+  } catch (error) {
+    if (options.throwOnError) throw error;
     return filterDemoListings(filters).map((row) => serializeListing(row, demoSeller(row), { userId: null, isAdmin: false }));
   }
 }

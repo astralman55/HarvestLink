@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Grape } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { flags } from "@/lib/flags";
+import { Wordmark } from "@/components/shared/Wordmark";
 
 // WINE-3: persistent header switch between the two sections, so neither
 // ever gets confused with the other. Skips the segmented control entirely
@@ -76,15 +76,18 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold text-stone-900">
-          <span className="flex size-8 items-center justify-center rounded-full bg-[var(--color-brand)] text-white">
-            <Grape className="size-4.5" />
-          </span>
-          <span className="text-lg tracking-tight">HarvestLink</span>
+        <Link href="/" className="flex shrink-0 items-center" aria-label="HarvestLink home">
+          <Wordmark className="h-7 w-auto sm:h-8" />
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-6 md:flex" aria-label="Main">
           <MarketplaceSwitch />
+          <Link href="/blog" className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900">
+            Blog
+          </Link>
+          <Link href="/faq" className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900">
+            FAQ
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">

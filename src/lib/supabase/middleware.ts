@@ -8,6 +8,8 @@ const PROTECTED_PREFIXES = [
   "/planning",
   "/choose-username",
   "/inquiries",
+  // /alerts itself is private; /alerts/unsubscribe (linked from emails) must stay public,
+  // so it is matched exactly below instead of by prefix.
   // Trailing slash so bare /sell (the public chooser) stays unprotected --
   // only the actual create forms underneath it require auth.
   "/sell/",
@@ -17,6 +19,29 @@ const PROTECTED_PREFIXES = [
   "/admin",
 ];
 const EDIT_LISTING_PATTERN = /^\/listings\/[^/]+\/edit$/;
+
+/**
+ * Duplicate-content guard: only the canonical production host may be indexed.
+ * Vercel preview deployments and alias hosts (like the *.vercel.app URL)
+ * get a noindex header, so they never compete with the real site.
+ */
+function isCanonicalHost(request: NextRequest): boolean {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!appUrl) return true;
+  try {
+    const canonicalHost = new URL(appUrl).host;
+    const host = request.nextUrl.host;
+    if (host.startsWith("localhost") || host.startsWith("127.0.0.1")) return true;
+    return host === canonicalHost;
+  } catch {
+    return true;
+  }
+}
+
+function withIndexingHeaders(request: NextRequest, response: NextResponse): NextResponse {
+  if (!isCanonicalHost(request)) response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return response;
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -42,6 +67,7 @@ export async function updateSession(request: NextRequest) {
 
   const isProtected =
     PROTECTED_PREFIXES.some((prefix) => request.nextUrl.pathname.startsWith(prefix)) ||
+    request.nextUrl.pathname === "/alerts" ||
     EDIT_LISTING_PATTERN.test(request.nextUrl.pathname);
 
   // In demo mode (no real Supabase project configured yet) this call fails
@@ -63,8 +89,8 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirect_to", request.nextUrl.pathname);
-    return NextResponse.redirect(url);
+    return withIndexingHeaders(request, NextResponse.redirect(url));
   }
 
-  return supabaseResponse;
+  return withIndexingHeaders(request, supabaseResponse);
 }

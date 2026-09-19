@@ -62,6 +62,7 @@ export interface PublicListing {
   slope_percent: number | null;
   harvest_year: number;
   created_at: string;
+  updated_at: string;
   is_nda: boolean;
   single_vineyard: boolean;
   vineyard_name: string | null;
@@ -179,6 +180,7 @@ export function serializeListing(row: Listing, seller: RawSellerProfile | null, 
     slope_percent: row.slope_percent,
     harvest_year: row.harvest_year,
     created_at: row.created_at,
+    updated_at: row.updated_at ?? row.created_at,
     is_nda: row.is_nda,
     single_vineyard: row.single_vineyard,
     vineyard_name: vineyardWithheld ? null : row.vineyard_name,

@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Blog posts are read from /content/blog at runtime by the RSS, sitemap,
+  // llms.txt and Markdown routes; make sure Vercel ships them with the functions.
+  outputFileTracingIncludes: {
+    "/**": ["./content/blog/**/*"],
+  },
   images: {
     remotePatterns: [
       {
@@ -17,6 +22,10 @@ const nextConfig: NextConfig = {
   // /listings/[id] is dynamic (its target depends on listing_type) and is
   // handled at request time in that route instead -- see
   // docs/scope-addendum-decisions.md.
+  // /blog/{slug}.md is a clean Markdown copy of each post for AI agents.
+  async rewrites() {
+    return [{ source: "/blog/:slug([a-z0-9-]+).md", destination: "/blog/:slug/md" }];
+  },
   async redirects() {
     return [
       { source: "/listings", destination: "/grapes", permanent: true },

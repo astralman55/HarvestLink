@@ -5,6 +5,8 @@ import { resolveViewerContext } from "@/lib/supabase/viewer";
 import { parseListingIdFromSlugParam, buildListingSlugPath } from "@/lib/utils";
 import { buildListingMetadata } from "@/lib/listing-metadata";
 import { ListingDetailContent } from "@/components/marketplace/ListingDetailContent";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, listingJsonLd } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -29,5 +31,20 @@ export default async function GrapesDetailPage({ params }: { params: Promise<{ s
     redirect(`/grapes/${canonicalSlug}`);
   }
 
-  return <ListingDetailContent listing={listing} viewer={viewer} backHref="/grapes" backLabel="Back to all lots" />;
+  const path = `/grapes/${canonicalSlug}`;
+  return (
+    <>
+      <JsonLd
+        data={[
+          listingJsonLd(listing, path),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Wine Grapes for Sale", path: "/grapes" },
+            { name: listing.title, path },
+          ]),
+        ]}
+      />
+      <ListingDetailContent listing={listing} viewer={viewer} backHref="/grapes" backLabel="Back to all lots" />
+    </>
+  );
 }

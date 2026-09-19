@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { pageMetadata } from "@/lib/seo";
 import { ListingTypeChooser } from "@/components/listings/ListingTypeChooser";
 import { flags } from "@/lib/flags";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Sell Wine Grapes & Bulk Wine | HarvestLink",
+  description:
+    "List your wine grapes or bulk wine for buyers across the country. Sell openly or confidentially under NDA and receive inquiries through the site.",
+  path: "/sell",
+});
 
 export default function SellPage() {
   // WINE-1/dark-launch: only one type has ever existed while the flag is

@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { Grape, LayoutDashboard, Package, PlusCircle, CalendarRange, MessageCircle, ShieldCheck } from "lucide-react";
+import type { Metadata } from "next";
+import { NOINDEX_METADATA } from "@/lib/seo";
+import { Wordmark } from "@/components/shared/Wordmark";
+import { Bell, LayoutDashboard, Package, PlusCircle, CalendarRange, MessageCircle, ShieldCheck } from "lucide-react";
 import { SignOutButton } from "@/components/shared/SignOutButton";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/types";
+
+export const metadata: Metadata = NOINDEX_METADATA;
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -10,6 +15,7 @@ const NAV_ITEMS = [
   { href: "/sell", label: "Create Listing", icon: PlusCircle },
   { href: "/planning", label: "Crop Planning", icon: CalendarRange },
   { href: "/inquiries", label: "Inquiries", icon: MessageCircle },
+  { href: "/alerts", label: "Email Alerts", icon: Bell },
 ];
 
 async function getCurrentProfile(): Promise<Profile | null> {
@@ -32,11 +38,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex min-h-screen bg-stone-50">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-stone-200 bg-white px-4 py-6 md:flex">
-        <Link href="/" className="flex items-center gap-2 px-2 font-semibold text-stone-900">
-          <span className="flex size-8 items-center justify-center rounded-full bg-[var(--color-brand)] text-white">
-            <Grape className="size-4.5" />
-          </span>
-          <span className="text-lg tracking-tight">HarvestLink</span>
+        <Link href="/" className="flex items-center px-2" aria-label="HarvestLink home">
+          <Wordmark className="h-7 w-auto" />
         </Link>
 
         <nav className="mt-8 flex flex-1 flex-col gap-1">

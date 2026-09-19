@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — SEO, AI-search, blog, FAQ, wordmark and email alerts
+
+- **Blog:** 15 posts by Andrew L. in `content/blog` (how wine is made, terroir, Napa Valley, bulk wine, buying and selling, sulfites, ABV, brix, farming labels, contracts, and a tons-to-gallons calculator), with a quick answer, table of contents, FAQ, sources, RSS, Markdown copies and generated social cards. Fact-check log: `docs/seo/blog-fact-check-log.md`.
+- **FAQ page** (`/faq`) with FAQPage structured data; FAQ and blog teasers on the homepage; editorial guides on /grapes and /bulk-wine.
+- **Search and AI readiness (Decision 54):** unique metadata, canonicals, noindex rules, extended robots.txt (welcomes ShapBot, GPTBot, ClaudeBot, PerplexityBot and other search and AI crawlers), preview and duplicate-host noindex, JSON-LD, `/llms.txt`, `/llms-full.txt`, real sitemap dates.
+- **Saved searches and email alerts (Decision 55):** save filters, get a daily digest, pause or delete on /alerts, one-click unsubscribe. Requires migration `0009` and the `CRON_SECRET` env var.
+- **Security:** state-only confidential lots no longer match county or region filters (an inference leak).
+- **Brand:** new wordmark, logo mark, favicon and app icon (Decision 56). Removed the unused default Next.js SVGs.
+- Added a DMARC record (`p=none`) for `bulkwinegrapes.com` in Vercel DNS.
+
 ## Unreleased — NDA hardening and primary domain
 
 - **Forgot password (Decision 53):** "Forgot password?" on the login page -> emailed code (or button) -> choose a new password. Same password rules as signup, breach check, other sessions signed out on success. Requires pasting `supabase/email-templates/reset-password.html` into Supabase's "Reset password" template.

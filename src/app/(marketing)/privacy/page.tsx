@@ -29,6 +29,9 @@ export default function PrivacyPage() {
           <strong>Messages:</strong> the inquiries you send and receive about listings.
         </li>
         <li>
+          <strong>Saved searches:</strong> the filters you choose to save for email alerts, and whether each alert is on or off.
+        </li>
+        <li>
           <strong>Technical data:</strong> your IP address, which we use briefly to limit abuse such as repeated login or
           signup attempts, and standard server logs kept by our hosting provider.
         </li>
@@ -41,7 +44,11 @@ export default function PrivacyPage() {
       <h2>How we use it</h2>
       <ul>
         <li>To run the Site: create your account, show listings, and let buyers and sellers message each other.</li>
-        <li>To email you: confirming your account and telling you when you have a new message.</li>
+        <li>
+          To email you: confirming your account, resetting your password, telling you when you have a new message, and, only if you
+          save a search, a daily digest of new listings that match it. Every alert email has a link to stop it, and you can pause
+          or delete alerts any time. Alerts never reveal a confidential seller.
+        </li>
         <li>To keep the Site secure and prevent abuse, and to meet legal obligations.</li>
       </ul>
       <p>We don&apos;t sell your personal information, and we don&apos;t use it for advertising.</p>
@@ -75,7 +82,7 @@ export default function PrivacyPage() {
           <strong>Vercel</strong> hosts the Site.
         </li>
         <li>
-          <strong>Resend</strong> sends our emails (account confirmation and new-message notifications).
+          <strong>Resend</strong> sends our emails (account confirmation, password resets, new-message notifications, and saved-search alerts).
         </li>
         <li>
           <strong>Google Maps Platform or OpenStreetMap</strong> suggest addresses as you type in the address field, so
