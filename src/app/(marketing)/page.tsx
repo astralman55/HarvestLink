@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag, Lock } from "lucide-react";
 import { GrapeSearchHero } from "@/components/marketplace/GrapeSearchHero";
@@ -67,19 +68,28 @@ export default async function HomePage({
   return (
     <>
       <JsonLd data={[organizationJsonLd(), websiteJsonLd(), faqJsonLd(faqTeaser)]} />
-      <section className="relative overflow-hidden border-b border-stone-200 bg-stone-50">
-        <div className="pointer-events-none absolute inset-0 bg-grain opacity-40" />
+      <section className="relative overflow-hidden border-b border-stone-200 bg-stone-900">
+        <Image
+          src="/images/hero-vineyard-rows-calistoga.webp"
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-stone-950/70 via-stone-950/50 to-stone-950/75" />
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <span className="inline-flex items-center rounded-full bg-[var(--color-brand-50)] px-3 py-1 text-xs font-semibold text-[var(--color-brand-dark)]">
               {isBulkWineHome ? "Bulk Wine Marketplace" : "Wine Grape Marketplace"}
             </span>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
               {isBulkWineHome
                 ? "Source exceptional bulk wine, direct from the best winemakers."
                 : "Source exceptional wine grapes, direct from growers."}
             </h1>
-            <p className="mt-4 text-lg text-stone-600">
+            <p className="mt-4 text-lg text-white/85">
               {isBulkWineHome
                 ? "Search by varietal, vintage, region, and the specs that actually matter: ABV, sulfites, quantity, and farming practice."
                 : "Search by region, variety, farming practice, and the vineyard-level detail that actually determines quality: trellis, soil, exposure, and slope."}
@@ -107,22 +117,24 @@ export default async function HomePage({
           )}
 
           <div className="mx-auto mt-10 max-w-4xl">
-            <h2 className="mb-4 text-center text-2xl font-semibold tracking-tight text-stone-900">Advanced Search</h2>
+            <h2 className="mb-4 text-center text-2xl font-semibold tracking-tight text-white">Advanced Search</h2>
             {isBulkWineHome ? <BulkWineSearchHero /> : <GrapeSearchHero />}
           </div>
         </div>
       </section>
 
       {flags.ndaListings && (
-        <section className="border-b border-stone-200 bg-white py-12">
-          <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden border-b border-stone-200 bg-stone-950 py-20">
+          <Image src="/images/confidential-barrel-room.webp" alt="" fill unoptimized sizes="100vw" className="object-cover" />
+          <div className="pointer-events-none absolute inset-0 bg-stone-950/45" />
+          <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
             <span className="flex size-11 items-center justify-center rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200">
               <Lock className="size-5" />
             </span>
-            <h2 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               Confidential lots from the world&apos;s best wineries and winemakers
             </h2>
-            <p className="max-w-2xl text-stone-600">
+            <p className="max-w-2xl text-white/85">
               Top producers don&apos;t advertise when they have fruit or wine to move. Sellers here can list under NDA, so
               their name, winery, and vineyard stay private while you still see everything that matters: varietal,
               vintage, region, quantity, price, and farming practice. Reach out through HarvestLink, and the seller decides
@@ -150,6 +162,62 @@ export default async function HomePage({
               New to bulk wine? Start here.
             </Link>
           </p>
+        </div>
+      </section>
+
+      <section className="border-b border-stone-200 bg-stone-50 py-14" aria-labelledby="two-markets-heading">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <h2 id="two-markets-heading" className="text-center text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+            Two marketplaces. One place to source.
+          </h2>
+          <div className={`mt-8 grid gap-6 ${flags.bulkWine ? "md:grid-cols-2" : "mx-auto max-w-xl"}`}>
+            <Link href="/grapes" className="group overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src="/images/grapes-cluster-on-vine.webp"
+                  alt="Cluster of ripe dark grapes hanging on the vine among green leaves"
+                  fill
+                  unoptimized
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-stone-900">Wine grapes, priced per ton</h3>
+                <p className="mt-2 text-stone-600">
+                  Find grape lots direct from growers. Search by variety, harvest year, brix target, farming practice, trellis,
+                  soil, exposure, and slope.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-brand)]">
+                  Browse grapes <ArrowRight className="size-4" />
+                </span>
+              </div>
+            </Link>
+            {flags.bulkWine && (
+              <Link href="/bulk-wine" className="group overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src="/images/bulk-wine-cellar-tanks.webp"
+                    alt="Winery cellar with oak barrels and a steel fermentation tank below a walkway"
+                    fill
+                    unoptimized
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-stone-900">Bulk wine, priced per gallon</h3>
+                  <p className="mt-2 text-stone-600">
+                    Find tank and barrel lots from wineries. Compare varietal, vintage, ABV, total sulfites, wine location, and
+                    farming practice, with the total lot value shown on every listing.
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-brand)]">
+                    Browse bulk wine <ArrowRight className="size-4" />
+                  </span>
+                </div>
+              </Link>
+            )}
+          </div>
         </div>
       </section>
 
@@ -222,6 +290,16 @@ export default async function HomePage({
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <h2 className="text-2xl font-semibold text-stone-900">How HarvestLink Works</h2>
+          <div className="relative mt-6 h-44 w-full max-w-4xl overflow-hidden rounded-2xl sm:h-56">
+            <Image
+              src="/images/harvest-bin-grapes.webp"
+              alt="A bin filled with freshly harvested dark wine grapes"
+              fill
+              unoptimized
+              sizes="(min-width: 896px) 896px, 100vw"
+              className="object-cover"
+            />
+          </div>
           <Tabs defaultValue="buyers" className="mt-6 flex flex-col items-center">
             <TabsList>
               <TabsTrigger value="buyers">For Buyers</TabsTrigger>
@@ -300,8 +378,10 @@ export default async function HomePage({
         </div>
       </section>
 
-      <section className="border-t border-stone-200 bg-[var(--color-brand)] py-16">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden border-t border-stone-200 bg-[var(--color-brand)] py-20">
+        <Image src="/images/vine-canopy-grapes.webp" alt="" fill unoptimized sizes="100vw" className="object-cover" />
+        <div className="pointer-events-none absolute inset-0 bg-[var(--color-brand-dark)]/80" />
+        <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-2xl font-semibold text-white sm:text-3xl">
             Are you a grower? List your harvest.
           </h2>

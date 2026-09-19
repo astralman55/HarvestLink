@@ -7,6 +7,7 @@
 - **Search and AI readiness (Decision 54):** unique metadata, canonicals, noindex rules, extended robots.txt (welcomes ShapBot, GPTBot, ClaudeBot, PerplexityBot and other search and AI crawlers), preview and duplicate-host noindex, JSON-LD, `/llms.txt`, `/llms-full.txt`, real sitemap dates.
 - **Saved searches and email alerts (Decision 55):** save filters, get a daily digest, pause or delete on /alerts, one-click unsubscribe. Requires migration `0009` and the `CRON_SECRET` env var.
 - **Security:** state-only confidential lots no longer match county or region filters (an inference leak).
+- **Photography (Decision 57):** six vetted stock photos on the homepage (hero, marketplace cards, confidential section, how it works, closing banner), self-hosted as optimized WebP; credits in `docs/image-credits.md`.
 - **Brand:** new wordmark, logo mark, favicon and app icon (Decision 56). Removed the unused default Next.js SVGs.
 - Added a DMARC record (`p=none`) for `bulkwinegrapes.com` in Vercel DNS.
 

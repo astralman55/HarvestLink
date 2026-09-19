@@ -330,7 +330,7 @@ Built: per-route unique titles and descriptions with canonical URLs; `noindex` o
 
 Why this helps AI search specifically: retrieval systems such as Parallel's Search and Extract APIs favor pages that are crawlable, server-rendered, clearly structured and consistent about what the entity is. The site now describes itself with one canonical sentence everywhere, and exposes clean Markdown on request. No one can guarantee placement in a particular index; these are the inputs that are in our control.
 
-Not built (by decision or dependency): a /contact page; the spec's "landing pages by region and variety" (need inventory and copy); image sourcing from stock sites (the site uses a generated brand card instead, avoiding licensing and identifiability risk); analytics. The spec's "Verified" and "world's best" cautions were not adopted, per the owner.
+Not built (by decision or dependency): a /contact page; the spec's "landing pages by region and variety" (need inventory and copy); analytics. (Stock photography was skipped at first, then added the same day after the owner asked; see Decision 57.) The spec's "Verified" and "world's best" cautions were not adopted, per the owner.
 
 New dependencies, justified: `marked` (Markdown to HTML) and `gray-matter` (front matter). Posts live as reviewable files in `content/blog`; the alternative was hand-writing every post as JSX.
 
@@ -349,3 +349,9 @@ Members save the filters on /grapes or /bulk-wine and get one email a day only w
 ### Decision 56 -- Brand assets
 
 A grape-cluster mark plus a Playfair Display wordmark (outlined to paths, so it renders identically everywhere) in the existing burgundy. Files: `public/brand/` (light and dark wordmarks, mark, 512 px logo), `src/app/icon.svg`, `apple-icon.png`, `favicon.ico`. Playfair Display is licensed under the SIL Open Font License. It is a first proposal for the owner to approve or change.
+
+### Decision 57 -- Homepage photography
+
+Six Pexels photographs (free commercial license, no attribution required) now carry the homepage: vineyard rows in the hero, a grape cluster and a winery cellar on the two marketplace cards, a dark barrel room behind the confidential-lots section, a harvest bin, and vine canopy behind the closing call to action. Chosen for: no people, no readable brands or signage, US-appropriate vineyard settings, and nothing that could point at a specific seller. Licenses, sources and edits are logged in `docs/image-credits.md`.
+
+Technical choices: files are pre-optimized WebP in `public/images/` (hero about 220 KB, others 20 to 130 KB, EXIF stripped) and served with `unoptimized` next/image, so no Vercel image-optimization usage is billed. Text over photos sits on CSS overlays; decorative backgrounds have empty alt text. Blog posts and social cards still use no photographs. Free stock sites do not verify model or property releases; paid stock is the option if indemnification matters.
