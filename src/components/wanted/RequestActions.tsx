@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { closeWantedRequest, deleteWantedRequest, renewWantedRequest } from "@/app/(dashboard)/requests/actions";
 
-/** Renew, mark filled, close and delete for one of the member's own requests. */
-export function RequestActions({ id, open }: { id: string; open: boolean }) {
+/** Renew, mark filled, close and delete for one of the member's own requests. Renew only appears in the last 30 days. */
+export function RequestActions({ id, open, expiresAt }: { id: string; open: boolean; expiresAt: string }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,9 +25,11 @@ export function RequestActions({ id, open }: { id: string; open: boolean }) {
       <div className="flex flex-wrap gap-2">
         {open && (
           <>
-            <Button size="sm" variant="outline" disabled={busy} onClick={() => run(() => renewWantedRequest(id))}>
-              Renew 60 days
-            </Button>
+            {new Date(expiresAt).getTime() - Date.now() < 30 * 24 * 3600_000 && (
+              <Button size="sm" variant="outline" disabled={busy} onClick={() => run(() => renewWantedRequest(id))}>
+                Renew 60 days
+              </Button>
+            )}
             <Button size="sm" variant="outline" disabled={busy} onClick={() => run(() => closeWantedRequest(id, "filled"))}>
               Mark as filled
             </Button>

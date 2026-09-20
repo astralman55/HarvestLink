@@ -105,7 +105,7 @@ export default async function MyRequestsPage({ searchParams }: { searchParams: P
                     )}
                   </p>
                   <div className="mt-3">
-                    <RequestActions id={request.id} open={request.status === "open"} />
+                    <RequestActions id={request.id} open={request.status === "open"} expiresAt={request.expires_at} />
                   </div>
                 </li>
               );

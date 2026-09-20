@@ -55,7 +55,7 @@ export default async function RequestResponsesPage({ params }: { params: Promise
         )}
       </p>
       <div className="mt-3">
-        <RequestActions id={id} open={request.status === "open"} />
+        <RequestActions id={id} open={request.status === "open"} expiresAt={request.expires_at} />
       </div>
 
       <h2 className="mt-8 text-lg font-semibold text-stone-900">Responses ({rows.length})</h2>
