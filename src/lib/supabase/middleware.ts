@@ -8,6 +8,11 @@ const PROTECTED_PREFIXES = [
   "/planning",
   "/choose-username",
   "/inquiries",
+  // Wanted requests: posting, managing and the response threads are private. The
+  // public browse and detail pages under /wanted stay open, so only /wanted/new is listed.
+  "/wanted/new",
+  "/requests",
+  "/responses",
   "/security",
   // /alerts itself is private; /alerts/unsubscribe (linked from emails) must stay public,
   // so it is matched exactly below instead of by prefix.

@@ -8,50 +8,62 @@ import { flags } from "@/lib/flags";
 import { Wordmark } from "@/components/shared/Wordmark";
 import { ExploreMenu } from "@/components/landing/ExploreMenu";
 
-// WINE-3: persistent header switch between the two sections, so neither
-// ever gets confused with the other. Skips the segmented control entirely
-// while the flag is off -- grapes is the only section that exists then.
+// WINE-3: persistent header switch between the marketplace sections, so none
+// ever gets confused with another. Grapes is always there; Bulk Wine and Wanted
+// join as segments of the same control when their flags are on, which keeps the
+// header to one switch instead of a row of separate links. Everything else
+// (Regions, Varieties, Blog, FAQ) lives in the single Explore menu.
 //
-// Both options link to "/" (this project's one homepage), not
+// Grapes and Bulk Wine link to "/" (this project's one homepage), not
 // straight to the results grid -- the switch's job is "take me to that
 // section's homepage," matching GrapeSearchHero's own entry point. The
 // homepage itself reads ?market=bulk-wine to decide which hero copy and
-// search form to show; from anywhere already inside a section (browsing
-// /bulk-wine, a listing, etc.) the switch still shows that section active.
+// search form to show. Wanted has its own page.
 //
 // The active-state piece is split into its own component and wrapped in
 // Suspense because it needs useSearchParams(), which otherwise forces this
 // entire layout -- and every otherwise-static page under it, like /login
 // and /register -- out of static rendering (Next.js's own requirement).
-function BulkWineToggle() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isBulkWine = pathname.startsWith("/bulk-wine") || (pathname === "/" && searchParams.get("market") === "bulk-wine");
+type Section = "grapes" | "bulk-wine" | "wanted";
+
+function SwitchSegments({ active }: { active: Section | null }) {
+  const segments: { key: Section; label: string; href: string }[] = [
+    { key: "grapes", label: "Grapes", href: "/" },
+    ...(flags.bulkWine ? [{ key: "bulk-wine" as const, label: "Bulk Wine", href: "/?market=bulk-wine" }] : []),
+    ...(flags.wanted ? [{ key: "wanted" as const, label: "Wanted", href: "/wanted" }] : []),
+  ];
 
   return (
     <div className="flex items-center rounded-full border border-stone-200 bg-stone-50 p-1">
-      <Link
-        href="/"
-        className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-          !isBulkWine ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-900"
-        }`}
-      >
-        Grapes
-      </Link>
-      <Link
-        href="/?market=bulk-wine"
-        className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-          isBulkWine ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-900"
-        }`}
-      >
-        Bulk Wine
-      </Link>
+      {segments.map((segment) => (
+        <Link
+          key={segment.key}
+          href={segment.href}
+          aria-current={active === segment.key ? "page" : undefined}
+          className={`whitespace-nowrap rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors sm:px-3.5 ${
+            active === segment.key ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-900"
+          }`}
+        >
+          {segment.label}
+        </Link>
+      ))}
     </div>
   );
 }
 
+function ActiveSwitch() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const active: Section = pathname.startsWith("/wanted")
+    ? "wanted"
+    : pathname.startsWith("/bulk-wine") || (pathname === "/" && searchParams.get("market") === "bulk-wine")
+      ? "bulk-wine"
+      : "grapes";
+  return <SwitchSegments active={active} />;
+}
+
 function MarketplaceSwitch() {
-  if (!flags.bulkWine) {
+  if (!flags.bulkWine && !flags.wanted) {
     return (
       <Link href="/grapes" className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900">
         Browse Grapes
@@ -60,15 +72,8 @@ function MarketplaceSwitch() {
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center rounded-full border border-stone-200 bg-stone-50 p-1">
-          <span className="rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-stone-900 shadow-sm">Grapes</span>
-          <span className="px-3.5 py-1.5 text-sm font-medium text-stone-500">Bulk Wine</span>
-        </div>
-      }
-    >
-      <BulkWineToggle />
+    <Suspense fallback={<SwitchSegments active="grapes" />}>
+      <ActiveSwitch />
     </Suspense>
   );
 }
@@ -81,15 +86,9 @@ export function Navbar() {
           <Wordmark className="h-[22px] w-auto sm:h-8" />
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-4 md:flex" aria-label="Main">
           <MarketplaceSwitch />
           <ExploreMenu />
-          <Link href="/blog" className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900">
-            Blog
-          </Link>
-          <Link href="/faq" className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900">
-            FAQ
-          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -103,8 +102,8 @@ export function Navbar() {
       </div>
 
       {/* On phones the logo, Log in, and Sell already fill the top row, so the
-          Grapes / Bulk Wine switch gets its own row underneath instead of
-          disappearing (it used to be hidden below the md breakpoint). */}
+          marketplace switch gets its own row underneath, with the Explore menu
+          beside it (it used to be hidden below the md breakpoint). */}
       <div className="flex items-center justify-between gap-2 border-t border-stone-100 px-4 py-2 md:hidden">
         <MarketplaceSwitch />
         <ExploreMenu />

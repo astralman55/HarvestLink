@@ -5,6 +5,7 @@ import { sendNotificationEmail } from "@/lib/email";
 import { runSavedSearchAlerts, type SavedSearchRow } from "@/lib/alerts/run";
 import { ANONYMOUS_VIEWER } from "@/lib/serializers/listing";
 import { SITE_URL } from "@/lib/seo";
+import { runWantedAlertsJob } from "@/lib/wanted/cron";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -64,7 +65,15 @@ export async function GET(request: NextRequest) {
     } catch {
       // ignore
     }
-    return NextResponse.json(result);
+    // Tell sellers about new "wanted" requests that match their lots. Best-effort and
+    // independent of the digest above: if migration 0011 has not been run this is a no-op.
+    let wanted: Awaited<ReturnType<typeof runWantedAlertsJob>> | { skipped: true } = { skipped: true };
+    try {
+      wanted = await runWantedAlertsJob(admin);
+    } catch (error) {
+      console.error("Wanted alerts skipped:", error);
+    }
+    return NextResponse.json({ ...result, wanted });
   } catch (error) {
     console.error("Saved search job failed:", error);
     return NextResponse.json({ error: "Job failed" }, { status: 500 });

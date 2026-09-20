@@ -76,6 +76,11 @@ export default function PrivacyPage() {
         </li>
         <li>Your username may be shown to other members.</li>
         <li>The people in a message thread can read that thread.</li>
+        <li>
+          A request you post (what you are looking for) is public. If you post it anonymously, others see &quot;Anonymous
+          buyer&quot; and never your name or company. Sellers with a matching lot may be emailed a description of the
+          request, without who posted it.
+        </li>
       </ul>
 
       <h2>Who else handles your data</h2>

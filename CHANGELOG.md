@@ -2,6 +2,8 @@
 
 ## Unreleased — SEO, AI-search, blog, FAQ, wordmark and email alerts
 
+- **Wanted requests (Decision 62), off until migration 0011 is run:** post what grapes or bulk wine you are looking for (anonymous by default), sellers respond through private threads, matching sellers are emailed once, and posters can be alerted to matching lots. Adds `/wanted`, `/wanted/new`, `/requests`, `/responses`, and entry points across the site.
+- **Shorter header:** Blog, FAQ, Regions and Varieties now live in one Explore menu; Wanted is a segment of the Grapes / Bulk Wine switch.
 - **Renamed to bulkwinegrapes.com, "BWG" for short (Decision 61):** new wordmark in the header, footer, sign-in and dashboard, and on social cards; every visible "HarvestLink" replaced (full domain where it identifies the site, BWG elsewhere); structured data, emails and the Supabase email templates updated. Re-paste the two email templates into Supabase.
 - **Easier to find region and variety pages:** an Explore menu in the header, a variety section on the homepage, a browse strip on Grapes and Bulk Wine, and links on the blog and in the dashboard. Blog index has jump-to-topic links.
 - **Region and variety pages (Decision 60):** ten `/regions/...` and ten `/varieties/...` pages with original copy, a photo, live grape and bulk wine lots, a Save this search button for each market, guides, FAQ and structured data, plus `/regions` and `/varieties` indexes. Linked from the homepage, footer, sitemap and llms files.

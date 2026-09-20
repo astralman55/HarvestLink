@@ -10,6 +10,7 @@ function getColumns() {
         { href: "/grapes", label: "Browse Grapes" },
         ...(flags.bulkWine ? [{ href: "/bulk-wine", label: "Browse Bulk Wine" }] : []),
         { href: "/sell", label: "List Your Harvest" },
+        ...(flags.wanted ? [{ href: "/wanted", label: "Wanted Requests" }, { href: "/wanted/new", label: "Post a Request" }] : []),
         { href: "/planning", label: "Crop Planning" },
         { href: "/alerts", label: "Email Alerts" },
       ],

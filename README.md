@@ -41,9 +41,9 @@ can't fake sign-up/sign-in) — `/login` and `/register` will show a clear
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`.
 3. Run the files in `supabase/migrations/` **in order** (`0001_init.sql`
-   through `0010_login_events.sql` — Phase 4 needed no
+   through `0011_wanted_requests.sql` — Phase 4 needed no
    new migration) in the Supabase SQL Editor. Rollback scripts for
-   `0003`–`0010` are in `supabase/rollback/` if you ever need to back the
+   `0003`–`0011` are in `supabase/rollback/` if you ever need to back the
    addendum out (see the README there — written, not yet rehearsed against
    live data).
 4. Restart `npm run dev`. Register an account — the `profiles` row is
@@ -143,6 +143,7 @@ and Site URL settings it needs). `/terms` and
 
 - **Blog:** Markdown files in `content/blog` (front matter is validated at build; `status: draft` hides a post everywhere). `npm run test` enforces title/description lengths, working internal links, related posts, no em dashes and no placeholders.
 - **SEO/AI search:** see Decision 54. `/llms.txt`, `/llms-full.txt`, `/robots.txt`, `/sitemap.xml`, `/blog/rss.xml` and `/blog/{slug}.md` are generated from the same content.
+- **Wanted requests:** `src/lib/wanted/`, pages under `/wanted`, `/requests`, `/responses` (Decision 62). Needs migration `0011` and `NEXT_PUBLIC_FEATURE_WANTED=true`.
 - **Region and variety pages:** copy in `src/content/landing/`, photos in `public/images/landing/`, routes `/regions` and `/varieties` (Decision 60). `landing.test.ts` enforces unique copy, sizes, images and filter values.
 - **Email alerts:** migration `0009`, the `CRON_SECRET` env var (a long random string shared with Vercel Cron), and Resend. Trigger the job by hand with `curl -H "Authorization: Bearer $CRON_SECRET" https://bulkwinegrapes.com/api/cron/saved-searches`.
 

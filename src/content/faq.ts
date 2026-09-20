@@ -1,3 +1,5 @@
+import { flags } from "@/lib/flags";
+
 /**
  * Questions and answers shown on /faq, in the homepage teaser, and as
  * FAQPage JSON-LD. Plain text only (no markdown) so the same string can be
@@ -70,6 +72,22 @@ export const FAQ_ITEMS: FaqItem[] = [
     q: "How do email alerts work?",
     a: "Set your filters on the Grapes or Bulk Wine page, choose Save this search, and BWG emails you a daily digest when new listings match. You can pause or delete a saved search at any time, and every email has a one-click unsubscribe link. Alerts never reveal the identity of a confidential seller.",
   },
+  ...(flags.wanted
+    ? [
+        {
+          q: "Can I post what grapes or wine I am looking for?",
+          a: "Yes. Choose Wanted, then Post a request. Say whether you want grapes or bulk wine, the variety, the regions you would accept, the quantity and, if you like, a price and timing. Sellers with a matching lot are emailed, and anyone can offer a lot from the request page. Requests stay open for 60 days and you can renew or close them at any time.",
+        },
+        {
+          q: "Can I post a request anonymously?",
+          a: "Yes, and it is the default. Sellers see Anonymous buyer, and you reply through the site. The note you add can not include your name, company, phone number, email address or a link. You decide if and when to tell a seller who you are.",
+        },
+        {
+          q: "How do I respond to a request?",
+          a: "Open the request and choose I can supply this. Write a message, and optionally offer one of your own lots. You can respond as a confidential seller, and a lot listed under NDA always stays confidential. The buyer replies in your inbox on BWG.",
+        },
+      ]
+    : []),
   {
     q: "How do I list grapes or bulk wine for sale?",
     a: "Create an account, choose Sell, and pick Wine Grapes or Bulk Wine. Enter the details buyers look for, decide whether to list openly or under NDA, and publish. You can edit or archive the listing at any time.",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { BrowseTopics } from "@/components/landing/BrowseTopics";
+import { PostRequestPrompt } from "@/components/wanted/PostRequestPrompt";
 import { MarketplaceGuide } from "@/components/marketplace/MarketplaceGuide";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -83,6 +84,7 @@ export default async function BulkWinePage({
               <Wine className="size-10 text-stone-300" />
               <p className="mt-4 font-medium text-stone-700">No lots match these filters</p>
               <p className="mt-1 text-sm text-stone-500">Try widening your variety or wine location selection.</p>
+              <PostRequestPrompt type="bulk_wine" variety={filters.variety} region={filters.region_ava} year={filters.vintage_year} />
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">

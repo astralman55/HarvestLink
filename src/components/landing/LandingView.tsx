@@ -9,6 +9,9 @@ import { findLandingBySlug, landingFilter, landingPath, type LandingPage } from 
 import { describeSearch, queryToFilters, sanitizeSearchParams } from "@/lib/alerts/query";
 import { getListings } from "@/lib/data/listings";
 import { getPost } from "@/lib/blog";
+import { WantedCard } from "@/components/wanted/WantedCard";
+import { PostRequestPrompt } from "@/components/wanted/PostRequestPrompt";
+import { getOpenWanted } from "@/lib/wanted/data";
 import { flags } from "@/lib/flags";
 import { CANONICAL_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, absoluteUrl, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 import { resolveViewerContext } from "@/lib/supabase/viewer";
@@ -24,10 +27,11 @@ export async function LandingView({ page }: { page: LandingPage }) {
   const savedQuery = sanitizeSearchParams(filter as Record<string, string>);
   const bulkOn = flags.bulkWine;
 
-  const [grapes, bulk, viewer] = await Promise.all([
+  const [grapes, bulk, viewer, wanted] = await Promise.all([
     getListings({ ...filter, listing_type: "grapes" }),
     bulkOn ? getListings({ ...filter, listing_type: "bulk_wine" }) : Promise.resolve([]),
     resolveViewerContext(),
+    flags.wanted ? getOpenWanted(page.kind === "region" ? { region: page.filterValue } : { variety: page.filterValue }, 3) : Promise.resolve([]),
   ]);
 
   const isLoggedIn = viewer.userId != null;
@@ -159,6 +163,38 @@ export async function LandingView({ page }: { page: LandingPage }) {
           )}
         </section>
       ))}
+
+      {flags.wanted && (
+        <section className="mt-12" aria-labelledby="wanted-heading">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2 id="wanted-heading" className="text-2xl font-semibold text-stone-900">
+              Buyers are looking for {page.name}
+            </h2>
+            {wanted.length > 0 && (
+              <Link href="/wanted" className="text-sm font-medium text-[var(--color-brand)] hover:underline">
+                See all requests →
+              </Link>
+            )}
+          </div>
+          {wanted.length > 0 ? (
+            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {wanted.map((request) => (
+                <WantedCard key={request.id} request={request} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-4 rounded-2xl border border-dashed border-stone-300 p-6 text-center">
+              <p className="font-medium text-stone-700">No open requests for {page.name} right now.</p>
+              <PostRequestPrompt
+                type="grapes"
+                variety={page.kind === "variety" ? page.filterValue : undefined}
+                region={page.kind === "region" ? page.filterValue : undefined}
+                text={"Looking for " + page.name + "? Tell sellers what you need."}
+              />
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="mt-12" aria-labelledby="buyer-notes">
         <h2 id="buyer-notes" className="text-2xl font-semibold text-stone-900">

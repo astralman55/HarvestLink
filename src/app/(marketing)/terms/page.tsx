@@ -73,11 +73,18 @@ export default function TermsPage() {
         </li>
       </ul>
 
-      <h2>5. Messaging</h2>
+      <h2>5. Messaging and requests</h2>
       <p>
         The Site&apos;s inquiry messages are for genuine business inquiries about a listing. Don&apos;t send spam,
         harassment, or anything unlawful. We store messages so both participants can read them and so we can investigate
         abuse.
+      </p>
+      <p>
+        You can also post a request saying what wine grapes or bulk wine you are looking for. Requests are public,
+        expire after 60 days unless renewed, and may be posted anonymously; the note on a request can&apos;t include
+        contact details or links. Sellers whose lots match may be emailed about your request without being told who you
+        are. Post real requests only, and don&apos;t use them to advertise or to fish for other members&apos; details.
+        We can remove any request.
       </p>
 
       <h2>6. What you can&apos;t do</h2>

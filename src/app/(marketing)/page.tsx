@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag, Lock } from "lucide-react";
+import { ShieldCheck, Handshake, LineChart, Bell, ArrowRight, Grape, Wine, Tag, Lock, Megaphone } from "lucide-react";
 import { GrapeSearchHero } from "@/components/marketplace/GrapeSearchHero";
 import { BulkWineSearchHero } from "@/components/marketplace/BulkWineSearchHero";
 import { ListingCard } from "@/components/marketplace/ListingCard";
@@ -261,6 +261,29 @@ export default async function HomePage({
           </div>
         </div>
       </section>
+
+      {flags.wanted && (
+        <section className="border-t border-stone-200 py-12" aria-labelledby="wanted-banner">
+          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-5 px-4 sm:px-6 md:flex-row md:items-center lg:px-8">
+            <div className="max-w-2xl">
+              <h2 id="wanted-banner" className="text-2xl font-semibold text-stone-900">
+                Looking for something specific?
+              </h2>
+              <p className="mt-1 text-stone-600">Post the grapes or bulk wine you want and sellers come to you. Post anonymously if you prefer, and we email you when a matching lot is listed.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link href="/wanted/new">
+                  <Megaphone /> Post a request
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/wanted">See what buyers want</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="border-t border-stone-200 bg-stone-50 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

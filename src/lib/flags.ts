@@ -10,4 +10,6 @@ export const flags = {
   usernames: isEnabled(process.env.NEXT_PUBLIC_FEATURE_USERNAMES),
   ndaListings: isEnabled(process.env.NEXT_PUBLIC_FEATURE_NDA_LISTINGS),
   bulkWine: isEnabled(process.env.NEXT_PUBLIC_FEATURE_BULK_WINE),
+  // Wanted requests ("looking for" posts). Needs migration 0011; off until it has been run.
+  wanted: isEnabled(process.env.NEXT_PUBLIC_FEATURE_WANTED),
 } as const;

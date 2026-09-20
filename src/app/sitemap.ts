@@ -4,6 +4,7 @@ import { getAllPosts } from "@/lib/blog";
 import { ALL_LANDING_PAGES, landingPath } from "@/content/landing";
 import { absoluteUrl } from "@/lib/seo";
 import { buildListingSlugPath } from "@/lib/utils";
+import { flags } from "@/lib/flags";
 
 // 6.6/NDA-5: sitemap needs to become type-aware and NDA-safe. Titles are
 // always server-generated from controlled fields (never the seller's own
@@ -25,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl("/bulk-wine"), changeFrequency: "hourly", priority: 0.9 },
     { url: absoluteUrl("/regions"), changeFrequency: "weekly", priority: 0.7 },
     { url: absoluteUrl("/varieties"), changeFrequency: "weekly", priority: 0.7 },
+    ...(flags.wanted ? [{ url: absoluteUrl("/wanted"), changeFrequency: "daily" as const, priority: 0.7 }] : []),
     { url: absoluteUrl("/faq"), changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/blog"), lastModified: newestPost || undefined, changeFrequency: "weekly", priority: 0.7 },
     { url: absoluteUrl("/sell"), changeFrequency: "monthly", priority: 0.5 },
@@ -45,6 +47,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Open "wanted" requests. Loaded lazily so the feature costs nothing while it is off.
+  let wantedRoutes: MetadataRoute.Sitemap = [];
+  if (flags.wanted) {
+    try {
+      const { getOpenWantedForSitemap } = await import("@/lib/wanted/data");
+      wantedRoutes = (await getOpenWantedForSitemap()).map((request) => ({
+        url: absoluteUrl(`/wanted/${buildListingSlugPath(request.title, request.id)}`),
+        lastModified: request.updated,
+        changeFrequency: "weekly" as const,
+        priority: 0.5,
+      }));
+    } catch {
+      wantedRoutes = [];
+    }
+  }
+
   let listings: Awaited<ReturnType<typeof getListings>> = [];
   try {
     listings = await getListings({});
@@ -59,5 +77,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...landingRoutes, ...postRoutes, ...listingRoutes];
+  return [...staticRoutes, ...landingRoutes, ...postRoutes, ...wantedRoutes, ...listingRoutes];
 }

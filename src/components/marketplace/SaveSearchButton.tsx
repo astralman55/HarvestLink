@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Bell, Check } from "lucide-react";
+import { flags } from "@/lib/flags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,19 @@ interface SaveSearchButtonProps {
   isLoggedIn: boolean;
   /** Where to send a logged-out visitor back to after they log in. */
   returnTo: string;
+}
+
+/** A prefilled "post a request" link built from the filters of a saved search. */
+function requestHref(listingType: "grapes" | "bulk_wine", query: string): string {
+  const source = new URLSearchParams(query);
+  const params = new URLSearchParams({ type: listingType });
+  const variety = source.get("variety");
+  const region = source.get("region_ava");
+  const year = source.get("harvest_year") ?? source.get("vintage_year");
+  if (variety) params.set("variety", variety);
+  if (region) params.set("region", region);
+  if (year) params.set("year", year);
+  return `/wanted/new?${params}`;
 }
 
 /** "Save this search" for the browse pages: one click for a name, then a daily email when new lots match. */
@@ -43,6 +57,15 @@ export function SaveSearchButton({ listingType, query, defaultName, isLoggedIn, 
         <Link href="/alerts" className="font-medium underline">
           Manage alerts
         </Link>
+        {flags.wanted && (
+          <>
+            {" "}
+            <Link href={requestHref(listingType, query)} className="font-medium underline">
+              Post it as a request
+            </Link>{" "}
+            so sellers can find you.
+          </>
+        )}
       </p>
     );
   }
